@@ -261,10 +261,10 @@ def open_application(self, app_path: str) -> None:
     ## Example
     
     ```robot
-    ***** Settings *****
+    *** Settings ***
     Library         PywinautoLibrary
     
-    ***** Test Cases *****
+    *** Test Cases ***
     Example
         Open Application    ${app_path}
         ${process_id}       Get Process ID
