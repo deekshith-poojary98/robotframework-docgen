@@ -11,6 +11,11 @@ A powerful documentation generator for Robot Framework libraries that extracts k
 - **Syntax Highlighting**: Custom Robot Framework syntax highlighting with professional color schemes
 - **Configuration System**: JSON-based configuration for customizing behavior
 
+### Important Notes
+- **@keyword Decorator Required**: Only methods decorated with `@keyword("Keyword Name")` will be included in the documentation
+- **Undecorated Methods Ignored**: Methods without the `@keyword` decorator are automatically excluded
+- **Custom Keyword Names**: The decorator allows you to specify custom keyword names that differ from the method name
+
 ### Advanced Documentation Features
 - **Rich Text Formatting**: Bold, italic, underlined, strikethrough text
 - **Structured Content**: Headers, tables, code blocks, horizontal rules
@@ -249,6 +254,32 @@ def open_application(self, app_path: str) -> None:
     | Example
     |     Open Application    ${app_path}
     """
+```
+
+### Important: @keyword Decorator Required
+```python
+# ✅ This will be included in documentation
+@keyword("Open Application")
+def open_application(self, app_path: str) -> None:
+    """Documentation here..."""
+    pass
+
+# ❌ This will be IGNORED (no @keyword decorator)
+def helper_method(self, data: str) -> str:
+    """This method won't appear in documentation"""
+    return data.upper()
+
+# ❌ This will be IGNORED (no keyword name specified)
+@keyword
+def my_method(self, param: str) -> str:
+    """This method won't appear in documentation"""
+    return param
+
+# ✅ This will be included with custom name
+@keyword("Close Application")
+def close_app(self, pid: str) -> bool:
+    """Documentation here..."""
+    pass
 ```
 
 ### After (Our Custom Syntax)

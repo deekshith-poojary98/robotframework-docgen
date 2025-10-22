@@ -1494,6 +1494,7 @@ class DocumentationGenerator:
      .kw-docs h4 {
        color: var(--text-color);
        margin: 2px 0 4px 0;
+       border-bottom: 0px;
      }
 
      .kwdoc {
@@ -1687,8 +1688,8 @@ class DocumentationGenerator:
      .intro-content h6 { font-size: 1em; }
 
      .intro-content p {
-       margin-bottom: 20px;
-       line-height: 1.5;
+       margin: 0px;
+       line-height: 1.9;
        font-size: inherit;
      }
 
