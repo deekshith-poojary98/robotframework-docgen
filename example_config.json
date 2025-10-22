@@ -1,0 +1,30 @@
+{
+  "custom_keywords": [
+    "Open Application",
+    "Close Application",
+    "Kill Application",
+    "Connect to Application",
+    "Get Process ID",
+    "Wait for Process Exit",
+    "Custom Keyword 1",
+    "Custom Keyword 2"
+  ],
+  "description": "Example configuration file for Robot Framework documentation parser",
+  "version": "1.0.0",
+  "settings": {
+    "theme": "dark",
+    "syntax_highlighting": true,
+    "include_line_numbers": false
+  },
+  "colors": {
+    "keywords": "#4ec9b0",
+    "variables": "#9cdcfe", 
+    "arguments": "#dcdcaa",
+    "comments": "#6a9955"
+  },
+  "future_features": {
+    "custom_templates": true,
+    "export_formats": ["html", "markdown", "pdf"],
+    "search_functionality": true
+  }
+}
