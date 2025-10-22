@@ -270,10 +270,6 @@ def open_application(self, app_path: str) -> None:
         ${process_id}       Get Process ID
         Close Application
     ```
-    
-    ## Notes
-    - The application must be a valid executable file
-    - Use `Close Application` to properly terminate the application
     """
 ```
 
