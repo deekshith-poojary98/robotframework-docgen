@@ -1,31 +1,38 @@
 # robotframework-docgen
 
-A powerful documentation generator for Robot Framework libraries that extracts keywords, arguments, and docstrings to create clean, well-formatted docs in HTML or Markdown with advanced custom syntax support.
+A powerful documentation generator for Robot Framework libraries that extracts keywords, arguments, and docstrings to create professional, well-formatted HTML documentation with advanced markdown support and syntax highlighting.
 
 ## 🚀 Features
 
 ### Core Functionality
-- **Keyword Extraction**: Automatically extracts keywords, arguments, and docstrings from Robot Framework libraries
+- **Keyword Extraction**: Automatically extracts keywords from methods decorated with `@keyword`
+- **Type Hints Support**: Displays argument types from function signatures
 - **Multiple Output Formats**: Generate documentation in HTML or Markdown
-- **Custom Syntax Support**: Rich markdown-like syntax for professional documentation
+- **Markdown Integration**: Full markdown support for docstrings with tables, images, code blocks, and more
 - **Syntax Highlighting**: Custom Robot Framework syntax highlighting with professional color schemes
-- **Configuration System**: JSON-based configuration for customizing behavior
+- **Configuration System**: JSON-based configuration for customizing behavior and metadata
 
-### Important Notes
-- **@keyword Decorator Required**: Only methods decorated with `@keyword("Keyword Name")` will be included in the documentation
-- **Undecorated Methods Ignored**: Methods without the `@keyword` decorator are automatically excluded
-- **Custom Keyword Names**: The decorator allows you to specify custom keyword names that differ from the method name
-
-### Advanced Documentation Features
+### Documentation Features
 - **Rich Text Formatting**: Bold, italic, underlined, strikethrough text
 - **Structured Content**: Headers, tables, code blocks, horizontal rules
-- **Code Highlighting**: Syntax-highlighted code blocks with language support
+- **Code Highlighting**: Syntax-highlighted code blocks for Robot Framework, Python, JavaScript, and 100+ languages via Pygments
+- **Images**: Support for markdown image syntax `![alt](url)`
+- **Tables**: Full markdown table support with professional styling
 - **Professional Styling**: Theme-aware CSS with Robot Framework integration
-- **Responsive Design**: Mobile and desktop friendly output
+- **Responsive Design**: Mobile and desktop friendly with hamburger menu for smaller screens
 
-## 📖 Custom Documentation Syntax
+### Advanced Syntax Highlighting
+- **Robot Framework Keywords**: Automatically extracted from your library and standard Robot Framework libraries
+- **Variables**: `${variable}`, `@{list}`, `&{dict}` highlighting
+- **Keyword Arguments**: `arg=value` highlighting in yellow/beige
+- **Comments**: Green italic comments (both full-line and inline)
+- **Reserved Control Keywords**: `IF`, `FOR`, `TRY`, `WHILE`, etc. in orange
+- **Settings Keywords**: `Library`, `Resource`, `Documentation`, etc. in purple
+- **Section Headers**: `*** Settings ***`, `*** Test Cases ***` in blue
 
-### Supported Features
+## 📖 Documentation Syntax
+
+### Supported Markdown Features
 
 #### 1. Headers
 Create hierarchical headers using `#` symbols:
@@ -51,16 +58,6 @@ Create hierarchical headers using `#` symbols:
 *italic text* or _italic text_
 ```
 
-++Underlined Text++
-```markdown
-++underlined text++
-```
-
-~~Strikethrough Text~~
-```markdown
-~~strikethrough text~~
-```
-
 `Inline Code`
 ```markdown
 `code snippet`
@@ -76,52 +73,23 @@ Create clickable links:
 #### 4. Code Blocks
 Create syntax-highlighted code blocks:
 
-
 ```robot
-***** Settings *****
-Library         MyLibrary
+*** Settings ***
+Library    MyLibrary
 
-***** Test Cases *****
+*** Test Cases ***
 Example
-    My Keyword    ${variable}
+    My Keyword    ${variable}    arg=value
+    # This is a comment
 ```
 
-
 Supported languages:
-- `robot` - Robot Framework syntax (custom highlighter)
+- `robot` - Robot Framework syntax (custom highlighter with full syntax support)
 - All Pygments-supported languages including:
-  - `python` - Python code
-  - `javascript` - JavaScript code
-  - `java` - Java code
-  - `c` - C code
-  - `cpp` - C++ code
-  - `html` - HTML markup
-  - `css` - CSS styles
-  - `sql` - SQL queries
-  - `bash` - Bash shell scripts
-  - `yaml` - YAML configuration
-  - `json` - JSON data
-  - `xml` - XML markup
-  - `go` - Go language
-  - `rust` - Rust code
-  - `php` - PHP code
-  - `ruby` - Ruby code
-  - `swift` - Swift code
-  - `kotlin` - Kotlin code
-  - `scala` - Scala code
-  - `r` - R language
-  - `matlab` - MATLAB code
-  - `lua` - Lua code
-  - `perl` - Perl code
-  - `powershell` - PowerShell scripts
-  - `dockerfile` - Docker files
-  - `ini` - INI configuration
-  - `toml` - TOML configuration
-  - `text` - Plain text (default)
-  - And many more...
+  - `python`, `javascript`, `java`, `c`, `cpp`, `html`, `css`, `sql`, `bash`, `yaml`, `json`, `xml`, `go`, `rust`, `php`, `ruby`, `swift`, `kotlin`, and many more...
 
 #### 5. Tables
-Create structured tables:
+Create structured tables with full markdown support:
 
 ```markdown
 | Column 1 | Column 2 | Column 3 |
@@ -130,235 +98,236 @@ Create structured tables:
 | Data 1   | Data 2   | Data 3   |
 ```
 
-#### 6. Horizontal Rules
-Create visual separators:
+#### 6. Images
+Include images in your documentation:
 
 ```markdown
----
-***
+![Alt Text](https://example.com/image.png)
 ```
 
-## 🎨 Custom Robot Framework Syntax Highlighting
+#### 7. Lists
+Create bulleted and numbered lists:
+
+```markdown
+- Item 1
+- Item 2
+  - Nested item
+- Item 3
+
+1. First step
+2. Second step
+3. Third step
+```
+
+## 🎨 Robot Framework Syntax Highlighting
 
 ### Color Scheme
 
 | Element | Color | Hex Code | Description |
 |---------|-------|----------|-------------|
 | **Section Headers** | Blue | `#569cd6` | `*** Settings ***`, `*** Test Cases ***` |
-| **Keywords** | Teal | `#4ec9b0` | Robot Framework keywords |
+| **Keywords** | Teal | `#4ec9b0` | Robot Framework keywords (bold) |
 | **Variables** | Light Blue | `#9cdcfe` | `${variable}`, `@{list}`, `&{dict}` |
-| **Comments** | Green | `#6a9955` | `# comment` with italic |
-| **Strings** | Orange | `#ce9178` | `"quoted text"` |
-| **Numbers** | Light Green | `#b5cea8` | `123`, `45.67` |
-| **Settings** | Purple | `#c586c0` | `Library`, `Resource`, `Documentation` |
-| **Test Cases** | Yellow | `#dcdcaa` | Test case names |
+| **Comments** | Green | `#6a9955` | `# comment` (italic) |
+| **Keyword Arguments** | Yellow/Beige | `#dcdcaa` | `arg=value` |
+| **Reserved Control** | Orange | `#ce9178` | `IF`, `FOR`, `TRY`, `WHILE`, etc. |
+| **Settings Keywords** | Purple | `#c586c0` | `Library`, `Resource`, `Documentation` |
+| **Test Cases** | Yellow | `#dcdcaa` | Test case names (bold) |
 
-### Features
-- **Section Headers**: `*** Settings ***`, `*** Test Cases ***`, `*** Keywords ***`, `*** Variables ***`
-- **Keywords**: Robot Framework keywords with bold formatting
-- **Variables**: `${variable}`, `@{list}`, `&{dict}` with light blue highlighting
-- **Comments**: Green italic comments
-- **Strings**: Orange quoted text
-- **Settings**: Purple Library, Resource, Documentation keywords
-- **Test Cases**: Yellow test case names
+### Highlighting Features
+- **Automatic Keyword Detection**: Keywords are automatically extracted from your library and standard Robot Framework libraries
+- **Custom Keywords**: Add additional keywords via `config.json` for highlighting
+- **Multi-word Keywords**: Properly highlights keywords like "Create Dictionary", "Should Be Equal"
+- **Variable Highlighting**: All Robot Framework variable types are highlighted
+- **Inline Comments**: Comments at the end of lines are highlighted in green
 
 ## ⚙️ Configuration System
 
 ### Usage
 
 ```bash
-python src/docgen.py src/PywinautoLibrary.py -f html -o output.html -c config.json
+python src/docgen.py your_library.py -f html -o output.html -c config.json
 ```
 
-### Basic Configuration
+### Configuration File (`config.json`)
+
+All fields are optional. Only provide the fields you want to display:
 
 ```json
 {
+  "github_url": "https://github.com/username/repo",
+  "library_url": "https://example.com/library",
+  "support_email": "support@example.com",
+  "author": "Your Name",
+  "maintainer": "Maintainer Name",
+  "license": "MIT",
+  "robot_framework": ">=7.0",
+  "python": ">=3.11",
   "custom_keywords": [
-    "Open Application",
-    "Close Application",
-    "Kill Application",
-    "Connect to Application",
-    "Get Process ID",
-    "Wait for Process Exit"
-  ]
-}
-```
-
-### Advanced Configuration
-
-```json
-{
-  "custom_keywords": [
-    "Open Application",
-    "Close Application",
-    "Kill Application",
-    "Connect to Application",
-    "Get Process ID",
-    "Wait for Process Exit",
     "Custom Keyword 1",
     "Custom Keyword 2"
-  ],
-  "description": "Configuration file for Robot Framework documentation parser",
-  "version": "1.0.0"
+  ]
 }
 ```
 
 ### Configuration Options
 
-#### Required
-- `custom_keywords`: Array of custom keywords to highlight (strings)
+#### Library Metadata (Optional)
+- `author`: Library author name
+- `maintainer`: Library maintainer name
+- `license`: License information
+- `robot_framework`: Required Robot Framework version
+- `python`: Required Python version
 
-#### Optional
-- `description`: Description of the configuration file
-- `version`: Configuration file version
+#### Links (Optional)
+- `github_url`: GitHub repository URL (enables "View on GitHub" and "Open an Issue" buttons)
+- `library_url`: Library website URL (enables "Library Website" button)
+- `support_email`: Support email address (enables "Contact Support" button)
 
-### Examples
+#### Highlighting (Optional)
+- `custom_keywords`: Array of additional keywords to highlight in code blocks
 
-#### Minimal Configuration
-```json
-{
-  "custom_keywords": ["My Custom Keyword"]
-}
+### Dynamic Display
+- Buttons and metadata are only displayed if the corresponding fields are provided in `config.json`
+- If `github_url` is not provided, the "Open an Issue on GitHub" button won't appear
+- If `support_email` is not provided, the "Contact Support" button won't appear
+- Metadata fields are only shown if they have values
+
+## 📝 Usage Examples
+
+### Basic Usage
+
+```bash
+# Generate HTML documentation
+python src/docgen.py your_library.py -f html -o docs.html -c config.json
+
+# Generate Markdown documentation
+python src/docgen.py your_library.py -f markdown -o docs.md -c config.json
 ```
 
-#### Full Configuration
-```json
-{
-  "custom_keywords": [
-    "Open Application",
-    "Close Application",
-    "Custom Keyword"
-  ],
-  "description": "My custom configuration",
-  "version": "1.0.0"
-}
-```
+### Keyword Decorator Usage
 
+#### ✅ Correct Usage
 
-## 📝 Complete Example
-
-### Before (Standard Robot Framework)
 ```python
-@keyword("Open Application")
-def open_application(self, app_path: str) -> None:
-    """
-    The ``Open Application`` keyword starts a new application instance.
+from robot.api.deco import keyword
+
+class MyLibrary:
+    # Custom keyword name
+    @keyword("Open Application")
+    def open_app(self, path: str) -> None:
+        """Opens an application at the given path."""
+        pass
     
-    = Example =
-    
-    | ***** Settings *****
-    | Library         PywinautoLibrary
-    |
-    | ***** Test Cases *****
-    | Example
-    |     Open Application    ${app_path}
-    """
+    # Function name converted to title case (Open Workbook)
+    @keyword
+    def open_workbook(self, file: str) -> None:
+        """Opens a workbook file."""
+        pass
 ```
 
-### Important: @keyword Decorator Required
-```python
-# ✅ This will be included in documentation
-@keyword("Open Application")
-def open_application(self, app_path: str) -> None:
-    """Documentation here..."""
-    pass
+#### ❌ Incorrect Usage
 
-# ❌ This will be IGNORED (no @keyword decorator)
+```python
+# This will NOT appear in documentation (no @keyword decorator)
 def helper_method(self, data: str) -> str:
     """This method won't appear in documentation"""
     return data.upper()
-
-# ❌ This will be IGNORED (no keyword name specified)
-@keyword
-def my_method(self, param: str) -> str:
-    """This method won't appear in documentation"""
-    return param
-
-# ✅ This will be included with custom name
-@keyword("Close Application")
-def close_app(self, pid: str) -> bool:
-    """Documentation here..."""
-    pass
 ```
 
-### After (Our Custom Syntax)
+### Complete Example
+
 ```python
-@keyword("Open Application")
-def open_application(self, app_path: str) -> None:
-    """
-    The **Open Application** keyword starts a new application instance.
-    
-    ## Example
-    
-    ```robot
-    *** Settings ***
-    Library         PywinautoLibrary
-    
-    *** Test Cases ***
-    Example
-        Open Application    ${app_path}
-        ${process_id}       Get Process ID
-        Close Application
-    ```
-    """
+from robot.api.deco import keyword
+from typing import Dict, List
+
+class DataProcessor:
+    @keyword
+    def process_data(self, data: Dict[str, any], options: List[str] = None) -> Dict[str, any]:
+        """
+        Process data with optional configuration.
+        
+        This keyword processes the provided data dictionary and returns
+        a processed result based on the given options.
+        
+        **Arguments:**
+        - `data`: Dictionary containing data to process
+        - `options`: Optional list of processing options
+        
+        **Returns:** Processed dictionary with results.
+        
+        **Example:**
+        ```robot
+        *** Settings ***
+        Library    DataProcessor
+        
+        *** Test Cases ***
+        Process Example
+            ${data}=    Create Dictionary    name=John    age=30
+            ${result}=    Process Data    ${data}    options=['option1', 'option2']
+        ```
+        
+        **Options:**
+        | Option | Description |
+        |--------|-------------|
+        | `validate` | Validate input data |
+        | `transform` | Transform data structure |
+        | `filter` | Filter data entries |
+        """
+        # Implementation here
+        return {}
 ```
 
-## 🎯 Benefits
+## 🎯 Key Features
 
 ### For Developers
 - **Rich documentation** with professional formatting
-- **Easy to write** using familiar markdown-like syntax
+- **Easy to write** using standard markdown syntax
+- **Type hints support** - automatically displays argument types
+- **Automatic keyword extraction** - no need to manually list keywords
+- **Function name conversion** - `my_keyword` becomes "My Keyword" automatically
 - **Consistent styling** across all documentation
-- **Better readability** with headers, tables, and code blocks
+- **Better readability** with headers, tables, code blocks, and images
 
 ### For Users
 - **Professional appearance** matching Robot Framework standards
 - **Interactive features** like search and theme toggle
-- **Mobile-friendly** responsive design
+- **Mobile-friendly** responsive design with hamburger menu
 - **Accessible** with proper HTML structure
+- **Syntax highlighting** for better code readability
+- **Dynamic metadata** display based on configuration
 
 ### For Teams
 - **Standardized format** for all library documentation
 - **Easy maintenance** with clear syntax rules
 - **Version control friendly** with readable source format
 - **Extensible** design for future enhancements
+- **Configuration-driven** customization
 
-## 🔮 Future Enhancements
+## 🔧 Installation
 
-### Potential Additions
-- **Image support** with `![alt](url)` syntax
-- **Collapsible sections** for large documentation
-- **Interactive examples** with runnable code
-- **Cross-references** between keywords
-- **Export options** for PDF, Word, etc.
+### Requirements
+- Python 3.8+
+- Robot Framework
+- Optional: `markdown` package for enhanced markdown support
+- Optional: `pygments` package for syntax highlighting of non-Robot languages
+- Optional: `rich` package for enhanced terminal output
 
-### Advanced Features
-- **Mathematical expressions** with LaTeX support
-- **Diagram generation** from text descriptions
-- **API documentation** auto-generation
-- **Multi-language support** for international teams
+### Install Dependencies
 
-## 🎊 Conclusion
-
-We've successfully created a **next-generation documentation system** for Robot Framework libraries that:
-
-- ✅ **Maintains compatibility** with existing Robot Framework standards
-- ✅ **Adds powerful formatting** capabilities
-- ✅ **Provides professional output** with modern styling
-- ✅ **Supports all requested features** (tables, headers, code blocks, formatting)
-- ✅ **Is easy to use** with familiar markdown-like syntax
-- ✅ **Is fully functional** and ready for production use
-
-This custom syntax format transforms Robot Framework library documentation from basic text to **rich, professional documentation** that rivals the best API documentation systems available today! 🚀
+```bash
+pip install robotframework markdown pygments rich
+```
 
 ## 📁 Project Structure
 
 ```
 robotframework-docgen/
 ├── src/
-│   └── docgen.py          # Enhanced parser with custom syntax support
-├── config.json                # Configuration file
+│   ├── docgen.py              # Main parser and generator
+│   └── templates/
+│       └── libdoc.html        # HTML template
+├── config.json                # Configuration file (optional)
 ├── example_config.json        # Example configuration
 ├── README.md                  # This file
 └── LICENSE                    # License file
@@ -366,13 +335,61 @@ robotframework-docgen/
 
 ## 🚀 Getting Started
 
-1. **Install dependencies** (if any)
-2. **Create a configuration file** (optional)
-3. **Run the parser**:
+1. **Install dependencies**:
    ```bash
-   python src/docgen.py your_library.py -f html -o output.html -c config.json
+   pip install robotframework markdown pygments rich
    ```
+
+2. **Create a configuration file** (optional):
+   ```json
+   {
+     "github_url": "https://github.com/username/repo",
+     "author": "Your Name",
+     "license": "MIT"
+   }
+   ```
+
+3. **Run the generator**:
+   ```bash
+   python src/docgen.py your_library.py -f html -o docs.html -c config.json
+   ```
+
+4. **Open the generated HTML** in your browser to view the documentation
+
+## 🎨 UI Features
+
+### Responsive Design
+- **Desktop**: Full sidebar navigation with keyword list
+- **Tablet/Mobile**: Hamburger menu for sidebar access
+- **Search**: Real-time keyword search functionality
+- **Theme Toggle**: Switch between light and dark themes
+
+### Dynamic Content
+- **Metadata Display**: Author, maintainer, license, versions (only if provided)
+- **Action Buttons**: GitHub, library website, contact support (only if URLs/email provided)
+- **Last Updated**: Automatic timestamp in footer
+- **Keyword Count**: Dynamic count of extracted keywords
 
 ## 📄 License
 
 See [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📚 Examples
+
+Check out the `sample_library.py` file for a comprehensive example demonstrating all features:
+- Multiple keyword types
+- Type hints
+- Markdown tables
+- Code blocks in multiple languages
+- Images
+- Lists and formatting
+- Complex documentation structures
+
+Generate documentation for it:
+```bash
+python src/docgen.py sample_library.py -f html -o sample_docs.html -c config.json
+```

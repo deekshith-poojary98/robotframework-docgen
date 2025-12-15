@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="Generator" content="Robot Framework Documentation Parser">
+  <link rel="icon" href="https://docs.robotframework.org/img/rf_favicon.png">
+  <title>{{LIBRARY_NAME}} Documentation</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-alt: #020617;
+      --card: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.15);
+      --border: #1e293b;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.8));
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo img {
+      width: 36px;
+      height: 36px;
+      display: block;
+    }
+
+    header h1 {
+      font-size: 1.05rem;
+      margin: 0;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f4f6ff;
+    }
+
+    header .tagline {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    header nav {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    header nav a {
+      color: var(--muted);
+      padding-bottom: 0.1rem;
+      border-bottom: 1px solid transparent;
+    }
+
+    header nav a:hover {
+      color: var(--text);
+      border-color: var(--accent-soft);
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      padding: 0.5rem;
+      margin-left: auto;
+      position: relative;
+      z-index: 31;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-toggle:hover {
+      color: var(--accent);
+    }
+
+    .menu-toggle svg {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      border-right: 1px solid var(--border);
+      padding: calc(1.25rem + 10px) 1.5rem 1.5rem;
+      background: linear-gradient(to bottom, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      max-height: 100vh;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    aside h2 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .toc-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .toc-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.25rem 0 0;
+    }
+
+    .toc-section li {
+      margin: 0.1rem 0;
+    }
+
+    .toc-section a {
+      color: var(--muted);
+      padding: 0.12rem 0;
+      display: inline-block;
+    }
+
+    .toc-section a:hover {
+      color: var(--text);
+    }
+
+    .keyword-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0 0;
+      font-size: 0.86rem;
+      overflow-y: auto;
+    }
+
+    .keyword-list li {
+      margin: 0;
+    }
+
+    .keyword-list li.hidden {
+      display: none;
+    }
+
+    .keyword-list a {
+      display: block;
+      color: var(--muted);
+      padding: 0.15rem 0;
+    }
+
+    .keyword-list a:hover {
+      color: var(--accent);
+    }
+
+    .search-box {
+      margin-top: 0.65rem;
+      margin-left: -5px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.8);
+      color: var(--text);
+      font-size: 0.85rem;
+    }
+
+    .search-box input:focus {
+      outline: 2px solid rgba(56,189,248,0.4);
+    }
+
+    .no-results {
+      color: var(--muted);
+      font-style: italic;
+      padding: 0.4rem 0;
+    }
+
+    main {
+      padding: 1.75rem 2.4rem 3rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+      gap: 2rem;
+      margin-bottom: 2.2rem;
+      align-items: center;
+    }
+
+    .hero h2 {
+      font-size: 2.2rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero p {
+      color: var(--muted);
+      margin-top: 0;
+      max-width: 40rem;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin: 0.8rem 0 1.25rem;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      color: var(--muted);
+      border-color: rgba(56,189,248,0.4);
+    }
+
+    .badge.primary {
+      border-color: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      border: 1px solid transparent;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: radial-gradient(circle at top left, #38bdf8, #0ea5e9 45%, #0369a1 100%);
+      border-color: rgba(56,189,248,0.4);
+      color: #0b1120;
+      box-shadow: 0 10px 30px rgba(56,189,248,0.4);
+    }
+
+    .btn-ghost {
+      background: rgba(15,23,42,0.75);
+      border-color: var(--border);
+      color: var(--muted);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 35px rgba(56,189,248,0.5);
+      text-decoration: none;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .hero-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hero-meta.meta-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      margin-top: 0.35rem;
+    }
+
+    .hero-meta.meta-grid span {
+      display: inline-flex;
+      gap: 0.25rem;
+      align-items: center;
+      color: var(--muted);
+    }
+
+    .hero-meta.meta-grid strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .hero-card {
+      border-radius: 1.2rem;
+      background: radial-gradient(circle at top, rgba(56,189,248,0.2), rgba(15,23,42,1));
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      padding: 1rem 1rem 1.2rem;
+      font-size: 0.75rem;
+    }
+
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.45rem;
+      color: var(--muted);
+    }
+
+    .hero-card-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+    }
+
+    .hero-card-lang {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.85);
+    }
+
+    pre {
+      background: rgba(2,6,23,0.95);
+      border-radius: 0.75rem;
+      padding: 0.9rem 1rem;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .keyword-container {
+      background: rgba(15,23,42,0.9);
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      padding: 1rem 1.1rem;
+      font-size: 0.92rem;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      margin-bottom: 1.5rem;
+    }
+
+    .keyword-name h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .kw-overview {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .args,
+    .return-type,
+    .kw-docs {
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 0.85rem;
+      background: rgba(2,6,23,0.75);
+    }
+
+    .args h4,
+    .return-type h4,
+    .kw-docs h4 {
+      margin: 0 0 0.4rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .arguments-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .arg-name {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      background: rgba(15,76,204,0.15);
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+      border: 1px solid rgba(15,76,204,0.3);
+    }
+
+    .arg-type {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      color: var(--muted);
+    }
+
+    .kwdoc {
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .kwdoc code {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      background: rgba(56,189,248,0.08);
+      padding: 0.2rem 0.35rem;
+      border-radius: 4px;
+    }
+
+    .kwdoc table,
+    .kwdoc .doc-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1rem 0;
+      border: 2px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: rgba(2,6,23,0.75);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .kwdoc table thead,
+    .kwdoc .doc-table thead {
+      background: rgba(56,189,248,0.1);
+    }
+
+    .kwdoc table th,
+    .kwdoc .doc-table th {
+      padding: 0.65rem 0.85rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .kwdoc table th:last-child,
+    .kwdoc .doc-table th:last-child {
+      border-right: none;
+    }
+
+    .kwdoc table td,
+    .kwdoc .doc-table td {
+      padding: 0.6rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+
+    .kwdoc table td:last-child,
+    .kwdoc .doc-table td:last-child {
+      border-right: none;
+    }
+
+    .kwdoc table tbody tr:last-child td,
+    .kwdoc .doc-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .kwdoc table tbody tr:hover,
+    .kwdoc .doc-table tbody tr:hover {
+      background: rgba(56,189,248,0.05);
+    }
+
+    .kwdoc img,
+    .kwdoc .doc img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      margin: 1rem 0;
+      display: block;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .code-block {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+
+    .code-block pre {
+      margin: 0;
+      padding: 1rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+      overflow-x: auto;
+      border-radius: 0;
+      border: none;
+      background: transparent;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.2rem 2.4rem 1.6rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      background: radial-gradient(circle at bottom, rgba(56,189,248,0.15), rgba(15,23,42,1));
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: fixed !important;
+        top: 70px;
+        left: 0;
+        width: 280px;
+        max-width: 85vw;
+        height: calc(100vh - 70px);
+        z-index: 26;
+        transform: translateX(-100%) !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
+        border-right: 1px solid var(--border);
+      }
+
+      aside.active {
+        transform: translateX(0) !important;
+      }
+
+      .sidebar-overlay {
+        display: block;
+      }
+
+      main {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      aside {
+        position: fixed !important;
+        top: 70px;
+        left: 0;
+        width: 280px;
+        max-width: 85vw;
+        height: calc(100vh - 70px);
+        z-index: 26;
+        transform: translateX(-100%) !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
+        border-right: 1px solid var(--border);
+      }
+
+      aside.active {
+        transform: translateX(0) !important;
+      }
+
+      .sidebar-overlay {
+        display: block;
+      }
+
+      main {
+        width: 100%;
+      }
+
+      main {
+        padding: 1.25rem 1.4rem 2.5rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 0.7rem 1rem;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero h2 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="https://docs.robotframework.org/img/robot-framework-dark.svg" alt="Robot Framework Logo">
+      </div>
+      <div>
+        <h1>{{LIBRARY_NAME}}</h1>
+        <div class="tagline">Robot Framework library documentation</div>
+      </div>
+    </div>
+    <nav>
+      <a href="#intro">Overview</a>
+      <a href="#keywords">Keywords</a>
+    </nav>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="layout">
+    <aside>
+      <div class="toc-section">
+        <h2>Getting Started</h2>
+        <ul>
+          <li><a href="#intro">Introduction</a></li>
+        </ul>
+      </div>
+
+      <div class="toc-section">
+        <h2>Keywords</h2>
+        <div class="search-box">
+          <input type="text" id="keyword-search" placeholder="Search keywords…">
+        </div>
+        <ul class="keyword-list" id="keyword-list">
+          {{KEYWORD_LIST}}
+        </ul>
+      </div>
+    </aside>
+
+    <main>
+      <section id="intro" class="hero">
+        <div>
+          <h2>{{LIBRARY_NAME}} Documentation</h2>
+          
+          <div class="hero-badges">
+            <!-- <span class="badge primary">Robot Framework Library</span> -->
+            <span class="badge">Version {{VERSION}}</span>
+            <span class="badge">Scope {{SCOPE}}</span>
+            <span class="badge">{{KEYWORD_COUNT}} Keywords</span>
+          </div>
+          {{HERO_ACTIONS}}
+          {{LIBRARY_META}}
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-header">
+            <div class="hero-card-title">Sample Usage</div>
+            <div class="hero-card-lang">Robot</div>
+          </div>
+          <pre class="language-robot"><code>{{SAMPLE_USAGE}}</code></pre>
+        </div>
+      </section>
+
+      {{INTRO_SECTION}}
+
+      <section id="keywords">
+        {{KEYWORDS_SECTION}}
+      </section>
+
+      <section class="keyword-container">
+        <div class="keyword-name">
+          <h2>Need Help?</h2>
+        </div>
+        <div class="kw-overview">
+          <div class="kw-docs">
+            <p>
+              Found an issue or have a feature request for this library? Let the maintainers know by opening a new
+              GitHub issue. Please include environment details and relevant log output to help us reproduce the problem.
+            </p>
+            {{GITHUB_ISSUE_BUTTON}}
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    Generated by <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · {{LIBRARY_NAME}} Documentation · Last updated: {{LAST_UPDATE}}
+  </footer>
+
+  <script>
+    const searchInput = document.getElementById('keyword-search');
+    const keywordList = document.getElementById('keyword-list');
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.querySelector('aside');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    function searchKeywords() {
+      const term = (searchInput.value || '').toLowerCase().trim();
+      const entries = keywordList.querySelectorAll('li');
+      let matches = 0;
+
+      entries.forEach((entry) => {
+        const text = entry.textContent.toLowerCase();
+        const hit = text.includes(term);
+        entry.classList.toggle('hidden', !hit);
+        if (hit) matches++;
+      });
+
+      let noResults = keywordList.querySelector('.no-results');
+      if (!matches && term) {
+        if (!noResults) {
+          noResults = document.createElement('li');
+          noResults.className = 'no-results';
+          keywordList.appendChild(noResults);
+        }
+        noResults.textContent = 'No keywords found';
+      } else if (noResults) {
+        noResults.remove();
+      }
+    }
+
+    function toggleSidebar() {
+      if (window.innerWidth <= 1024) {
+        const isActive = sidebar.classList.contains('active');
+        const headerHeight = document.querySelector('header').offsetHeight;
+        
+        if (!isActive) {
+          // Open sidebar - set up styles first
+          sidebar.style.display = 'block';
+          sidebar.style.visibility = 'visible';
+          sidebar.style.opacity = '1';
+          sidebar.style.position = 'fixed';
+          sidebar.style.top = headerHeight + 'px';
+          sidebar.style.left = '0';
+          sidebar.style.width = '280px';
+          sidebar.style.maxWidth = '85vw';
+          sidebar.style.height = `calc(100vh - ${headerHeight}px)`;
+          sidebar.style.zIndex = '26';
+          sidebar.style.transition = 'transform 0.3s ease-in-out';
+          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+          
+          // Ensure sidebar starts off-screen
+          sidebar.style.transform = 'translateX(-100%)';
+          sidebar.style.webkitTransform = 'translateX(-100%)';
+          
+          // Use requestAnimationFrame to ensure transition is applied before changing transform
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              sidebar.style.transform = 'translateX(0)';
+              sidebar.style.webkitTransform = 'translateX(0)';
+              sidebar.classList.add('active');
+              sidebarOverlay.classList.add('active');
+            });
+          });
+        } else {
+          // Close sidebar
+          sidebar.style.transition = 'transform 0.3s ease-in-out';
+          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+          sidebar.style.transform = 'translateX(-100%)';
+          sidebar.style.webkitTransform = 'translateX(-100%)';
+          sidebar.classList.remove('active');
+          sidebarOverlay.classList.remove('active');
+        }
+      }
+    }
+
+    function closeSidebar() {
+      if (window.innerWidth <= 1024) {
+        sidebar.style.transition = 'transform 0.3s ease-in-out';
+        sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+        sidebar.style.transform = 'translateX(-100%)';
+        sidebar.style.webkitTransform = 'translateX(-100%)';
+      }
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    }
+
+    if (searchInput && keywordList) {
+      searchInput.addEventListener('input', searchKeywords);
+      searchInput.addEventListener('keyup', (event) => {
+        if (event.key === 'Escape') {
+          searchInput.value = '';
+          searchKeywords();
+          searchInput.blur();
+        }
+      });
+    }
+
+    if (menuToggle && sidebar && sidebarOverlay) {
+      menuToggle.addEventListener('click', toggleSidebar);
+      sidebarOverlay.addEventListener('click', closeSidebar);
+      
+      // Close sidebar when clicking on a link (mobile only)
+      const sidebarLinks = sidebar.querySelectorAll('a');
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 1024) {
+            closeSidebar();
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
+
