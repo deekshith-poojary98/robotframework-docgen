@@ -2,6 +2,9 @@
 
 A powerful documentation generator for Robot Framework libraries that extracts keywords, arguments, and docstrings to create professional, well-formatted HTML documentation with advanced markdown support and syntax highlighting.
 
+See the generated documentation in action: **[View Sample Documentation](https://deekshith-poojary98.github.io/robotframework-docgen/)**
+
+
 ## 🚀 Features
 
 ### Core Functionality
