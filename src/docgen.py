@@ -1408,6 +1408,99 @@ class DocumentationGenerator:
                 f"HTML template not found at {cls.TEMPLATE_PATH}"
             ) from exc
 
+    def _html_to_markdown(self, html_content: str) -> str:
+        """Convert basic HTML tags to markdown format."""
+        if not html_content:
+            return ""
+        
+        # Convert code blocks with syntax highlighting
+        html_content = re.sub(
+            r'<div class="code-block"><pre class="language-([^"]+)">(.*?)</pre></div>',
+            lambda m: f"```{m.group(1)}\n{self._strip_html_tags(m.group(2)).strip()}\n```",
+            html_content,
+            flags=re.DOTALL
+        )
+        
+        # Convert inline code
+        html_content = re.sub(r'<code>(.*?)</code>', r'`\1`', html_content)
+        
+        # Convert bold
+        html_content = re.sub(r'<strong>(.*?)</strong>', r'**\1**', html_content)
+        
+        # Convert italic
+        html_content = re.sub(r'<em>(.*?)</em>', r'*\1*', html_content)
+        html_content = re.sub(r'<i>(.*?)</i>', r'*\1*', html_content)
+        
+        # Convert paragraphs
+        html_content = re.sub(r'<p>(.*?)</p>', r'\1\n\n', html_content, flags=re.DOTALL)
+        
+        # Convert lists
+        html_content = re.sub(r'<ul>(.*?)</ul>', r'\1', html_content, flags=re.DOTALL)
+        html_content = re.sub(r'<ol>(.*?)</ol>', r'\1', html_content, flags=re.DOTALL)
+        html_content = re.sub(r'<li>(.*?)</li>', r'- \1\n', html_content, flags=re.DOTALL)
+        
+        # Convert tables - basic conversion
+        html_content = re.sub(r'<table[^>]*>(.*?)</table>', self._convert_table_to_markdown, html_content, flags=re.DOTALL)
+        
+        # Convert links
+        html_content = re.sub(r'<a[^>]*href="([^"]*)"[^>]*>(.*?)</a>', r'[\2](\1)', html_content)
+        
+        # Convert headers
+        html_content = re.sub(r'<h([1-6])>(.*?)</h[1-6]>', lambda m: '#' * int(m.group(1)) + ' ' + m.group(2) + '\n', html_content)
+        
+        # Strip remaining HTML tags
+        html_content = self._strip_html_tags(html_content)
+        
+        # Clean up extra whitespace
+        html_content = re.sub(r'\n{3,}', '\n\n', html_content)
+        html_content = html_content.strip()
+        
+        return html_content
+    
+    def _strip_html_tags(self, text: str) -> str:
+        """Remove HTML tags and decode entities."""
+        # Decode HTML entities
+        text = text.replace('&quot;', '"')
+        text = text.replace('&amp;', '&')
+        text = text.replace('&lt;', '<')
+        text = text.replace('&gt;', '>')
+        text = text.replace('&nbsp;', ' ')
+        
+        # Remove HTML tags (including style attributes in spans)
+        text = re.sub(r'<span[^>]*>(.*?)</span>', r'\1', text, flags=re.DOTALL)
+        text = re.sub(r'<[^>]+>', '', text)
+        
+        return text
+    
+    def _convert_table_to_markdown(self, match) -> str:
+        """Convert HTML table to markdown table."""
+        table_html = match.group(1)
+        
+        # Extract rows
+        rows = []
+        for row_match in re.finditer(r'<tr>(.*?)</tr>', table_html, re.DOTALL):
+            row_html = row_match.group(1)
+            cells = []
+            for cell_match in re.finditer(r'<t[dh][^>]*>(.*?)</t[dh]>', row_html, re.DOTALL):
+                cell_content = self._strip_html_tags(cell_match.group(1)).strip()
+                cells.append(cell_content)
+            if cells:
+                rows.append(cells)
+        
+        if not rows:
+            return ""
+        
+        # Generate markdown table
+        md_rows = []
+        for i, row in enumerate(rows):
+            md_row = '| ' + ' | '.join(row) + ' |'
+            md_rows.append(md_row)
+            if i == 0:  # Add separator after header
+                separator = '| ' + ' | '.join(['---'] * len(row)) + ' |'
+                md_rows.append(separator)
+        
+        return '\n'.join(md_rows) + '\n\n'
+
     def generate_markdown(self) -> str:
         """Generate markdown documentation."""
         md_content = []
@@ -1421,7 +1514,7 @@ class DocumentationGenerator:
         if self.library_info.description:
             md_content.append("## Description")
             md_content.append("")
-            md_content.append(self.library_info.description)
+            md_content.append(self._html_to_markdown(self.library_info.description))
             md_content.append("")
 
         md_content.append("## Keywords")
@@ -1432,7 +1525,7 @@ class DocumentationGenerator:
             md_content.append("")
 
             if keyword.description:
-                md_content.append(keyword.description)
+                md_content.append(self._html_to_markdown(keyword.description))
                 md_content.append("")
 
             if keyword.parameters:
@@ -1720,23 +1813,44 @@ def load_config(config_file: str) -> dict:
 def main():
     """Main function to run the documentation parser."""
     parser = argparse.ArgumentParser(
-        description="Generate documentation from Robot Framework library files"
+        description="Generate professional documentation from Robot Framework library files",
+        epilog="""
+Examples:
+  # Generate HTML documentation (default)
+  python src/docgen.py my_library.py -o docs.html -c config.json
+  
+  # Generate Markdown documentation
+  python src/docgen.py my_library.py -f markdown -o README.md
+  
+  # Generate with default settings (HTML format)
+  python src/docgen.py my_library.py
+
+For more information, visit: https://github.com/deekshith-poojary98/robotframework-docgen
+        """,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("input_file", help="Path to the Python library file")
     parser.add_argument(
-        "-o", "--output", help="Output file path (default: input_file.md)"
+        "input_file",
+        help="Path to the Python library file containing Robot Framework keywords"
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        metavar="FILE",
+        help="Output file path. If not specified, defaults to input_file.html (for HTML) or input_file.md (for markdown)"
     )
     parser.add_argument(
         "-f",
         "--format",
         choices=["markdown", "html"],
-        default="markdown",
-        help="Output format (default: markdown)",
+        default="html",
+        help="Output format: 'markdown' for Markdown files, 'html' for HTML documentation (default: html)"
     )
     parser.add_argument(
         "-c",
         "--config",
-        help="Path to JSON configuration file for custom keywords and settings",
+        metavar="FILE",
+        help="Path to JSON configuration file. Optional fields include: github_url, library_url, support_email, author, maintainer, license, robot_framework, python, custom_keywords"
     )
 
     args = parser.parse_args()
