@@ -322,10 +322,10 @@ class DataProcessor:
 
 ### Install from PyPI (Recommended)
 
-The easiest way to install `rf-docgen` is using pip:
+The easiest way to install `robotframework-libdocgen` is using pip:
 
 ```bash
-pip install rf-docgen
+pip install robotframework-libdocgen
 ```
 
 This will automatically install all required dependencies:
@@ -343,7 +343,7 @@ After installation, verify that the CLI commands are available:
 docgen --help
 
 # Or using the full command name
-rf-docgen --help
+robotframework-libdocgen --help
 ```
 
 You should see the help message with usage instructions.
@@ -355,7 +355,7 @@ If you want to install from the source code or contribute to the project:
 ```bash
 # Clone the repository
 git clone https://github.com/deekshith-poojary98/robotframework-docgen.git
-cd rf-docgen
+cd robotframework-docgen
 
 # Install in development mode (recommended for development)
 pip install -e .
@@ -374,7 +374,7 @@ pip install .
 To upgrade to the latest version:
 
 ```bash
-pip install --upgrade rf-docgen
+pip install --upgrade robotframework-libdocgen
 ```
 
 ### Uninstall
@@ -382,13 +382,13 @@ pip install --upgrade rf-docgen
 To uninstall the package:
 
 ```bash
-pip uninstall rf-docgen
+pip uninstall robotframework-libdocgen
 ```
 
 ## 📁 Project Structure
 
 ```
-rf-docgen/
+robotframework-docgen/
 ├── robotframework_docgen/     # Main package
 │   ├── __init__.py           # Package initialization
 │   ├── parser.py              # Parser module (RobotFrameworkDocParser)
@@ -410,7 +410,7 @@ rf-docgen/
 
 1. **Install the package**:
    ```bash
-   pip install rf-docgen
+   pip install robotframework-libdocgen
    ```
 
 2. **Create a configuration file** (optional):
@@ -449,7 +449,7 @@ rf-docgen/
 
 ```bash
 # Install
-pip install rf-docgen
+pip install robotframework-libdocgen
 
 # Generate docs for your library
 docgen sample_library.py -o documentation.html -c config.json

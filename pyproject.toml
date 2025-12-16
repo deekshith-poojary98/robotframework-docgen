@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "rf-docgen"
+name = "robotframework-libdocgen"
 version = "1.0.0"
 description = "A powerful documentation generator for Robot Framework libraries that creates professional HTML and Markdown documentation"
 readme = "README.md"
@@ -48,7 +48,8 @@ Repository = "https://github.com/deekshith-poojary98/robotframework-docgen"
 Issues = "https://github.com/deekshith-poojary98/robotframework-docgen/issues"
 
 [project.scripts]
-rf-docgen = "robotframework_docgen.cli:main"
+robotframework-libdocgen = "robotframework_docgen.cli:main"
+rf-libdocgen = "robotframework_docgen.cli:main"
 docgen = "robotframework_docgen.cli:main"
 
 [tool.setuptools]
