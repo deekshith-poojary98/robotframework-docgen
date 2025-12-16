@@ -1,8 +1,8 @@
-# robotframework-docgen
+# rf-docgen
 
 A powerful documentation generator for Robot Framework libraries that extracts keywords, arguments, and docstrings to create professional, well-formatted HTML documentation with advanced markdown support and syntax highlighting.
 
-See the generated documentation in action: **[View Sample Documentation](https://deekshith-poojary98.github.io/robotframework-docgen/)**
+See the generated documentation in action: **[View Sample Documentation](https://deekshith-poojary98.github.io/rf-docgen/)**
 
 
 ## 🚀 Features
@@ -201,11 +201,17 @@ All fields are optional. Only provide the fields you want to display:
 ### Basic Usage
 
 ```bash
-# Generate HTML documentation
-python src/docgen.py your_library.py -f html -o docs.html -c config.json
+# Generate HTML documentation (default format)
+docgen your_library.py -o docs.html -c config.json
 
 # Generate Markdown documentation
-python src/docgen.py your_library.py -f markdown -o docs.md -c config.json
+docgen your_library.py -f markdown -o docs.md -c config.json
+
+# Generate with default output filename (your_library.html)
+docgen your_library.py -c config.json
+
+# Generate without config file
+docgen your_library.py
 ```
 
 ### Keyword Decorator Usage
@@ -309,49 +315,80 @@ class DataProcessor:
 
 ## 🔧 Installation
 
+### Prerequisites
+
+- Python 3.8 or higher
+- pip (Python package installer)
+
 ### Install from PyPI (Recommended)
 
-```bash
-pip install robotframework-docgen
-```
-
-After installation, you can use the CLI command:
+The easiest way to install `rf-docgen` is using pip:
 
 ```bash
-# Using the full command name
-robotframework-docgen my_library.py -f html -o docs.html -c config.json
-
-# Or using the shorter alias
-docgen my_library.py -f html -o docs.html -c config.json
+pip install rf-docgen
 ```
+
+This will automatically install all required dependencies:
+- Robot Framework >= 5.0.1
+- Markdown >= 3.4.0
+- Pygments >= 2.10.0
+- Rich >= 13.0.0
+
+### Verify Installation
+
+After installation, verify that the CLI commands are available:
+
+```bash
+# Check if the command is available
+docgen --help
+
+# Or using the full command name
+rf-docgen --help
+```
+
+You should see the help message with usage instructions.
 
 ### Install from Source
 
+If you want to install from the source code or contribute to the project:
+
 ```bash
 # Clone the repository
-git clone https://github.com/deekshith-poojary98/robotframework-docgen.git
-cd robotframework-docgen
+git clone https://github.com/deekshith-poojary98/rf-docgen.git
+cd rf-docgen
 
-# Install in development mode
+# Install in development mode (recommended for development)
 pip install -e .
 
 # Or install directly
 pip install .
 ```
 
-### Requirements
-- Python 3.8+
-- Robot Framework >= 5.0.1
-- Markdown >= 3.4.0 (for enhanced markdown support)
-- Pygments >= 2.10.0 (for syntax highlighting)
-- Rich >= 13.0.0 (for enhanced terminal output)
+**Development Mode (`-e` flag):**
+- Installs the package in "editable" mode
+- Changes to source code are immediately reflected
+- Useful when developing or modifying the package
 
-All dependencies are automatically installed when installing from PyPI.
+### Upgrade Installation
+
+To upgrade to the latest version:
+
+```bash
+pip install --upgrade rf-docgen
+```
+
+### Uninstall
+
+To uninstall the package:
+
+```bash
+pip uninstall rf-docgen
+```
 
 ## 📁 Project Structure
 
 ```
-robotframework-docgen/
+rf-docgen/
 ├── robotframework_docgen/     # Main package
 │   ├── __init__.py           # Package initialization
 │   ├── parser.py              # Parser module (RobotFrameworkDocParser)
@@ -369,26 +406,63 @@ robotframework-docgen/
 
 ## 🚀 Getting Started
 
-1. **Install dependencies**:
+### Quick Start
+
+1. **Install the package**:
    ```bash
-   pip install robotframework markdown pygments rich
+   pip install rf-docgen
    ```
 
 2. **Create a configuration file** (optional):
+   Create a `config.json` file with your library metadata:
    ```json
    {
      "github_url": "https://github.com/username/repo",
+     "library_url": "https://example.com/library",
+     "support_email": "support@example.com",
      "author": "Your Name",
-     "license": "MIT"
+     "maintainer": "Maintainer Name",
+     "license": "Apache-2.0",
+     "robot_framework": ">=7.0",
+     "python": ">=3.8",
+     "custom_keywords": ["Custom Keyword 1", "Custom Keyword 2"]
    }
    ```
 
-3. **Run the generator**:
+3. **Generate documentation**:
    ```bash
-   python src/docgen.py your_library.py -f html -o docs.html -c config.json
+   # Generate HTML documentation (default)
+   docgen your_library.py -o docs.html -c config.json
+
+   # Generate Markdown documentation
+   docgen your_library.py -f markdown -o README.md -c config.json
+
+   # Generate with default settings (HTML format, no config)
+   docgen your_library.py
    ```
 
-4. **Open the generated HTML** in your browser to view the documentation
+4. **View the documentation**:
+   - Open the generated HTML file in your browser
+   - Or view the Markdown file in your editor/README viewer
+
+### Example
+
+```bash
+# Install
+pip install rf-docgen
+
+# Generate docs for your library
+docgen sample_library.py -o documentation.html -c config.json
+
+# Open in browser (macOS)
+open documentation.html
+
+# Or on Linux
+xdg-open documentation.html
+
+# Or on Windows
+start documentation.html
+```
 
 ## 🎨 UI Features
 
