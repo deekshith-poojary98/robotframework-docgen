@@ -309,29 +309,60 @@ class DataProcessor:
 
 ## 🔧 Installation
 
-### Requirements
-- Python 3.8+
-- Robot Framework
-- Optional: `markdown` package for enhanced markdown support
-- Optional: `pygments` package for syntax highlighting of non-Robot languages
-- Optional: `rich` package for enhanced terminal output
-
-### Install Dependencies
+### Install from PyPI (Recommended)
 
 ```bash
-pip install robotframework markdown pygments rich
+pip install robotframework-docgen
 ```
+
+After installation, you can use the CLI command:
+
+```bash
+# Using the full command name
+robotframework-docgen my_library.py -f html -o docs.html -c config.json
+
+# Or using the shorter alias
+docgen my_library.py -f html -o docs.html -c config.json
+```
+
+### Install from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/deekshith-poojary98/robotframework-docgen.git
+cd robotframework-docgen
+
+# Install in development mode
+pip install -e .
+
+# Or install directly
+pip install .
+```
+
+### Requirements
+- Python 3.8+
+- Robot Framework >= 5.0.1
+- Markdown >= 3.4.0 (for enhanced markdown support)
+- Pygments >= 2.10.0 (for syntax highlighting)
+- Rich >= 13.0.0 (for enhanced terminal output)
+
+All dependencies are automatically installed when installing from PyPI.
 
 ## 📁 Project Structure
 
 ```
 robotframework-docgen/
-├── src/
-│   ├── docgen.py              # Main parser and generator
+├── robotframework_docgen/     # Main package
+│   ├── __init__.py           # Package initialization
+│   ├── parser.py              # Parser module (RobotFrameworkDocParser)
+│   ├── generator.py           # Generator module (DocumentationGenerator)
+│   ├── cli.py                 # CLI entry point
 │   └── templates/
 │       └── libdoc.html        # HTML template
 ├── config.json                # Configuration file (optional)
 ├── example_config.json        # Example configuration
+├── pyproject.toml             # Package configuration
+├── MANIFEST.in                # Package manifest
 ├── README.md                  # This file
 └── LICENSE                    # License file
 ```

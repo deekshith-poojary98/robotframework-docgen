@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "robotframework-docgen"
+version = "1.0.0"
+description = "A powerful documentation generator for Robot Framework libraries that creates professional HTML and Markdown documentation"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Deekshith Poojary", email = "deekshithpoojary355@gmail.com"}
+]
+keywords = ["robotframework", "documentation", "generator", "html", "markdown", "cli"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Documentation",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Framework :: Robot Framework",
+]
+dependencies = [
+    "robotframework>=5.0.1",
+    "markdown>=3.4.0",
+    "pygments>=2.10.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=22.0.0",
+    "flake8>=4.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/deekshith-poojary98/robotframework-docgen"
+Documentation = "https://github.com/deekshith-poojary98/robotframework-docgen#readme"
+Repository = "https://github.com/deekshith-poojary98/robotframework-docgen"
+Issues = "https://github.com/deekshith-poojary98/robotframework-docgen/issues"
+
+[project.scripts]
+robotframework-docgen = "robotframework_docgen.cli:main"
+docgen = "robotframework_docgen.cli:main"
+
+[tool.setuptools]
+packages = ["robotframework_docgen"]
+
+[tool.setuptools.package-data]
+robotframework_docgen = ["templates/*.html"]
+
