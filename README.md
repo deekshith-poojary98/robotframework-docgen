@@ -1,8 +1,8 @@
-# rf-docgen
+# robotframework-docgen
 
 A powerful documentation generator for Robot Framework libraries that extracts keywords, arguments, and docstrings to create professional, well-formatted HTML documentation with advanced markdown support and syntax highlighting.
 
-See the generated documentation in action: **[View Sample Documentation](https://deekshith-poojary98.github.io/rf-docgen/)**
+See the generated documentation in action: **[View Sample Documentation](https://deekshith-poojary98.github.io/robotframework-docgen/)**
 
 
 ## 🚀 Features
@@ -354,7 +354,7 @@ If you want to install from the source code or contribute to the project:
 
 ```bash
 # Clone the repository
-git clone https://github.com/deekshith-poojary98/rf-docgen.git
+git clone https://github.com/deekshith-poojary98/robotframework-docgen.git
 cd rf-docgen
 
 # Install in development mode (recommended for development)
