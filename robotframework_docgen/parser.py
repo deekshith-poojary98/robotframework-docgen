@@ -8,14 +8,10 @@ and generates comprehensive documentation from their docstrings.
 
 import ast
 import re
-import argparse
-import json
 import textwrap
-from datetime import datetime
 from pathlib import Path
 from typing import List, Tuple, Optional
 from dataclasses import dataclass
-from functools import lru_cache
 
 try:
     from pygments import highlight
@@ -36,8 +32,6 @@ except ImportError:
 
 try:
     from rich.console import Console
-    from rich.panel import Panel
-    from rich.text import Text
 
     RICH_AVAILABLE = True
     console = Console()
@@ -148,17 +142,198 @@ class RobotFrameworkDocParser:
         return function_name.replace("_", " ").title()
 
     def parse_file(self, file_path: str) -> LibraryInfo:
-        """Parse a Python file and extract library information."""
-        with open(file_path, "r", encoding="utf-8") as file:
-            content = file.read()
-
-        tree = ast.parse(content)
-        module_globals = self._execute_module_safely(file_path)
-
-        library_info = self._extract_library_info(tree, file_path, module_globals)
+        """
+        Parse a Python file and extract library information.
+        
+        Uses Robot Framework's LibraryDocumentation API where possible,
+        falling back to AST parsing for information not available via the API
+        (e.g., type hints, custom docstring processing).
+        """
+        # Try to use Robot Framework's LibraryDocumentation API first
+        library_info = self._parse_with_libdoc_api(file_path)
+        
+        if library_info is None:
+            # Fallback to AST parsing if LibraryDocumentation API doesn't work
+            with open(file_path, "r", encoding="utf-8") as file:
+                content = file.read()
+            
+            tree = ast.parse(content)
+            module_globals = self._execute_module_safely(file_path)
+            library_info = self._extract_library_info(tree, file_path, module_globals)
+        
         self.library_info = library_info
         self._cached_keywords = None
         return library_info
+    
+    def _parse_with_libdoc_api(self, file_path: str) -> Optional[LibraryInfo]:
+        """
+        Parse library using Robot Framework's LibraryDocumentation API.
+        
+        Returns LibraryInfo if successful, None if API cannot be used.
+        This method uses the same public API that Libdoc uses internally.
+        
+        NOTE: LibraryDocumentation requires the library to be importable.
+        If the library cannot be imported or LibraryDocumentation fails,
+        this returns None and the code falls back to AST parsing.
+        """
+        try:
+            from robot.libdocpkg import LibraryDocumentation
+            import sys
+            import os
+            import importlib.util
+            
+            # Make the library importable by adding its directory to sys.path
+            file_dir = os.path.dirname(os.path.abspath(file_path))
+            file_name = Path(file_path).stem
+            
+            if file_dir not in sys.path:
+                sys.path.insert(0, file_dir)
+            
+            # Try to use LibraryDocumentation with file path first
+            try:
+                lib_doc = LibraryDocumentation(file_path)
+            except Exception:
+                # If file path doesn't work, try importing as module
+                # This is needed because LibraryDocumentation may require importable modules
+                spec = importlib.util.spec_from_file_location(file_name, file_path)
+                if spec is None or spec.loader is None:
+                    return None
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                
+                # Find the library class in the module
+                library_class = None
+                for attr_name in dir(module):
+                    if not attr_name.startswith("_"):
+                        attr = getattr(module, attr_name)
+                        if (isinstance(attr, type) and 
+                            hasattr(attr, '__module__') and
+                            attr.__module__ == file_name):
+                            # Check if it has @keyword decorated methods
+                            for method_name in dir(attr):
+                                method = getattr(attr, method_name, None)
+                                if callable(method) and hasattr(method, 'robot_name'):
+                                    library_class = attr
+                                    break
+                            if library_class:
+                                break
+                
+                if library_class is None:
+                    return None
+                
+                # Use module name for LibraryDocumentation
+                lib_doc = LibraryDocumentation(f"{file_name}.{library_class.__name__}")
+            
+            # Extract library metadata from LibraryDocumentation (using public API)
+            library_name = lib_doc.name
+            library_version = lib_doc.version or "Unknown"
+            library_scope = lib_doc.scope or "TEST"
+            library_description = lib_doc.doc or ""
+            
+            # If no keywords found via API, fall back to AST parsing
+            # This can happen if the library structure doesn't match what LibraryDocumentation expects
+            if len(lib_doc.keywords) == 0:
+                return None
+            
+            # Extract keywords from LibraryDocumentation
+            keywords = []
+            # We still need AST for type hints (not available in LibraryDocumentation API)
+            with open(file_path, "r", encoding="utf-8") as file:
+                content = file.read()
+            tree = ast.parse(content)
+            
+            # Map keyword names from LibraryDocumentation to AST nodes for type hints
+            keyword_ast_map = self._build_keyword_ast_map(tree)
+            
+            for kw_doc in lib_doc.keywords:
+                keyword_name = kw_doc.name
+                keyword_docstring = kw_doc.doc or ""
+                
+                # Get type hints from AST (not available in LibraryDocumentation API)
+                # NOTE: LibraryDocumentation provides kw_doc.args but not type annotations
+                parameters = []
+                return_type = "None"
+                line_number = kw_doc.lineno if hasattr(kw_doc, 'lineno') else 0
+                
+                if keyword_name in keyword_ast_map:
+                    func_node = keyword_ast_map[keyword_name]
+                    for arg in func_node.args.args:
+                        if arg.arg == "self":
+                            continue
+                        param_name = arg.arg
+                        param_type = (
+                            self._ast_type_to_string(arg.annotation) if arg.annotation else "Any"
+                        )
+                        parameters.append((param_name, param_type))
+                    
+                    if func_node.returns:
+                        return_type = self._ast_type_to_string(func_node.returns)
+                else:
+                    # Fallback: use args from LibraryDocumentation if AST mapping fails
+                    # LibraryDocumentation provides kw_doc.args as a list of argument names
+                    if hasattr(kw_doc, 'args') and kw_doc.args:
+                        for arg_name in kw_doc.args:
+                            parameters.append((arg_name, "Any"))
+                
+                # Parse docstring with our custom markdown processing
+                # NOTE: We preserve our custom docstring parsing for markdown support
+                description, example = self._parse_docstring(keyword_docstring, self.config)
+                
+                keywords.append(
+                    KeywordInfo(
+                        name=keyword_name,
+                        description=description,
+                        example=example,
+                        parameters=parameters,
+                        return_type=return_type,
+                        line_number=line_number,
+                    )
+                )
+            
+            return LibraryInfo(
+                name=library_name,
+                version=library_version,
+                scope=library_scope,
+                description=library_description,
+                keywords=keywords,
+            )
+            
+        except Exception:
+            # LibraryDocumentation API failed, will fall back to AST parsing
+            # This is expected for some edge cases (e.g., non-importable modules, 
+            # libraries that don't follow standard RF patterns)
+            return None
+    
+    def _build_keyword_ast_map(self, tree: ast.AST) -> dict:
+        """
+        Build a map of keyword names to their AST function nodes.
+        This is needed to extract type hints which are not available in LibraryDocumentation.
+        """
+        keyword_map = {}
+        
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef):
+                for class_node in node.body:
+                    if isinstance(class_node, ast.FunctionDef):
+                        keyword_name = None
+                        for decorator in class_node.decorator_list:
+                            if isinstance(decorator, ast.Name) and decorator.id == "keyword":
+                                keyword_name = self._function_name_to_keyword_name(class_node.name)
+                            elif isinstance(decorator, ast.Call) and isinstance(
+                                decorator.func, ast.Name
+                            ):
+                                if decorator.func.id == "keyword":
+                                    if decorator.args and isinstance(decorator.args[0], ast.Constant):
+                                        keyword_name = decorator.args[0].value
+                                    else:
+                                        keyword_name = self._function_name_to_keyword_name(
+                                            class_node.name
+                                        )
+                        
+                        if keyword_name:
+                            keyword_map[keyword_name] = class_node
+        
+        return keyword_map
 
     def _execute_module_safely(self, file_path: str) -> dict:
         """Safely execute the module to get actual values."""
@@ -198,7 +373,14 @@ class RobotFrameworkDocParser:
     def _extract_library_info(
         self, tree: ast.AST, file_path: str, module_globals: dict = None
     ) -> LibraryInfo:
-        """Extract library information from AST."""
+        """
+        Extract library information from AST.
+        
+        NOTE: This method is used as a fallback when LibraryDocumentation API
+        cannot be used. It performs custom AST parsing to extract library metadata.
+        This is kept for backward compatibility and edge cases where the library
+        cannot be imported or doesn't follow standard Robot Framework patterns.
+        """
         if module_globals is None:
             module_globals = {}
 
@@ -225,7 +407,13 @@ class RobotFrameworkDocParser:
         )
 
     def _extract_module_variables(self, tree: ast.AST) -> dict:
-        """Extract module-level variable assignments."""
+        """
+        Extract module-level variable assignments.
+        
+        NOTE: This is used to extract ROBOT_LIBRARY_VERSION and ROBOT_LIBRARY_SCOPE
+        from module-level assignments. LibraryDocumentation API provides these
+        via lib_doc.version and lib_doc.scope, but we keep this for the fallback path.
+        """
         module_vars = {}
         for node in tree.body:
             if isinstance(node, ast.Assign):
@@ -254,7 +442,14 @@ class RobotFrameworkDocParser:
     def _parse_library_class(
         self, class_node: ast.ClassDef, module_vars: dict = None
     ) -> LibraryInfo:
-        """Parse a Robot Framework library class."""
+        """
+        Parse a Robot Framework library class.
+        
+        NOTE: This method is used as a fallback when LibraryDocumentation API
+        cannot extract library information. It performs custom AST parsing.
+        LibraryDocumentation API (used in _parse_with_libdoc_api) is preferred
+        as it uses the same logic as Libdoc.
+        """
         if module_vars is None:
             module_vars = {}
 
