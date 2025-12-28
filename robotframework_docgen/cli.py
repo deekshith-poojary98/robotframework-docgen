@@ -55,13 +55,13 @@ def main():
         epilog="""
 Examples:
   # Generate HTML documentation (default)
-  python src/docgen.py my_library.py -o docs.html -c config.json
+  docgen my_library.py -o docs.html -c config.json
   
   # Generate Markdown documentation
-  python src/docgen.py my_library.py -f markdown -o README.md
+  docgen my_library.py -f markdown -o README.md
   
   # Generate with default settings (HTML format)
-  python src/docgen.py my_library.py
+  docgen my_library.py
 
 For more information, visit: https://github.com/deekshith-poojary98/robotframework-docgen
         """,

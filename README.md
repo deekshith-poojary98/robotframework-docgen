@@ -149,7 +149,7 @@ Create bulleted and numbered lists:
 ### Usage
 
 ```bash
-python src/docgen.py your_library.py -f html -o output.html -c config.json
+python docgen your_library.py -f html -o output.html -c config.json
 ```
 
 ### Configuration File (`config.json`)
@@ -499,5 +499,5 @@ Check out the `sample_library.py` file for a comprehensive example demonstrating
 
 Generate documentation for it:
 ```bash
-python src/docgen.py sample_library.py -f html -o sample_docs.html -c config.json
+docgen sample_library.py -f html -o sample_docs.html -c config.json
 ```
