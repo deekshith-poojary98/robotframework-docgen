@@ -1,8 +1,14 @@
 # Robotframework Docgen
 
+[![PyPI version](https://badge.fury.io/py/robotframework-libdocgen.svg)](https://badge.fury.io/py/robotframework-libdocgen)
+[![Python](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://www.python.org/downloads/)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/robotframework-libdocgen?period=total&units=international_system&left_color=gray&right_color=orange&left_text=downloads)](https://pepy.tech/project/robotframework-libdocgen)
+
 A powerful documentation generator for Robot Framework libraries that extracts keywords, arguments, and docstrings to create professional, well-formatted HTML documentation with advanced markdown support and syntax highlighting.
 
-**View Sample Documentation:** [Live Demo](https://deekshith-poojary98.github.io/robotframework-docgen/)
+**View Sample Documentation:** 
+- [Genearted Documentation](https://deekshith-poojary98.github.io/robotframework-docgen/SingleLibrary/)
+- [Dashboard](https://deekshith-poojary98.github.io/robotframework-docgen/)
 
 ## 🚀 Features
 
