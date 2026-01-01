@@ -36,7 +36,7 @@ class DataProcessor:
     @keyword
     def validate_json_structure(self, json_data: Union[str, dict], schema: Dict[str, Any]) -> bool:
         """
-        Validate JSON data against a schema structure.
+        
         
         This keyword validates that the provided JSON data matches the expected
         schema structure. It checks for required fields, data types, and nested

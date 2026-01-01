@@ -156,7 +156,7 @@ class RobotFrameworkDocParser:
             # Fallback to AST parsing if LibraryDocumentation API doesn't work
             with open(file_path, "r", encoding="utf-8") as file:
                 content = file.read()
-            
+
             tree = ast.parse(content)
             module_globals = self._execute_module_safely(file_path)
             library_info = self._extract_library_info(tree, file_path, module_globals)

@@ -1,0 +1,686 @@
+[
+  {
+    "type": "library",
+    "name": "String Utils",
+    "description": "A comprehensive string manipulation library providing powerful keywords for text processing, pattern matching, validation, encoding, hashing, and data transformation operations.",
+    "url": "String Utils/string_utils.html",
+    "author": "Bruce Wayne",
+    "maintainer": "Docs Team",
+    "license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Capitalize Words",
+    "url": "String Utils/string_utils.html#capitalize-words",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Remove Whitespace",
+    "url": "String Utils/string_utils.html#remove-whitespace",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Extract Numbers",
+    "url": "String Utils/string_utils.html#extract-numbers",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Extract Emails",
+    "url": "String Utils/string_utils.html#extract-emails",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Validate Url",
+    "url": "String Utils/string_utils.html#validate-url",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Mask Sensitive Data",
+    "url": "String Utils/string_utils.html#mask-sensitive-data",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Hash String",
+    "url": "String Utils/string_utils.html#hash-string",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Encode Base64",
+    "url": "String Utils/string_utils.html#encode-base64",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Decode Base64",
+    "url": "String Utils/string_utils.html#decode-base64",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Replace Pattern",
+    "url": "String Utils/string_utils.html#replace-pattern",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Split String",
+    "url": "String Utils/string_utils.html#split-string",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Join Strings",
+    "url": "String Utils/string_utils.html#join-strings",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Format Template",
+    "url": "String Utils/string_utils.html#format-template",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Count Occurrences",
+    "url": "String Utils/string_utils.html#count-occurrences",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Truncate String",
+    "url": "String Utils/string_utils.html#truncate-string",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Pad String",
+    "url": "String Utils/string_utils.html#pad-string",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Reverse String",
+    "url": "String Utils/string_utils.html#reverse-string",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Remove Duplicates",
+    "url": "String Utils/string_utils.html#remove-duplicates",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Validate Phone Number",
+    "url": "String Utils/string_utils.html#validate-phone-number",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Extract Json From Text",
+    "url": "String Utils/string_utils.html#extract-json-from-text",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "String Utils",
+    "keyword": "Generate Random String",
+    "url": "String Utils/string_utils.html#generate-random-string",
+    "library_license": "MIT"
+  },
+  {
+    "type": "library",
+    "name": "Data Processor",
+    "description": "A comprehensive data processing library for validation, transformation, and manipulation of JSON data structures with advanced filtering and merging capabilities.",
+    "url": "Data Processor/data_processor.html",
+    "author": "Mary Jane",
+    "maintainer": "Docs Team",
+    "license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "Data Processor",
+    "keyword": "Validate Json Structure",
+    "url": "Data Processor/data_processor.html#validate-json-structure",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "Data Processor",
+    "keyword": "Transform JSON Data",
+    "url": "Data Processor/data_processor.html#transform-json-data",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "Data Processor",
+    "keyword": "Filter List By Condition",
+    "url": "Data Processor/data_processor.html#filter-list-by-condition",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "Data Processor",
+    "keyword": "Merge Dictionaries",
+    "url": "Data Processor/data_processor.html#merge-dictionaries",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "Data Processor",
+    "keyword": "Format String Template",
+    "url": "Data Processor/data_processor.html#format-string-template",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "Data Processor",
+    "keyword": "Extract Data By Pattern",
+    "url": "Data Processor/data_processor.html#extract-data-by-pattern",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "Data Processor",
+    "keyword": "Compare Data Structures",
+    "url": "Data Processor/data_processor.html#compare-data-structures",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "Data Processor",
+    "keyword": "Group Items By Key",
+    "url": "Data Processor/data_processor.html#group-items-by-key",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "Data Processor",
+    "keyword": "Calculate Statistics",
+    "url": "Data Processor/data_processor.html#calculate-statistics",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "Data Processor",
+    "keyword": "Create Data Snapshot",
+    "url": "Data Processor/data_processor.html#create-data-snapshot",
+    "library_license": "MIT"
+  },
+  {
+    "type": "library",
+    "name": "File Utils",
+    "description": "File and directory operations library providing comprehensive file system utilities for reading, writing, copying, and managing files and directories.",
+    "url": "File Utils/file_utils.html",
+    "author": "Jane Smith",
+    "maintainer": "Infrastructure Team",
+    "license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "Read File Content",
+    "url": "File Utils/file_utils.html#read-file-content",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "Write File Content",
+    "url": "File Utils/file_utils.html#write-file-content",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "File Exists",
+    "url": "File Utils/file_utils.html#file-exists",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "Directory Exists",
+    "url": "File Utils/file_utils.html#directory-exists",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "Create Directory",
+    "url": "File Utils/file_utils.html#create-directory",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "Copy File",
+    "url": "File Utils/file_utils.html#copy-file",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "Move File",
+    "url": "File Utils/file_utils.html#move-file",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "Delete File",
+    "url": "File Utils/file_utils.html#delete-file",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "List Files",
+    "url": "File Utils/file_utils.html#list-files",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "Get File Size",
+    "url": "File Utils/file_utils.html#get-file-size",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "Read Json File",
+    "url": "File Utils/file_utils.html#read-json-file",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "Write Json File",
+    "url": "File Utils/file_utils.html#write-json-file",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "Get File Extension",
+    "url": "File Utils/file_utils.html#get-file-extension",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "keyword",
+    "library": "File Utils",
+    "keyword": "Join Paths",
+    "url": "File Utils/file_utils.html#join-paths",
+    "library_license": "Apache-2.0"
+  },
+  {
+    "type": "library",
+    "name": "HTTP Client",
+    "description": "HTTP client library for making REST API calls, handling authentication, and managing HTTP requests and responses with support for GET, POST, PUT, and DELETE operations.",
+    "url": "HTTP Client/http_client.html",
+    "author": "Peter Parker",
+    "maintainer": "API Team",
+    "license": "BSD-3-Clause"
+  },
+  {
+    "type": "keyword",
+    "library": "HTTP Client",
+    "keyword": "Http Get",
+    "url": "HTTP Client/http_client.html#http-get",
+    "library_license": "BSD-3-Clause"
+  },
+  {
+    "type": "keyword",
+    "library": "HTTP Client",
+    "keyword": "Http Post",
+    "url": "HTTP Client/http_client.html#http-post",
+    "library_license": "BSD-3-Clause"
+  },
+  {
+    "type": "keyword",
+    "library": "HTTP Client",
+    "keyword": "Http Put",
+    "url": "HTTP Client/http_client.html#http-put",
+    "library_license": "BSD-3-Clause"
+  },
+  {
+    "type": "keyword",
+    "library": "HTTP Client",
+    "keyword": "Http Delete",
+    "url": "HTTP Client/http_client.html#http-delete",
+    "library_license": "BSD-3-Clause"
+  },
+  {
+    "type": "keyword",
+    "library": "HTTP Client",
+    "keyword": "Set Header",
+    "url": "HTTP Client/http_client.html#set-header",
+    "library_license": "BSD-3-Clause"
+  },
+  {
+    "type": "keyword",
+    "library": "HTTP Client",
+    "keyword": "Clear Headers",
+    "url": "HTTP Client/http_client.html#clear-headers",
+    "library_license": "BSD-3-Clause"
+  },
+  {
+    "type": "keyword",
+    "library": "HTTP Client",
+    "keyword": "Get Response Status",
+    "url": "HTTP Client/http_client.html#get-response-status",
+    "library_license": "BSD-3-Clause"
+  },
+  {
+    "type": "keyword",
+    "library": "HTTP Client",
+    "keyword": "Get Response Body",
+    "url": "HTTP Client/http_client.html#get-response-body",
+    "library_license": "BSD-3-Clause"
+  },
+  {
+    "type": "keyword",
+    "library": "HTTP Client",
+    "keyword": "Response Should Be Success",
+    "url": "HTTP Client/http_client.html#response-should-be-success",
+    "library_license": "BSD-3-Clause"
+  },
+  {
+    "type": "keyword",
+    "library": "HTTP Client",
+    "keyword": "Parse Json Response",
+    "url": "HTTP Client/http_client.html#parse-json-response",
+    "library_license": "BSD-3-Clause"
+  },
+  {
+    "type": "keyword",
+    "library": "HTTP Client",
+    "keyword": "Build Query String",
+    "url": "HTTP Client/http_client.html#build-query-string",
+    "library_license": "BSD-3-Clause"
+  },
+  {
+    "type": "keyword",
+    "library": "HTTP Client",
+    "keyword": "Set Basic Auth",
+    "url": "HTTP Client/http_client.html#set-basic-auth",
+    "library_license": "BSD-3-Clause"
+  },
+  {
+    "type": "keyword",
+    "library": "HTTP Client",
+    "keyword": "Set Bearer Token",
+    "url": "HTTP Client/http_client.html#set-bearer-token",
+    "library_license": "BSD-3-Clause"
+  },
+  {
+    "type": "library",
+    "name": "DB Utils",
+    "description": "Database utilities library for executing SQL queries, managing database connections, and handling transactions with support for common database operations.",
+    "url": "DB Utils/db_utils.html",
+    "author": "Tony Stark",
+    "maintainer": "Database Team",
+    "license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DB Utils",
+    "keyword": "Connect To Database",
+    "url": "DB Utils/db_utils.html#connect-to-database",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DB Utils",
+    "keyword": "Disconnect From Database",
+    "url": "DB Utils/db_utils.html#disconnect-from-database",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DB Utils",
+    "keyword": "Execute Query",
+    "url": "DB Utils/db_utils.html#execute-query",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DB Utils",
+    "keyword": "Execute Non Query",
+    "url": "DB Utils/db_utils.html#execute-non-query",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DB Utils",
+    "keyword": "Insert Record",
+    "url": "DB Utils/db_utils.html#insert-record",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DB Utils",
+    "keyword": "Update Record",
+    "url": "DB Utils/db_utils.html#update-record",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DB Utils",
+    "keyword": "Delete Record",
+    "url": "DB Utils/db_utils.html#delete-record",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DB Utils",
+    "keyword": "Get Table Count",
+    "url": "DB Utils/db_utils.html#get-table-count",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DB Utils",
+    "keyword": "Begin Transaction",
+    "url": "DB Utils/db_utils.html#begin-transaction",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DB Utils",
+    "keyword": "Commit Transaction",
+    "url": "DB Utils/db_utils.html#commit-transaction",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DB Utils",
+    "keyword": "Rollback Transaction",
+    "url": "DB Utils/db_utils.html#rollback-transaction",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DB Utils",
+    "keyword": "Query Single Row",
+    "url": "DB Utils/db_utils.html#query-single-row",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DB Utils",
+    "keyword": "Query Single Value",
+    "url": "DB Utils/db_utils.html#query-single-value",
+    "library_license": "MIT"
+  },
+  {
+    "type": "library",
+    "name": "DateTime Utils",
+    "description": "Date and time utilities library providing comprehensive operations for date parsing, formatting, calculations, comparisons, and timezone handling with support for timestamps and calendar operations.",
+    "url": "DateTime Utils/datetime_utils.html",
+    "author": "Black Widow",
+    "maintainer": "Core Team",
+    "license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Get Current Datetime",
+    "url": "DateTime Utils/datetime_utils.html#get-current-datetime",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Parse Datetime",
+    "url": "DateTime Utils/datetime_utils.html#parse-datetime",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Format Datetime",
+    "url": "DateTime Utils/datetime_utils.html#format-datetime",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Add Days",
+    "url": "DateTime Utils/datetime_utils.html#add-days",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Add Hours",
+    "url": "DateTime Utils/datetime_utils.html#add-hours",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Add Minutes",
+    "url": "DateTime Utils/datetime_utils.html#add-minutes",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Get Date Difference",
+    "url": "DateTime Utils/datetime_utils.html#get-date-difference",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Is Date Before",
+    "url": "DateTime Utils/datetime_utils.html#is-date-before",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Is Date After",
+    "url": "DateTime Utils/datetime_utils.html#is-date-after",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Get Timestamp",
+    "url": "DateTime Utils/datetime_utils.html#get-timestamp",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Timestamp To Datetime",
+    "url": "DateTime Utils/datetime_utils.html#timestamp-to-datetime",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Datetime To Timestamp",
+    "url": "DateTime Utils/datetime_utils.html#datetime-to-timestamp",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Get Day Of Week",
+    "url": "DateTime Utils/datetime_utils.html#get-day-of-week",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Get Month Name",
+    "url": "DateTime Utils/datetime_utils.html#get-month-name",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Is Weekend",
+    "url": "DateTime Utils/datetime_utils.html#is-weekend",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Is Weekday",
+    "url": "DateTime Utils/datetime_utils.html#is-weekday",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Get Start Of Day",
+    "url": "DateTime Utils/datetime_utils.html#get-start-of-day",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Get End Of Day",
+    "url": "DateTime Utils/datetime_utils.html#get-end-of-day",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "DateTime Utils",
+    "keyword": "Get Age",
+    "url": "DateTime Utils/datetime_utils.html#get-age",
+    "library_license": "MIT"
+  }
+]

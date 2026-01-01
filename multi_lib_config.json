@@ -1,0 +1,91 @@
+{
+    "site": {
+        "name": "Robot Framework Libraries",
+        "description": "Comprehensive collection of Robot Framework libraries for various use cases",
+        "github_url": "https://github.com/username/repo",
+        "support_email": "support@example.com",
+        "maintainer": "Docs Team",
+        "author": "Org / Team Name",
+        "license": "MIT",
+        "robot_framework": ">=7.0",
+        "python": ">=3.11"
+    },
+    "libraries": [
+        {
+            "name": "String Utils",
+            "source": "sample_libs/string_utils.py",
+            "description": "A comprehensive string manipulation library providing powerful keywords for text processing, pattern matching, validation, encoding, hashing, and data transformation operations.",
+            "author": "Bruce Wayne",
+            "maintainer": "Docs Team",
+            "license": "MIT",
+            "output_file": "string_utils.html",
+            "output_format": "html",
+            "library_url": "https://example.com/string_utils",
+            "python": ">=3.11",
+            "custom_keywords": [
+                "Transform Json Data"
+            ]
+        },
+        {
+            "name": "Data Processor",
+            "source": "sample_libs/data_processor.py",
+            "description": "A comprehensive data processing library for validation, transformation, and manipulation of JSON data structures with advanced filtering and merging capabilities.",
+            "author": "Mary Jane",
+            "maintainer": "Docs Team",
+            "license": "MIT",
+            "output_file": "data_processor.html",
+            "library_url": "https://example.com/data_processor",
+            "python": ">=3.8",
+            "custom_keywords": [
+                "Transform Json Data"
+            ]
+        },
+        {
+            "name": "File Utils",
+            "source": "sample_libs/file_utils.py",
+            "description": "File and directory operations library providing comprehensive file system utilities for reading, writing, copying, and managing files and directories.",
+            "author": "Jane Smith",
+            "maintainer": "Infrastructure Team",
+            "license": "Apache-2.0",
+            "output_file": "file_utils.html",
+            "library_url": "https://example.com/file_utils",
+            "python": ">=3.9"
+        },
+        {
+            "name": "HTTP Client",
+            "source": "sample_libs/http_client.py",
+            "description": "HTTP client library for making REST API calls, handling authentication, and managing HTTP requests and responses with support for GET, POST, PUT, and DELETE operations.",
+            "author": "Peter Parker",
+            "maintainer": "API Team",
+            "license": "BSD-3-Clause",
+            "output_file": "http_client.html",
+            "library_url": "https://example.com/http_client",
+            "robot_framework": ">=5.0",
+            "python": ">=3.10"
+        },
+        {
+            "name": "DB Utils",
+            "source": "sample_libs/db_utils.py",
+            "description": "Database utilities library for executing SQL queries, managing database connections, and handling transactions with support for common database operations.",
+            "author": "Tony Stark",
+            "maintainer": "Database Team",
+            "license": "MIT",
+            "output_file": "db_utils.html",
+            "library_url": "https://example.com/db_utils",
+            "robot_framework": ">=6.1",
+            "python": ">=3.8"
+        },
+        {
+            "name": "DateTime Utils",
+            "source": "sample_libs/datetime_utils.py",
+            "description": "Date and time utilities library providing comprehensive operations for date parsing, formatting, calculations, comparisons, and timezone handling with support for timestamps and calendar operations.",
+            "author": "Black Widow",
+            "maintainer": "Core Team",
+            "license": "MIT",
+            "output_file": "datetime_utils.html",
+            "library_url": "https://example.com/datetime_utils",
+            "robot_framework": ">=7.0",
+            "python": ">=3.9"
+        }
+    ]
+}

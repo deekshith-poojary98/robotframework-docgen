@@ -26,6 +26,11 @@ class DocumentationGenerator:
         self.library_info = library_info
         self.parser = parser
         self.config = config or {}
+    
+    @property
+    def library_name(self) -> str:
+        """Get library display name: config name if available, otherwise class name."""
+        return self.config.get("name", self.library_info.name)
 
     @classmethod
     @lru_cache(maxsize=1)
@@ -126,7 +131,7 @@ class DocumentationGenerator:
         """Generate markdown documentation."""
         md_content = []
 
-        md_content.append(f"# {self.library_info.name}")
+        md_content.append(f"# {self.library_name}")
         md_content.append("")
         md_content.append(f"**Version:** {self.library_info.version}")
         md_content.append(f"**Scope:** {self.library_info.scope}")
@@ -369,11 +374,11 @@ class DocumentationGenerator:
             )
 
         sample_usage_code = f"""*** Settings ***
-Library    {self.library_info.name}
+Library    {self.library_name}
 
 *** Test Cases ***
 Example
-    [Documentation]    Demonstrates using {self.library_info.name}
+    [Documentation]    Demonstrates using {self.library_name}
     # add your keyword calls here"""
 
         if self.parser:
@@ -384,7 +389,7 @@ Example
             sample_usage_highlighted = sample_usage_code
 
         replacements = {
-            "{{LIBRARY_NAME}}": self.library_info.name,
+            "{{LIBRARY_NAME}}": self.library_name,
             "{{VERSION}}": self.library_info.version,
             "{{SCOPE}}": self.library_info.scope,
             "{{KEYWORD_COUNT}}": str(len(self.library_info.keywords)),

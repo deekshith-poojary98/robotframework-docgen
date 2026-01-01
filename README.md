@@ -1,160 +1,139 @@
-# robotframework-docgen
+# Robotframework Docgen
 
 A powerful documentation generator for Robot Framework libraries that extracts keywords, arguments, and docstrings to create professional, well-formatted HTML documentation with advanced markdown support and syntax highlighting.
 
-See the generated documentation in action: **[View Sample Documentation](https://deekshith-poojary98.github.io/robotframework-docgen/)**
-
+**View Sample Documentation:** [Live Demo](https://deekshith-poojary98.github.io/robotframework-docgen/)
 
 ## 🚀 Features
 
-### Core Functionality
 - **Keyword Extraction**: Automatically extracts keywords from methods decorated with `@keyword`
 - **Type Hints Support**: Displays argument types from function signatures
 - **Multiple Output Formats**: Generate documentation in HTML or Markdown
-- **Markdown Integration**: Full markdown support for docstrings with tables, images, code blocks, and more
+- **Multi-Library Support**: Generate documentation for multiple libraries from a single configuration
+- **Interactive Dashboard**: Beautiful dashboard UI with library listing, global keyword search, filtering, sorting, and export
+- **Live Server**: Built-in web server to serve and preview your dashboard locally
+- **Parallel Processing**: Process multiple libraries concurrently for faster generation
+- **Markdown Integration**: Full markdown support for docstrings (tables, images, code blocks, lists)
 - **Syntax Highlighting**: Custom Robot Framework syntax highlighting with professional color schemes
 - **Configuration System**: JSON-based configuration for customizing behavior and metadata
+- **Responsive Design**: Mobile-friendly with hamburger menu and theme toggle
+- **Multi-Language Support**: Dashboard available in 10 languages with instant translation
 
-### Documentation Features
-- **Rich Text Formatting**: Bold, italic, underlined, strikethrough text
-- **Structured Content**: Headers, tables, code blocks, horizontal rules
-- **Code Highlighting**: Syntax-highlighted code blocks for Robot Framework, Python, JavaScript, and 100+ languages via Pygments
-- **Images**: Support for markdown image syntax `![alt](url)`
-- **Tables**: Full markdown table support with professional styling
-- **Professional Styling**: Theme-aware CSS with Robot Framework integration
-- **Responsive Design**: Mobile and desktop friendly with hamburger menu for smaller screens
-
-### Advanced Syntax Highlighting
-- **Robot Framework Keywords**: Automatically extracted from your library and standard Robot Framework libraries
-- **Variables**: `${variable}`, `@{list}`, `&{dict}` highlighting
-- **Keyword Arguments**: `arg=value` highlighting in yellow/beige
-- **Comments**: Green italic comments (both full-line and inline)
-- **Reserved Control Keywords**: `IF`, `FOR`, `TRY`, `WHILE`, etc. in orange
-- **Settings Keywords**: `Library`, `Resource`, `Documentation`, etc. in purple
-- **Section Headers**: `*** Settings ***`, `*** Test Cases ***` in blue
-
-## 📖 Documentation Syntax
-
-### Supported Markdown Features
-
-#### 1. Headers
-Create hierarchical headers using `#` symbols:
-
-```markdown
-# Main Title
-## Section Title
-### Subsection Title
-#### Sub-subsection Title
-##### Level 5 Header
-###### Level 6 Header
-```
-
-#### 2. Text Formatting
-
-**Bold Text**
-```markdown
-**bold text** or __bold text__
-```
-
-*Italic Text*
-```markdown
-*italic text* or _italic text_
-```
-
-`Inline Code`
-```markdown
-`code snippet`
-```
-
-#### 3. Links
-Create clickable links:
-
-```markdown
-[Link Text](https://example.com)
-```
-
-#### 4. Code Blocks
-Create syntax-highlighted code blocks:
-
-```robot
-*** Settings ***
-Library    MyLibrary
-
-*** Test Cases ***
-Example
-    My Keyword    ${variable}    arg=value
-    # This is a comment
-```
-
-Supported languages:
-- `robot` - Robot Framework syntax (custom highlighter with full syntax support)
-- All Pygments-supported languages including:
-  - `python`, `javascript`, `java`, `c`, `cpp`, `html`, `css`, `sql`, `bash`, `yaml`, `json`, `xml`, `go`, `rust`, `php`, `ruby`, `swift`, `kotlin`, and many more...
-
-#### 5. Tables
-Create structured tables with full markdown support:
-
-```markdown
-| Column 1 | Column 2 | Column 3 |
-|----------|----------|----------|
-| **Bold** | *Italic* | `Code` |
-| Data 1   | Data 2   | Data 3   |
-```
-
-#### 6. Images
-Include images in your documentation:
-
-```markdown
-![Alt Text](https://example.com/image.png)
-```
-
-#### 7. Lists
-Create bulleted and numbered lists:
-
-```markdown
-- Item 1
-- Item 2
-  - Nested item
-- Item 3
-
-1. First step
-2. Second step
-3. Third step
-```
-
-## 🎨 Robot Framework Syntax Highlighting
-
-### Color Scheme
-
-| Element | Color | Hex Code | Description |
-|---------|-------|----------|-------------|
-| **Section Headers** | Blue | `#569cd6` | `*** Settings ***`, `*** Test Cases ***` |
-| **Keywords** | Teal | `#4ec9b0` | Robot Framework keywords (bold) |
-| **Variables** | Light Blue | `#9cdcfe` | `${variable}`, `@{list}`, `&{dict}` |
-| **Comments** | Green | `#6a9955` | `# comment` (italic) |
-| **Keyword Arguments** | Yellow/Beige | `#dcdcaa` | `arg=value` |
-| **Reserved Control** | Orange | `#ce9178` | `IF`, `FOR`, `TRY`, `WHILE`, etc. |
-| **Settings Keywords** | Purple | `#c586c0` | `Library`, `Resource`, `Documentation` |
-| **Test Cases** | Yellow | `#dcdcaa` | Test case names (bold) |
-
-### Highlighting Features
-- **Automatic Keyword Detection**: Keywords are automatically extracted from your library and standard Robot Framework libraries
-- **Custom Keywords**: Add additional keywords via `config.json` for highlighting
-- **Multi-word Keywords**: Properly highlights keywords like "Create Dictionary", "Should Be Equal"
-- **Variable Highlighting**: All Robot Framework variable types are highlighted
-- **Inline Comments**: Comments at the end of lines are highlighted in green
-
-## ⚙️ Configuration System
-
-### Usage
+## 📦 Installation
 
 ```bash
-python docgen your_library.py -f html -o output.html -c config.json
+pip install robotframework-libdocgen
 ```
 
-### Configuration File (`config.json`)
+**Dependencies:** Robot Framework >= 5.0.1, Markdown >= 3.4.0, Pygments >= 2.10.0, Rich >= 13.0.0
 
-All fields are optional. Only provide the fields you want to display:
+## 🔧 CLI Arguments
+
+| Flag | Short | Description | Mode |
+|------|-------|-------------|------|
+| `--output` | `-o` | Output file path | Single-library only |
+| `--format` | `-f` | Output format: `html` (default) or `markdown` | Both |
+| `--config` | `-c` | Path to JSON configuration file | Both |
+| `--multi-lib` | - | Enable multi-library mode | Multi-library only |
+| `--dashboard` | - | Generate interactive dashboard UI | Multi-library only |
+| `--serve` | - | Start web server to serve dashboard | Requires `--dashboard` |
+| `--host` | - | Server host IP (default: `localhost`) | With `--serve` |
+| `--port` | - | Server port number (default: `8000`) | With `--serve` |
+| `--parallel` | - | Enable parallel processing | Multi-library only |
+| `--workers` | - | Number of parallel workers | With `--parallel` |
+| `--dir` | `-d` | Output directory | Both |
+
+## 📝 Quick Start
+
+### Single-Library Mode
+
+```bash
+# Generate HTML documentation (default)
+docgen your_library.py -o docs.html -c config.json
+
+# Generate Markdown documentation
+docgen your_library.py -f markdown -o README.md -c config.json
+
+# With output directory
+docgen your_library.py -d docs -o my_library.html -c config.json
+
+# Default settings (no config)
+docgen your_library.py
+```
+
+### Multi-Library Mode
+
+```bash
+# Generate documentation for multiple libraries
+docgen -c multi_lib_config.json --multi-lib
+
+# With custom output directory
+docgen -c multi_lib_config.json --multi-lib -d docs
+
+# With parallel processing (faster for many libraries)
+docgen -c multi_lib_config.json --multi-lib --parallel
+
+# With custom number of workers
+docgen -c multi_lib_config.json --multi-lib --parallel --workers 4
+```
+
+**Output Structure:**
+```
+output/
+├── Library1/
+│   └── index.html
+└── Library2/
+    └── index.html
+```
+
+### Dashboard Mode
+
+Generate an interactive dashboard with library listing, search, filtering, and more:
+
+```bash
+# Generate dashboard
+docgen -c multi_lib_config.json --dashboard
+
+# Generate and serve dashboard locally
+docgen -c multi_lib_config.json --dashboard --serve
+
+# Serve on custom host and port
+docgen -c multi_lib_config.json --dashboard --serve --host 0.0.0.0 --port 8080
+
+# Combine with parallel processing
+docgen -c multi_lib_config.json --dashboard --parallel --serve
+```
+
+**Dashboard Features:**
+- 📚 **Library Overview**: Browse all libraries with metadata and statistics
+- 🔍 **Global Keyword Search**: Search keywords across all libraries with instant results
+- 🎯 **Advanced Filtering**: Filter by author, maintainer, license, Robot Framework version, Python version
+- 📊 **Sorting Options**: Sort libraries by name or keyword count
+- 📥 **Export Functionality**: Export library data as CSV, Excel, or PDF
+- 🌐 **Multi-Language**: Dashboard available in 10 languages (English, Spanish, French, German, Chinese, Japanese, Portuguese, Russian, Italian, Korean)
+- ⌨️ **Keyboard Shortcuts**: `/` to focus search, `↑/↓` to navigate, `Enter` to open, `Esc` to close
+- 💾 **State Persistence**: Remembers your search, sort, and language preferences
+
+**Dashboard Output Structure:**
+```
+output/
+├── index.html          # Dashboard homepage
+├── assets/
+│   ├── style.css       # Dashboard styles
+│   ├── app.js          # Dashboard JavaScript
+│   ├── search.js       # Search functionality
+│   └── search-index.json  # Keyword search index
+├── Library1/
+│   └── index.html
+└── Library2/
+    └── index.html
+```
+
+## ⚙️ Configuration
+
+### Single-Library Configuration
+
+All fields are optional. Only provide what you need:
 
 ```json
 {
@@ -166,338 +145,262 @@ All fields are optional. Only provide the fields you want to display:
   "license": "MIT",
   "robot_framework": ">=7.0",
   "python": ">=3.11",
-  "custom_keywords": [
-    "Custom Keyword 1",
-    "Custom Keyword 2"
+  "custom_keywords": ["Custom Keyword 1", "Custom Keyword 2"]
+}
+```
+
+**Note:** Single-library configs should NOT contain `site` or `libraries` keys.
+
+### Multi-Library Configuration
+
+Requires `site` object (mandatory) and `libraries` array (mandatory):
+
+```json
+{
+  "site": {
+    "github_url": "https://github.com/username/repo",
+    "support_email": "support@example.com",
+    "author": "Org / Team Name",
+    "license": "MIT",
+    "robot_framework": ">=7.0",
+    "python": ">=3.11"
+  },
+  "libraries": [
+    {
+      "name": "Library1",
+      "source": "library1.py",
+      "output_file": "index.html",
+      "output_format": "html",
+      "library_url": "https://example.com/library1",
+      "custom_keywords": ["Custom Keyword 1"]
+    },
+    {
+      "name": "Library2",
+      "source": "library2.py",
+      "output_format": "markdown"
+    }
   ]
 }
 ```
 
+**Configuration Priority (Multi-Library):**
+1. Output filename: `library.output_file` > default (`index.html` or `index.md`)
+2. Output format: `library.output_format` > CLI `-f/--format` > default (`html`)
+3. Metadata: Library-specific config overrides `site` config
+
 ### Configuration Options
 
-#### Library Metadata (Optional)
-- `author`: Library author name
-- `maintainer`: Library maintainer name
-- `license`: License information
-- `robot_framework`: Required Robot Framework version
-- `python`: Required Python version
+- **Metadata**: `author`, `maintainer`, `license`, `robot_framework`, `python`
+- **Links**: `github_url` (enables "View on GitHub" and "Open an Issue" buttons), `library_url` (enables "Library Website" button), `support_email` (enables "Contact Support" button)
+- **Highlighting**: `custom_keywords` (array of additional keywords to highlight)
+- **Dashboard**: `site.name` and `site.description` for dashboard branding
 
-#### Links (Optional)
-- `github_url`: GitHub repository URL (enables "View on GitHub" and "Open an Issue" buttons)
-- `library_url`: Library website URL (enables "Library Website" button)
-- `support_email`: Support email address (enables "Contact Support" button)
+**Note:** In multi-library mode, the `name` field in library entries is optional. If not provided, the class name will be used.
 
-#### Highlighting (Optional)
-- `custom_keywords`: Array of additional keywords to highlight in code blocks
+## 📖 Usage
 
-### Dynamic Display
-- Buttons and metadata are only displayed if the corresponding fields are provided in `config.json`
-- If `github_url` is not provided, the "Open an Issue on GitHub" button won't appear
-- If `support_email` is not provided, the "Contact Support" button won't appear
-- Metadata fields are only shown if they have values
-
-## 📝 Usage Examples
-
-### Basic Usage
-
-```bash
-# Generate HTML documentation (default format)
-docgen your_library.py -o docs.html -c config.json
-
-# Generate Markdown documentation
-docgen your_library.py -f markdown -o docs.md -c config.json
-
-# Generate with default output filename (your_library.html)
-docgen your_library.py -c config.json
-
-# Generate without config file
-docgen your_library.py
-```
-
-### Keyword Decorator Usage
-
-#### ✅ Correct Usage
+### Keyword Decorator
 
 ```python
 from robot.api.deco import keyword
 
 class MyLibrary:
     # Custom keyword name
-    @keyword("Open Application")
+@keyword("Open Application")
     def open_app(self, path: str) -> None:
         """Opens an application at the given path."""
-        pass
-    
+    pass
+
     # Function name converted to title case (Open Workbook)
-    @keyword
+@keyword
     def open_workbook(self, file: str) -> None:
         """Opens a workbook file."""
-        pass
+    pass
 ```
 
-#### ❌ Incorrect Usage
+**Important:** Methods without `@keyword` decorator will NOT appear in documentation.
 
+### Markdown in Docstrings
+
+Full markdown support including:
+- **Headers**: `# H1`, `## H2`, etc.
+- **Text Formatting**: `**bold**`, `*italic*`, `` `code` ``
+- **Code Blocks**: Use ` ```robot ` for Robot Framework syntax highlighting
+- **Tables**: Standard markdown table syntax
+- **Images**: `![alt](url)`
+- **Lists**: Bulleted and numbered lists
+
+**Example:**
 ```python
-# This will NOT appear in documentation (no @keyword decorator)
-def helper_method(self, data: str) -> str:
-    """This method won't appear in documentation"""
-    return data.upper()
+@keyword
+def process_data(self, data: dict) -> dict:
+    """
+    Process data with configuration.
+    
+    **Arguments:**
+    - `data`: Dictionary containing data to process
+    
+    **Example:**
+    ```robot
+    *** Settings ***
+    Library    MyLibrary
+    
+    *** Test Cases ***
+    Example
+        ${result}=    Process Data    ${data}
+    ```
+    
+    **Options:**
+    | Option | Description |
+    |--------|-------------|
+    | validate | Validate input data |
+    | transform | Transform data structure |
+    """
+    pass
 ```
 
-### Complete Example
+## 🎛️ Dashboard Features
 
+The interactive dashboard provides a comprehensive view of all your libraries with powerful search and filtering capabilities.
+
+### Library Search
+- **Real-time filtering**: Type to filter library cards instantly
+- **No dropdown results**: Matching libraries are shown directly as cards
+
+### Keyword Search
+- **Global search**: Search keywords across all libraries
+- **Instant results**: See matching keywords with library names
+- **Keyboard navigation**: Use arrow keys to navigate, Enter to open
+- **Quick access**: Press `/` to focus the search bar
+
+### Filtering
+Filter libraries by:
+- **Author**: Filter by library author
+- **Maintainer**: Filter by maintainer
+- **License**: Filter by license type
+- **Robot Framework Version**: Filter by RF version requirements
+- **Python Version**: Filter by Python version requirements
+
+### Sorting
+- **Name (A–Z)**: Alphabetical sorting
+- **Keyword Count (desc)**: Sort by number of keywords
+
+### Export
+Export library metadata as:
+- **CSV**: Comma-separated values
+- **Excel**: Microsoft Excel format
+- **PDF**: Portable Document Format
+
+### Multi-Language Support
+Dashboard is available in:
+- English, Spanish, French, German, Chinese, Japanese, Portuguese, Russian, Italian, Korean
+- Language preference is saved in browser localStorage
+- Instant translation without page reload
+
+### Keyboard Shortcuts
+- `/` - Focus keyword search bar
+- `↑/↓` - Navigate search results
+- `Enter` - Open selected result
+- `Esc` - Close dropdown / Remove focus
+
+## 🎨 Syntax Highlighting
+
+Robot Framework code blocks are automatically highlighted with:
+- **Section Headers** (`*** Settings ***`): Blue
+- **Keywords**: Teal (bold)
+- **Variables** (`${var}`, `@{list}`, `&{dict}`): Light Blue
+- **Comments** (`# comment`): Green (italic)
+- **Keyword Arguments** (`arg=value`): Yellow/Beige
+- **Reserved Control** (`IF`, `FOR`, `TRY`): Orange
+- **Settings Keywords** (`Library`, `Resource`): Purple
+
+Keywords are automatically extracted from your library and standard Robot Framework libraries. Add custom keywords via `config.json`.
+
+## ❓ Troubleshooting
+
+### "Successfully parsed 0 keywords"
+
+Ensure all public methods are decorated with `@keyword`:
 ```python
-from robot.api.deco import keyword
-from typing import Dict, List
+@keyword("My Keyword")  # ✅ Correct
+def my_method(self):
+    pass
 
-class DataProcessor:
-    @keyword
-    def process_data(self, data: Dict[str, any], options: List[str] = None) -> Dict[str, any]:
-        """
-        Process data with optional configuration.
-        
-        This keyword processes the provided data dictionary and returns
-        a processed result based on the given options.
-        
-        **Arguments:**
-        - `data`: Dictionary containing data to process
-        - `options`: Optional list of processing options
-        
-        **Returns:** Processed dictionary with results.
-        
-        **Example:**
-        ```robot
-        *** Settings ***
-        Library    DataProcessor
-        
-        *** Test Cases ***
-        Process Example
-            ${data}=    Create Dictionary    name=John    age=30
-            ${result}=    Process Data    ${data}    options=['option1', 'option2']
-        ```
-        
-        **Options:**
-        | Option | Description |
-        |--------|-------------|
-        | `validate` | Validate input data |
-        | `transform` | Transform data structure |
-        | `filter` | Filter data entries |
-        """
-        # Implementation here
-        return {}
+def helper_method(self):  # ❌ Won't appear
+    pass
 ```
 
-## 🎯 Key Features
+### Multi-library mode errors
 
-### For Developers
-- **Rich documentation** with professional formatting
-- **Easy to write** using standard markdown syntax
-- **Type hints support** - automatically displays argument types
-- **Automatic keyword extraction** - no need to manually list keywords
-- **Function name conversion** - `my_keyword` becomes "My Keyword" automatically
-- **Consistent styling** across all documentation
-- **Better readability** with headers, tables, code blocks, and images
+- Ensure config contains `libraries` array
+- Ensure config contains `site` object (mandatory)
+- Use `--multi-lib` flag: `docgen -c config.json --multi-lib`
+- Don't use `--multi-lib` with single-library configs
+- `--dashboard` automatically enables multi-library mode (no need for `--multi-lib`)
 
-### For Users
-- **Professional appearance** matching Robot Framework standards
-- **Interactive features** like search and theme toggle
-- **Mobile-friendly** responsive design with hamburger menu
-- **Accessible** with proper HTML structure
-- **Syntax highlighting** for better code readability
-- **Dynamic metadata** display based on configuration
+### Dashboard and serve errors
 
-### For Teams
-- **Standardized format** for all library documentation
-- **Easy maintenance** with clear syntax rules
-- **Version control friendly** with readable source format
-- **Extensible** design for future enhancements
-- **Configuration-driven** customization
+- `--serve` requires `--dashboard` flag: `docgen -c config.json --dashboard --serve`
+- Dashboard requires multi-library configuration with `site` and `libraries` keys
+- Port already in use: Use `--port` to specify a different port
+- To serve on all network interfaces: Use `--host 0.0.0.0`
 
-## 🔧 Installation
+### Output file location
 
-### Prerequisites
+- **Single-library**: `-d/--dir` sets base directory, `-o/--output` can be relative (combined with `-d`) or absolute (ignores `-d`)
+- **Multi-library**: `-d/--dir` sets base output directory (defaults to `output/`), `-o/--output` is ignored
 
-- Python 3.8 or higher
-- pip (Python package installer)
+### Config not being read
 
-### Install from PyPI (Recommended)
-
-The easiest way to install `robotframework-libdocgen` is using pip:
-
+Ensure you're passing the `-c/--config` flag:
 ```bash
-pip install robotframework-libdocgen
+docgen your_library.py -c config.json  # ✅ Correct
+docgen your_library.py                 # ❌ Config not loaded
 ```
 
-This will automatically install all required dependencies:
-- Robot Framework >= 5.0.1
-- Markdown >= 3.4.0
-- Pygments >= 2.10.0
-- Rich >= 13.0.0
+### Type hints not showing
 
-### Verify Installation
+Add type hints to function signatures:
+```python
+@keyword
+def my_keyword(self, arg1: str, arg2: int = 10) -> bool:
+    """Keyword documentation."""
+    pass
+```
 
-After installation, verify that the CLI commands are available:
+If type hints are not provided, arguments show as `Any` type.
 
+## 📚 Examples
+
+- **Sample Library**: See `sample_libs/` directory for comprehensive examples
+- **Multi-Library Config**: See `multi_lib_config.json` for configuration structure
+
+**Single Library:**
 ```bash
-# Check if the command is available
-docgen --help
-
-# Or using the full command name
-robotframework-libdocgen --help
+docgen sample_libs/string_utils.py -f html -o sample_docs.html -c config.json
 ```
 
-You should see the help message with usage instructions.
-
-### Install from Source
-
-If you want to install from the source code or contribute to the project:
-
+**Multi-Library with Dashboard:**
 ```bash
-# Clone the repository
-git clone https://github.com/deekshith-poojary98/robotframework-docgen.git
-cd robotframework-docgen
+# Generate dashboard
+docgen -c multi_lib_config.json --dashboard
 
-# Install in development mode (recommended for development)
-pip install -e .
+# Generate and serve dashboard
+docgen -c multi_lib_config.json --dashboard --serve
 
-# Or install directly
-pip install .
+# With parallel processing
+docgen -c multi_lib_config.json --dashboard --parallel --serve --port 8080
 ```
-
-**Development Mode (`-e` flag):**
-- Installs the package in "editable" mode
-- Changes to source code are immediately reflected
-- Useful when developing or modifying the package
-
-### Upgrade Installation
-
-To upgrade to the latest version:
-
-```bash
-pip install --upgrade robotframework-libdocgen
-```
-
-### Uninstall
-
-To uninstall the package:
-
-```bash
-pip uninstall robotframework-libdocgen
-```
-
-## 📁 Project Structure
-
-```
-robotframework-docgen/
-├── robotframework_docgen/     # Main package
-│   ├── __init__.py           # Package initialization
-│   ├── parser.py              # Parser module (RobotFrameworkDocParser)
-│   ├── generator.py           # Generator module (DocumentationGenerator)
-│   ├── cli.py                 # CLI entry point
-│   └── templates/
-│       └── libdoc.html        # HTML template
-├── config.json                # Configuration file (optional)
-├── example_config.json        # Example configuration
-├── pyproject.toml             # Package configuration
-├── MANIFEST.in                # Package manifest
-├── README.md                  # This file
-└── LICENSE                    # License file
-```
-
-## 🚀 Getting Started
-
-### Quick Start
-
-1. **Install the package**:
-   ```bash
-   pip install robotframework-libdocgen
-   ```
-
-2. **Create a configuration file** (optional):
-   Create a `config.json` file with your library metadata:
-   ```json
-   {
-     "github_url": "https://github.com/username/repo",
-     "library_url": "https://example.com/library",
-     "support_email": "support@example.com",
-     "author": "Your Name",
-     "maintainer": "Maintainer Name",
-     "license": "Apache-2.0",
-     "robot_framework": ">=7.0",
-     "python": ">=3.8",
-     "custom_keywords": ["Custom Keyword 1", "Custom Keyword 2"]
-   }
-   ```
-
-3. **Generate documentation**:
-   ```bash
-   # Generate HTML documentation (default)
-   docgen your_library.py -o docs.html -c config.json
-
-   # Generate Markdown documentation
-   docgen your_library.py -f markdown -o README.md -c config.json
-
-   # Generate with default settings (HTML format, no config)
-   docgen your_library.py
-   ```
-
-4. **View the documentation**:
-   - Open the generated HTML file in your browser
-   - Or view the Markdown file in your editor/README viewer
-
-### Example
-
-```bash
-# Install
-pip install robotframework-libdocgen
-
-# Generate docs for your library
-docgen sample_library.py -o documentation.html -c config.json
-
-# Open in browser (macOS)
-open documentation.html
-
-# Or on Linux
-xdg-open documentation.html
-
-# Or on Windows
-start documentation.html
-```
-
-## 🎨 UI Features
-
-### Responsive Design
-- **Desktop**: Full sidebar navigation with keyword list
-- **Tablet/Mobile**: Hamburger menu for sidebar access
-- **Search**: Real-time keyword search functionality
-- **Theme Toggle**: Switch between light and dark themes
-
-### Dynamic Content
-- **Metadata Display**: Author, maintainer, license, versions (only if provided)
-- **Action Buttons**: GitHub, library website, contact support (only if URLs/email provided)
-- **Last Updated**: Automatic timestamp in footer
-- **Keyword Count**: Dynamic count of extracted keywords
 
 ## 📄 License
 
-See [LICENSE](LICENSE) file for details.
+Apache License 2.0 - See [LICENSE](LICENSE) file for details.
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📚 Examples
+## 🔗 Links
 
-Check out the `sample_library.py` file for a comprehensive example demonstrating all features:
-- Multiple keyword types
-- Type hints
-- Markdown tables
-- Code blocks in multiple languages
-- Images
-- Lists and formatting
-- Complex documentation structures
-
-Generate documentation for it:
-```bash
-docgen sample_library.py -f html -o sample_docs.html -c config.json
-```
+- **Repository**: [GitHub](https://github.com/deekshith-poojary98/robotframework-docgen)
+- **Live Demo**: [Sample Documentation](https://deekshith-poojary98.github.io/robotframework-docgen/)
