@@ -1,0 +1,1687 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="Generator" content="Robot Framework Documentation Parser">
+  <link rel="icon" href="https://docs.robotframework.org/img/rf_favicon.png">
+  <title>Data Processor Documentation</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-alt: #020617;
+      --card: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.15);
+      --border: #1e293b;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.8));
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo img {
+      width: 36px;
+      height: 36px;
+      display: block;
+    }
+
+    header h1 {
+      font-size: 1.05rem;
+      margin: 0;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f4f6ff;
+    }
+
+    header .tagline {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    header nav {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    header nav a {
+      color: var(--muted);
+      padding-bottom: 0.1rem;
+      border-bottom: 1px solid transparent;
+    }
+
+    header nav a:hover {
+      color: var(--text);
+      border-color: var(--accent-soft);
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      padding: 0.5rem;
+      margin-left: auto;
+      position: relative;
+      z-index: 31;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-toggle:hover {
+      color: var(--accent);
+    }
+
+    .menu-toggle svg {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      border-right: 1px solid var(--border);
+      padding: calc(1.25rem + 10px) 1.5rem 1.5rem;
+      background: linear-gradient(to bottom, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      max-height: 100vh;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    aside h2 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .toc-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .toc-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.25rem 0 0;
+    }
+
+    .toc-section li {
+      margin: 0.1rem 0;
+    }
+
+    .toc-section a {
+      color: var(--muted);
+      padding: 0.12rem 0;
+      display: inline-block;
+    }
+
+    .toc-section a:hover {
+      color: var(--text);
+    }
+
+    .keyword-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0 0;
+      font-size: 0.86rem;
+      overflow-y: auto;
+    }
+
+    .keyword-list li {
+      margin: 0;
+    }
+
+    .keyword-list li.hidden {
+      display: none;
+    }
+
+    .keyword-list a {
+      display: block;
+      color: var(--muted);
+      padding: 0.15rem 0;
+    }
+
+    .keyword-list a:hover {
+      color: var(--accent);
+    }
+
+    .search-box {
+      margin-top: 0.65rem;
+      margin-left: -5px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.8);
+      color: var(--text);
+      font-size: 0.85rem;
+    }
+
+    .search-box input:focus {
+      outline: 2px solid rgba(56,189,248,0.4);
+    }
+
+    .no-results {
+      color: var(--muted);
+      font-style: italic;
+      padding: 0.4rem 0;
+    }
+
+    main {
+      padding: 1.75rem 2.4rem 3rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+      gap: 2rem;
+      margin-bottom: 2.2rem;
+      align-items: center;
+    }
+
+    .hero h2 {
+      font-size: 2.2rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero p {
+      color: var(--muted);
+      margin-top: 0;
+      max-width: 40rem;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin: 0.8rem 0 1.25rem;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      color: var(--muted);
+      border-color: rgba(56,189,248,0.4);
+    }
+
+    .badge.primary {
+      border-color: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      border: 1px solid transparent;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: radial-gradient(circle at top left, #38bdf8, #0ea5e9 45%, #0369a1 100%);
+      border-color: rgba(56,189,248,0.4);
+      color: #0b1120;
+      box-shadow: 0 10px 30px rgba(56,189,248,0.4);
+    }
+
+    .btn-ghost {
+      background: rgba(15,23,42,0.75);
+      border-color: var(--border);
+      color: var(--muted);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 35px rgba(56,189,248,0.5);
+      text-decoration: none;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .hero-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hero-meta.meta-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      margin-top: 0.35rem;
+    }
+
+    .hero-meta.meta-grid span {
+      display: inline-flex;
+      gap: 0.25rem;
+      align-items: center;
+      color: var(--muted);
+    }
+
+    .hero-meta.meta-grid strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .hero-card {
+      border-radius: 1.2rem;
+      background: radial-gradient(circle at top, rgba(56,189,248,0.2), rgba(15,23,42,1));
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      padding: 1rem 1rem 1.2rem;
+      font-size: 0.75rem;
+    }
+
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.45rem;
+      color: var(--muted);
+    }
+
+    .hero-card-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+    }
+
+    .hero-card-lang {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.85);
+    }
+
+    pre {
+      background: rgba(2,6,23,0.95);
+      border-radius: 0.75rem;
+      padding: 0.9rem 1rem;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .keyword-container {
+      background: rgba(15,23,42,0.9);
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      padding: 1rem 1.1rem;
+      font-size: 0.92rem;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      margin-bottom: 1.5rem;
+    }
+
+    .keyword-name h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .kw-overview {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .args,
+    .return-type,
+    .kw-docs {
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 0.85rem;
+      background: rgba(2,6,23,0.75);
+    }
+
+    .args h4,
+    .return-type h4,
+    .kw-docs h4 {
+      margin: 0 0 0.4rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .arguments-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .arg-name {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      background: rgba(15,76,204,0.15);
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+      border: 1px solid rgba(15,76,204,0.3);
+    }
+
+    .arg-type {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      color: var(--muted);
+    }
+
+    .kwdoc {
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .kwdoc code {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      background: rgba(56,189,248,0.08);
+      padding: 0.2rem 0.35rem;
+      border-radius: 4px;
+    }
+
+    .kwdoc table,
+    .kwdoc .doc-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1rem 0;
+      border: 2px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: rgba(2,6,23,0.75);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .kwdoc table thead,
+    .kwdoc .doc-table thead {
+      background: rgba(56,189,248,0.1);
+    }
+
+    .kwdoc table th,
+    .kwdoc .doc-table th {
+      padding: 0.65rem 0.85rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .kwdoc table th:last-child,
+    .kwdoc .doc-table th:last-child {
+      border-right: none;
+    }
+
+    .kwdoc table td,
+    .kwdoc .doc-table td {
+      padding: 0.6rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+
+    .kwdoc table td:last-child,
+    .kwdoc .doc-table td:last-child {
+      border-right: none;
+    }
+
+    .kwdoc table tbody tr:last-child td,
+    .kwdoc .doc-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .kwdoc table tbody tr:hover,
+    .kwdoc .doc-table tbody tr:hover {
+      background: rgba(56,189,248,0.05);
+    }
+
+    .kwdoc img,
+    .kwdoc .doc img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      margin: 1rem 0;
+      display: block;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .code-block {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+
+    .code-block pre {
+      margin: 0;
+      padding: 1rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+      overflow-x: auto;
+      border-radius: 0;
+      border: none;
+      background: transparent;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.2rem 2.4rem 1.6rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      background: radial-gradient(circle at bottom, rgba(56,189,248,0.15), rgba(15,23,42,1));
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: fixed !important;
+        top: 70px;
+        left: 0;
+        width: 280px;
+        max-width: 85vw;
+        height: calc(100vh - 70px);
+        z-index: 26;
+        transform: translateX(-100%) !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
+        border-right: 1px solid var(--border);
+      }
+
+      aside.active {
+        transform: translateX(0) !important;
+      }
+
+      .sidebar-overlay {
+        display: block;
+      }
+
+      main {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      aside {
+        position: fixed !important;
+        top: 70px;
+        left: 0;
+        width: 280px;
+        max-width: 85vw;
+        height: calc(100vh - 70px);
+        z-index: 26;
+        transform: translateX(-100%) !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
+        border-right: 1px solid var(--border);
+      }
+
+      aside.active {
+        transform: translateX(0) !important;
+      }
+
+      .sidebar-overlay {
+        display: block;
+      }
+
+      main {
+        width: 100%;
+      }
+
+      main {
+        padding: 1.25rem 1.4rem 2.5rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 0.7rem 1rem;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero h2 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="https://docs.robotframework.org/img/robot-framework-dark.svg" alt="Robot Framework Logo">
+      </div>
+      <div>
+        <h1>Data Processor</h1>
+        <div class="tagline">Robot Framework library documentation</div>
+      </div>
+    </div>
+    <nav><a href="../index.html">← Back to Dashboard</a>
+      <a href="#intro">Overview</a>
+      <a href="#keywords">Keywords</a>
+    </nav>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="layout">
+    <aside>
+      <div class="toc-section">
+        <h2>Getting Started</h2>
+        <ul>
+          <li><a href="#intro">Introduction</a></li>
+        </ul>
+      </div>
+
+      <div class="toc-section">
+        <h2>Keywords</h2>
+        <div class="search-box">
+          <input type="text" id="keyword-search" placeholder="Search keywords…">
+        </div>
+        <ul class="keyword-list" id="keyword-list">
+          <li><a href="#validate-json-structure">Validate Json Structure</a></li>
+        <li><a href="#transform-json-data">Transform JSON Data</a></li>
+        <li><a href="#filter-list-by-condition">Filter List By Condition</a></li>
+        <li><a href="#merge-dictionaries">Merge Dictionaries</a></li>
+        <li><a href="#format-string-template">Format String Template</a></li>
+        <li><a href="#extract-data-by-pattern">Extract Data By Pattern</a></li>
+        <li><a href="#compare-data-structures">Compare Data Structures</a></li>
+        <li><a href="#group-items-by-key">Group Items By Key</a></li>
+        <li><a href="#calculate-statistics">Calculate Statistics</a></li>
+        <li><a href="#create-data-snapshot">Create Data Snapshot</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main>
+      <section id="intro" class="hero">
+        <div>
+          <h2>Data Processor Documentation</h2>
+          
+          <div class="hero-badges">
+            <!-- <span class="badge primary">Robot Framework Library</span> -->
+            <span class="badge">Version 2.5.0</span>
+            <span class="badge">Scope GLOBAL</span>
+            <span class="badge">10 Keywords</span>
+          </div>
+          <div class="hero-actions"><a class="btn btn-primary" href="https://example.com/data_processor" target="_blank" rel="noopener noreferrer"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2Zm6.93 9H16.2a17.459 17.459 0 0 0-1.18-4.495A7.953 7.953 0 0 1 18.93 11Zm-7.93 8a15.417 15.417 0 0 1-1.458-4h2.916A15.417 15.417 0 0 1 11 19Zm-1.458-6a13.7 13.7 0 0 1 0-2h2.916a13.7 13.7 0 0 1 0 2Zm-3.25-2a13.116 13.116 0 0 1 .4-2h2.365a13.472 13.472 0 0 0 0 4H6.692a13.116 13.116 0 0 1-.4-2Zm4.708-6a15.417 15.417 0 0 1 1.458 4h-2.916A15.417 15.417 0 0 1 11 5Zm-2.02.505A17.459 17.459 0 0 0 7.8 11H5.07A7.953 7.953 0 0 1 8.98 5.505ZM5.07 13H7.8a17.459 17.459 0 0 0 1.18 4.495A7.953 7.953 0 0 1 5.07 13Zm9.95 4.495c.42-1.282.728-2.64.892-3.995h2.188a7.953 7.953 0 0 1-3.08 3.995Z"></path></svg><span>Library Website</span></a><a class="btn btn-ghost" href="https://github.com/username/repo" target="_blank" rel="noopener noreferrer"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" data-view-component="true" class="octicon octicon-mark-github v-align-middle"><path fill="currentColor" d="M12 1C5.923 1 1 5.923 1 12c0 4.867 3.149 8.979 7.521 10.436.55.096.756-.233.756-.522 0-.262-.013-1.128-.013-2.049-2.764.509-3.479-.674-3.699-1.292-.124-.317-.66-1.293-1.127-1.554-.385-.207-.936-.715-.014-.729.866-.014 1.485.797 1.691 1.128.99 1.663 2.571 1.196 3.204.907.096-.715.385-1.196.701-1.471-2.448-.275-5.005-1.224-5.005-5.432 0-1.196.426-2.186 1.128-2.956-.111-.275-.496-1.402.11-2.915 0 0 .921-.288 3.024 1.128a10.193 10.193 0 0 1 2.75-.371c.936 0 1.871.123 2.75.371 2.104-1.43 3.025-1.128 3.025-1.128.605 1.513.221 2.64.111 2.915.701.77 1.127 1.747 1.127 2.956 0 4.222-2.571 5.157-5.019 5.432.399.344.743 1.004.743 2.035 0 1.471-.014 2.654-.014 3.025 0 .289.206.632.756.522C19.851 20.979 23 16.854 23 12c0-6.077-4.922-11-11-11Z"></path></svg><span>View on GitHub</span></a><a class="btn btn-ghost" href="mailto:support@example.com"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M19.25 4H4.75A2.75 2.75 0 0 0 2 6.75v10.5A2.75 2.75 0 0 0 4.75 20h14.5A2.75 2.75 0 0 0 22 17.25V6.75A2.75 2.75 0 0 0 19.25 4Zm0 1.5c.129 0 .252.027.363.076L12 11.14 4.387 5.076A1.25 1.25 0 0 1 4.75 5.5Zm0 13H4.75A1.25 1.25 0 0 1 3.5 17.25V7.46l7.87 6.04a.75.75 0 0 0 .88 0l7.87-6.04v9.79A1.25 1.25 0 0 1 19.25 18.5Z"></path></svg><span>Contact Support</span></a></div>
+          <div class="hero-meta meta-grid"><span><strong>Author:</strong> Mary Jane</span><span><strong>Maintainer:</strong> Docs Team</span><span><strong>License:</strong> MIT</span><span><strong>Robot Framework:</strong> >=7.0</span><span><strong>Python:</strong> >=3.8</span></div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-header">
+            <div class="hero-card-title">Sample Usage</div>
+            <div class="hero-card-lang">Robot</div>
+          </div>
+          <pre class="language-robot"><code><span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> Data Processor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example</span>
+    [Documentation]    Demonstrates using Data Processor
+<span style="color: #6a9955; font-style: italic;">    # add your keyword calls here</span></code></pre>
+        </div>
+      </section>
+
+      <section class="keyword-container intro-section"><div class="keyword-name"><h2>Introduction</h2></div><div class="kw-overview"><div class="kw-docs"><div class="intro-content"><p>A powerful data processing library for Robot Framework.</p>
+<p>    This library provides keywords for:</p>
+<ul>
+<li>Data validation and transformation</li>
+<li>JSON and dictionary manipulation</li>
+<li>String processing and formatting</li>
+<li>List operations and filtering</li>
+<li>Data comparison and merging</li>
+</ul></div></div></div></section>
+
+      <section id="keywords">
+        <div class="keyword-container" id="validate-json-structure">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#validate-json-structure">Validate Json Structure</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">json_data</span> : <span class="arg-type">Union[str, dict]</span></li>
+            <li><span class="arg-name">schema</span> : <span class="arg-type">Dict[str, Any]</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">bool</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>This keyword validates that the provided JSON data matches the expected</p>
+<p>schema structure. It checks for required fields, data types, and nested</p>
+<p>structures.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>json_data</code>: JSON string or dictionary to validate</li>
+<li><code>schema</code>: Dictionary defining the expected structure with type information</li>
+</ul>
+<p><strong>Returns:</strong> <code>True</code> if validation passes, <code>False</code> otherwise.</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Validate JSON Example</span>
+    <span style="color: #9cdcfe;">${schema}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">name</span>=str    <span style="color: #dcdcaa;">age</span>=int    <span style="color: #dcdcaa;">email</span>=str
+    <span style="color: #9cdcfe;">${valid}</span>    <span style="color: #4ec9b0; font-weight: bold;">Validate Json Structure</span>    {&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30, &quot;email&quot;: &quot;john@example.com&quot;}    <span style="color: #9cdcfe;">${schema}</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be True</span>     <span style="color: #9cdcfe;">${valid}</span>
+</pre></div>
+<p><strong>Schema Format:</strong></p>
+<table class="doc-table">
+<thead><tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td>Field name</td>
+<td>str/int/bool/list/dict</td>
+<td>Expected data type</td>
+</tr>
+<tr>
+<td>Nested dict</td>
+<td>dict</td>
+<td>For nested objects, use dict with sub-schema</td>
+</tr>
+</tbody></table>
+<p><strong>See also:</strong></p>
+<ul>
+<li><code>Transform Json Data</code> for data transformation</li>
+<li><code>Merge Dictionaries</code> for combining data structures</li>
+</ul>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="transform-json-data">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#transform-json-data">Transform JSON Data</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">data</span> : <span class="arg-type">Union[str, Dict]</span></li>
+            <li><span class="arg-name">mapping</span> : <span class="arg-type">Dict[str, str]</span></li>
+            <li><span class="arg-name">default_value</span> : <span class="arg-type">Optional[Any]</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">Dict[str, Any]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Transform JSON data using field mapping rules.</p>
+<p>Maps fields from source data to target structure based on the provided</p>
+<p>mapping dictionary. Supports nested field access using dot notation.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>data</code>: Source JSON data (string or dictionary)</li>
+<li><code>mapping</code>: Dictionary mapping target fields to source fields (e.g., <code>{&quot;new<em>name&quot;: &quot;old</em>name&quot;}</code>)</li>
+<li><code>default_value</code>: Default value for missing fields (default: None)</li>
+</ul>
+<p><strong>Returns:</strong> Transformed dictionary with mapped fields.</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Transform JSON Example</span>
+    <span style="color: #9cdcfe;">${source}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">first_name</span>=John    <span style="color: #dcdcaa;">last_name</span>=Doe    <span style="color: #dcdcaa;">age</span>=30
+    <span style="color: #9cdcfe;">${mapping}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">name</span>=first_name    <span style="color: #dcdcaa;">surname</span>=last_name    <span style="color: #dcdcaa;">years</span>=age
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Transform Json Data</span>    <span style="color: #9cdcfe;">${source}</span>    <span style="color: #9cdcfe;">${mapping}</span>
+<span style="color: #6a9955; font-style: italic;">    # Result: {&quot;name&quot;: &quot;John&quot;, &quot;surname&quot;: &quot;Doe&quot;, &quot;years&quot;: 30}</span>
+</pre></div>
+<p><strong>Advanced Mapping:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Advanced Transform Example</span>
+    <span style="color: #9cdcfe;">${source}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">user</span>=<span style="color: #9cdcfe;">${dict}</span>    <span style="color: #dcdcaa;">metadata</span>=<span style="color: #9cdcfe;">${dict2}</span>
+    <span style="color: #9cdcfe;">${mapping}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">username</span>=user.name    <span style="color: #dcdcaa;">email</span>=user.contact.email
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Transform Json Data</span>    <span style="color: #9cdcfe;">${source}</span>    <span style="color: #9cdcfe;">${mapping}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="filter-list-by-condition">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#filter-list-by-condition">Filter List By Condition</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">items</span> : <span class="arg-type">List[Any]</span></li>
+            <li><span class="arg-name">condition</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">value</span> : <span class="arg-type">Optional[Any]</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">List[Any]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Filter a list based on a condition.</p>
+<p>Filters list items based on various conditions like equality, comparison,</p>
+<p>type checking, or custom lambda functions.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>items</code>: List of items to filter</li>
+<li><code>condition</code>: Condition type: <code>equals</code>, <code>contains</code>, <code>greater<em>than</code>, <code>less</em>than</code>, <code>type<em>is</code>, <code>matches</em>regex</code></li>
+<li><code>value</code>: Value to compare against (required for most conditions)</li>
+</ul>
+<p><strong>Returns:</strong> Filtered list containing only matching items.</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Filter List Example</span>
+    <span style="color: #9cdcfe;">${numbers}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create List</span>    1    5    10    15    20
+    <span style="color: #9cdcfe;">${filtered}</span>    <span style="color: #4ec9b0; font-weight: bold;">Filter List By Condition</span>    <span style="color: #9cdcfe;">${numbers}</span>    greater_than    10
+<span style="color: #6a9955; font-style: italic;">    # Result: [15, 20]</span>
+</pre></div>
+<p><strong>Supported Conditions:</strong></p>
+<table class="doc-table">
+<thead><tr>
+<th>Condition</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead><tbody>
+<tr>
+<td><code>equals</code></td>
+<td>Exact match</td>
+<td><code>equals</code> with <code>value=&quot;test&quot;</code></td>
+</tr>
+<tr>
+<td><code>contains</code></td>
+<td>Substring search</td>
+<td><code>contains</code> with <code>value=&quot;key&quot;</code></td>
+</tr>
+<tr>
+<td><code>greater_than</code></td>
+<td>Numeric comparison</td>
+<td><code>greater_than</code> with <code>value=10</code></td>
+</tr>
+<tr>
+<td><code>less_than</code></td>
+<td>Numeric comparison</td>
+<td><code>less_than</code> with <code>value=5</code></td>
+</tr>
+<tr>
+<td><code>type_is</code></td>
+<td>Type checking</td>
+<td><code>type_is</code> with <code>value=int</code></td>
+</tr>
+<tr>
+<td><code>matches_regex</code></td>
+<td>Pattern matching</td>
+<td><code>matches_regex</code> with <code>value=&quot;^[A-Z]+$&quot;</code></td>
+</tr>
+</tbody></table>
+<p><strong>Regex Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Filter By Regex Example</span>
+    <span style="color: #9cdcfe;">${emails}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create List</span>    user@example.com    invalid    admin@test.org
+    <span style="color: #9cdcfe;">${valid}</span>    <span style="color: #4ec9b0; font-weight: bold;">Filter List By Condition</span>    <span style="color: #9cdcfe;">${emails}</span>    matches_regex    ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="merge-dictionaries">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#merge-dictionaries">Merge Dictionaries</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">Dict[str, Any]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Merge multiple dictionaries into a single dictionary.</p>
+<p>Combines multiple dictionaries using different merge strategies. Handles</p>
+<p>nested dictionaries intelligently based on the chosen strategy.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>*dictionaries</code>: Variable number of dictionaries to merge</li>
+<li><code>strategy</code>: Merge strategy - <code>override</code> (default), <code>keep<em>first</code>, <code>keep</em>last</code>, <code>deep_merge</code></li>
+</ul>
+<p><strong>Returns:</strong> Merged dictionary containing all key-value pairs.</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Merge Dictionaries Example</span>
+    <span style="color: #9cdcfe;">${dict1}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">name</span>=John    <span style="color: #dcdcaa;">age</span>=30
+    <span style="color: #9cdcfe;">${dict2}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">age</span>=35    <span style="color: #dcdcaa;">city</span>=NYC
+    <span style="color: #9cdcfe;">${merged}</span>    <span style="color: #4ec9b0; font-weight: bold;">Merge Dictionaries</span>    <span style="color: #9cdcfe;">${dict1}</span>    <span style="color: #9cdcfe;">${dict2}</span>
+<span style="color: #6a9955; font-style: italic;">    # Result: {&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 35, &quot;city&quot;: &quot;NYC&quot;} (override strategy)</span>
+</pre></div>
+<p><strong>Merge Strategies:</strong></p>
+<table class="doc-table">
+<thead><tr>
+<th>Strategy</th>
+<th>Behavior</th>
+<th>Use Case</th>
+</tr></thead><tbody>
+<tr>
+<td><code>override</code></td>
+<td>Later dicts override earlier ones</td>
+<td>Default configuration overrides</td>
+</tr>
+<tr>
+<td><code>keep_first</code></td>
+<td>First value wins</td>
+<td>Preserve original data</td>
+</tr>
+<tr>
+<td><code>keep_last</code></td>
+<td>Last value wins</td>
+<td>Latest updates take precedence</td>
+</tr>
+<tr>
+<td><code>deep_merge</code></td>
+<td>Recursively merge nested dicts</td>
+<td>Complex nested structures</td>
+</tr>
+</tbody></table>
+<p><strong>Deep Merge Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Deep Merge Example</span>
+    <span style="color: #9cdcfe;">${base}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">user</span>=<span style="color: #9cdcfe;">${dict}</span>    <span style="color: #dcdcaa;">settings</span>=<span style="color: #9cdcfe;">${dict2}</span>
+    <span style="color: #9cdcfe;">${update}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">user</span>=<span style="color: #9cdcfe;">${dict3}</span>    <span style="color: #dcdcaa;">settings</span>=<span style="color: #9cdcfe;">${dict4}</span>
+    <span style="color: #9cdcfe;">${merged}</span>    <span style="color: #4ec9b0; font-weight: bold;">Merge Dictionaries</span>    <span style="color: #9cdcfe;">${base}</span>    <span style="color: #9cdcfe;">${update}</span>    <span style="color: #dcdcaa;">strategy</span>=deep_merge
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="format-string-template">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#format-string-template">Format String Template</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">template</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">variables</span> : <span class="arg-type">Dict[str, Any]</span></li>
+            <li><span class="arg-name">missing_handler</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Format a string template with variable substitution.</p>
+<p>Replaces placeholders in a template string with values from a dictionary.</p>
+<p>Supports various placeholder formats and missing value handling strategies.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>template</code>: String template with placeholders (e.g., <code>&quot;Hello {name}, you have {count} messages&quot;</code>)</li>
+<li><code>variables</code>: Dictionary mapping placeholder names to values</li>
+<li><code>missing_handler</code>: How to handle missing variables - <code>skip</code>, <code>error</code>, or <code>default</code></li>
+</ul>
+<p><strong>Returns:</strong> Formatted string with variables substituted.</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Format Template Example</span>
+    <span style="color: #9cdcfe;">${template}</span>    <span style="color: #4ec9b0; font-weight: bold;">Set Variable</span>    Welcome {username}! You have {message_count} new messages.
+    <span style="color: #9cdcfe;">${vars}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">username</span>=John    <span style="color: #dcdcaa;">message_count</span>=5
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Format String Template</span>    <span style="color: #9cdcfe;">${template}</span>    <span style="color: #9cdcfe;">${vars}</span>
+<span style="color: #6a9955; font-style: italic;">    # Result: &quot;Welcome John! You have 5 new messages.&quot;</span>
+</pre></div>
+<p><strong>Placeholder Formats:</strong></p>
+<ul>
+<li><code>{variable}</code> - Simple placeholder</li>
+<li><code>{variable:default}</code> - With default value</li>
+<li><code>{variable!upper}</code> - With transformation (upper, lower, title)</li>
+</ul>
+<p><strong>Missing Handler Options:</strong></p>
+<table class="doc-table">
+<thead><tr>
+<th>Handler</th>
+<th>Behavior</th>
+</tr></thead><tbody>
+<tr>
+<td><code>skip</code></td>
+<td>Leave placeholder as-is</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>Raise an error</td>
+</tr>
+<tr>
+<td><code>default</code></td>
+<td>Use empty string</td>
+</tr>
+</tbody></table>
+<p><strong>Advanced Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Advanced Template Example</span>
+    <span style="color: #9cdcfe;">${template}</span>    <span style="color: #4ec9b0; font-weight: bold;">Set Variable</span>    User: {user:Guest} | Status: {status!upper} | Count: {count:0}
+    <span style="color: #9cdcfe;">${vars}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">status</span>=active
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Format String Template</span>    <span style="color: #9cdcfe;">${template}</span>    <span style="color: #9cdcfe;">${vars}</span>    <span style="color: #dcdcaa;">missing_handler</span>=default
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="extract-data-by-pattern">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#extract-data-by-pattern">Extract Data By Pattern</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">pattern</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">group</span> : <span class="arg-type">Optional[int]</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">Union[str, List[str]]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Extract data from text using regex patterns.</p>
+<p>Extracts matching text from a string using regular expressions. Supports</p>
+<p>single match, all matches, and specific capture group extraction.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Text to search in</li>
+<li><code>pattern</code>: Regular expression pattern</li>
+<li><code>group</code>: Capture group number (None for all matches, 0 for full match, 1+ for specific group)</li>
+</ul>
+<p><strong>Returns:</strong> Extracted string or list of strings.</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Extract Pattern Example</span>
+    <span style="color: #9cdcfe;">${text}</span>    <span style="color: #4ec9b0; font-weight: bold;">Set Variable</span>    Contact: john@example.com or admin@test.org
+    <span style="color: #9cdcfe;">${emails}</span>    <span style="color: #4ec9b0; font-weight: bold;">Extract Data By Pattern</span>    <span style="color: #9cdcfe;">${text}</span>    [a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}
+<span style="color: #6a9955; font-style: italic;">    # Result: [&quot;john@example.com&quot;, &quot;admin@test.org&quot;]</span>
+</pre></div>
+<p><strong>Capture Group Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Extract With Group Example</span>
+    <span style="color: #9cdcfe;">${text}</span>    <span style="color: #4ec9b0; font-weight: bold;">Set Variable</span>    Date: 2024-01-15 Time: 14:30:00
+    <span style="color: #9cdcfe;">${date}</span>    <span style="color: #4ec9b0; font-weight: bold;">Extract Data By Pattern</span>    <span style="color: #9cdcfe;">${text}</span>    (\d{4}-\d{2}-\d{2})    <span style="color: #dcdcaa;">group</span>=1
+<span style="color: #6a9955; font-style: italic;">    # Result: &quot;2024-01-15&quot;</span>
+</pre></div>
+<p><strong>Common Patterns:</strong></p>
+<table class="doc-table">
+<thead><tr>
+<th>Pattern</th>
+<th>Description</th>
+<th>Example</th>
+</tr></thead><tbody>
+<tr>
+<td><code>\d+</code></td>
+<td>Numbers</td>
+<td><code>&quot;123&quot;</code> from <code>&quot;Price: 123 dollars&quot;</code></td>
+</tr>
+<tr>
+<td><code>[A-Z][a-z]+</code></td>
+<td>Capitalized words</td>
+<td><code>&quot;John&quot;</code> from <code>&quot;Hello John Doe&quot;</code></td>
+</tr>
+<tr>
+<td><code>\w+@\w+\.\w+</code></td>
+<td>Email addresses</td>
+<td><code>&quot;user@example.com&quot;</code></td>
+</tr>
+<tr>
+<td><code>\$\{[^}]+\}</code></td>
+<td>Robot variables</td>
+<td><code>${variable}</code> from Robot Framework code</td>
+</tr>
+</tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="compare-data-structures">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#compare-data-structures">Compare Data Structures</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">data1</span> : <span class="arg-type">Union[Dict, List]</span></li>
+            <li><span class="arg-name">data2</span> : <span class="arg-type">Union[Dict, List]</span></li>
+            <li><span class="arg-name">ignore_order</span> : <span class="arg-type">bool</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">Dict[str, Any]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Compare two data structures and return differences.</p>
+<p>Performs deep comparison of dictionaries or lists, identifying added,</p>
+<p>removed, and modified items. Useful for data validation and testing.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>data1</code>: First data structure (baseline)</li>
+<li><code>data2</code>: Second data structure (to compare)</li>
+<li><code>ignore_order</code>: If True, list order is ignored (default: False)</li>
+</ul>
+<p><strong>Returns:</strong> Dictionary with comparison results:</p>
+<ul>
+<li><code>equal</code>: Boolean indicating if structures are identical</li>
+<li><code>added</code>: Items present in data2 but not in data1</li>
+<li><code>removed</code>: Items present in data1 but not in data2</li>
+<li><code>modified</code>: Items that differ between structures</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Compare Structures Example</span>
+    <span style="color: #9cdcfe;">${original}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">name</span>=John    <span style="color: #dcdcaa;">age</span>=30
+    <span style="color: #9cdcfe;">${updated}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">name</span>=John    <span style="color: #dcdcaa;">age</span>=31    <span style="color: #dcdcaa;">city</span>=NYC
+    <span style="color: #9cdcfe;">${diff}</span>    <span style="color: #4ec9b0; font-weight: bold;">Compare Data Structures</span>    <span style="color: #9cdcfe;">${original}</span>    <span style="color: #9cdcfe;">${updated}</span>
+<span style="color: #6a9955; font-style: italic;">    # Result: {&quot;equal&quot;: False, &quot;added&quot;: {&quot;city&quot;: &quot;NYC&quot;}, &quot;removed&quot;: {}, &quot;modified&quot;: {&quot;age&quot;: (30, 31)}}</span>
+</pre></div>
+<p><strong>List Comparison:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Compare Lists Example</span>
+    <span style="color: #9cdcfe;">${list1}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create List</span>    a    b    c
+    <span style="color: #9cdcfe;">${list2}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create List</span>    c    b    a
+    <span style="color: #9cdcfe;">${diff}</span>    <span style="color: #4ec9b0; font-weight: bold;">Compare Data Structures</span>    <span style="color: #9cdcfe;">${list1}</span>    <span style="color: #9cdcfe;">${list2}</span>    <span style="color: #dcdcaa;">ignore_order</span>=True
+<span style="color: #6a9955; font-style: italic;">    # Result: {&quot;equal&quot;: True, ...}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="group-items-by-key">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#group-items-by-key">Group Items By Key</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">items</span> : <span class="arg-type">List[Dict[str, Any]]</span></li>
+            <li><span class="arg-name">key</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">default_group</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">Dict[str, List[Dict[str, Any]]]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Group a list of dictionaries by a common key.</p>
+<p>Organizes a list of dictionaries into groups based on the value of a</p>
+<p>specified key. Useful for categorizing and organizing data.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>items</code>: List of dictionaries to group</li>
+<li><code>key</code>: Key name to group by</li>
+<li><code>default_group</code>: Group name for items missing the key (default: &quot;other&quot;)</li>
+</ul>
+<p><strong>Returns:</strong> Dictionary mapping group names to lists of items.</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Group Items Example</span>
+    <span style="color: #9cdcfe;">${users}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create List</span>
+    ...    <span style="color: #9cdcfe;">${dict1}</span>    <span style="color: #6a9955; font-style: italic;"># {&quot;name&quot;: &quot;John&quot;, &quot;role&quot;: &quot;admin&quot;}</span>
+    ...    <span style="color: #9cdcfe;">${dict2}</span>    <span style="color: #6a9955; font-style: italic;"># {&quot;name&quot;: &quot;Jane&quot;, &quot;role&quot;: &quot;user&quot;}</span>
+    ...    <span style="color: #9cdcfe;">${dict3}</span>    <span style="color: #6a9955; font-style: italic;"># {&quot;name&quot;: &quot;Bob&quot;, &quot;role&quot;: &quot;admin&quot;}</span>
+    <span style="color: #9cdcfe;">${grouped}</span>    <span style="color: #4ec9b0; font-weight: bold;">Group Items By Key</span>    <span style="color: #9cdcfe;">${users}</span>    role
+<span style="color: #6a9955; font-style: italic;">    # Result: {&quot;admin&quot;: [dict1, dict3], &quot;user&quot;: [dict2]}</span>
+</pre></div>
+<p><strong>Use Cases:</strong></p>
+<ul>
+<li>Organizing test results by status</li>
+<li>Grouping API responses by category</li>
+<li>Categorizing log entries by level</li>
+<li>Sorting data by type or classification</li>
+</ul>
+<p><strong>Nested Key Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Group By Nested Key Example</span>
+    <span style="color: #9cdcfe;">${items}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create List</span>    <span style="color: #9cdcfe;">${dict1}</span>    <span style="color: #9cdcfe;">${dict2}</span>
+<span style="color: #6a9955; font-style: italic;">    # dict1: {&quot;user&quot;: {&quot;department&quot;: &quot;IT&quot;}}</span>
+<span style="color: #6a9955; font-style: italic;">    # Use dot notation: &quot;user.department&quot;</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="calculate-statistics">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#calculate-statistics">Calculate Statistics</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">numbers</span> : <span class="arg-type">List[Union[int, float]]</span></li>
+            <li><span class="arg-name">include_percentiles</span> : <span class="arg-type">bool</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">Dict[str, float]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Calculate statistical measures for a list of numbers.</p>
+<p>Computes common statistical metrics including mean, median, min, max,</p>
+<p>and optionally percentiles. Useful for data analysis and reporting.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>numbers</code>: List of numeric values</li>
+<li><code>include_percentiles</code>: If True, calculate 25th, 50th, 75th, and 95th percentiles</li>
+</ul>
+<p><strong>Returns:</strong> Dictionary with statistical measures:</p>
+<ul>
+<li><code>count</code>: Number of values</li>
+<li><code>sum</code>: Sum of all values</li>
+<li><code>mean</code>: Average value</li>
+<li><code>median</code>: Middle value</li>
+<li><code>min</code>: Minimum value</li>
+<li><code>max</code>: Maximum value</li>
+<li><code>range</code>: Difference between max and min</li>
+<li><code>percentiles</code>: (if enabled) Dictionary with percentile values</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Calculate Statistics Example</span>
+    <span style="color: #9cdcfe;">${scores}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create List</span>    85    90    78    92    88
+    <span style="color: #9cdcfe;">${stats}</span>    <span style="color: #4ec9b0; font-weight: bold;">Calculate Statistics</span>    <span style="color: #9cdcfe;">${scores}</span>
+<span style="color: #6a9955; font-style: italic;">    # Result: {&quot;count&quot;: 5, &quot;mean&quot;: 86.6, &quot;median&quot;: 88, &quot;min&quot;: 78, &quot;max&quot;: 92, ...}</span>
+</pre></div>
+<p><strong>With Percentiles:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Statistics With Percentiles Example</span>
+    <span style="color: #9cdcfe;">${data}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create List</span>    10    20    30    40    50    60    70    80    90    100
+    <span style="color: #9cdcfe;">${stats}</span>    <span style="color: #4ec9b0; font-weight: bold;">Calculate Statistics</span>    <span style="color: #9cdcfe;">${data}</span>    <span style="color: #dcdcaa;">include_percentiles</span>=True
+<span style="color: #6a9955; font-style: italic;">    # Includes: &quot;percentiles&quot;: {&quot;25&quot;: 30, &quot;50&quot;: 55, &quot;75&quot;: 80, &quot;95&quot;: 95}</span>
+</pre></div>
+<p><strong>Visualization:</strong></p>
+<div class="code-block"><pre class="language-text">
+Distribution: [min]----[25%]----[median]----[75%]----[max]
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="create-data-snapshot">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#create-data-snapshot">Create Data Snapshot</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">data</span> : <span class="arg-type">Any</span></li>
+            <li><span class="arg-name">include_metadata</span> : <span class="arg-type">bool</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">Dict[str, Any]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Create a snapshot of data with optional metadata.</p>
+<p>Captures a point-in-time snapshot of data structures, including</p>
+<p>metadata like timestamp, data type, and size information.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>data</code>: Data structure to snapshot (dict, list, string, etc.)</li>
+<li><code>include_metadata</code>: If True, include metadata in snapshot (default: True)</li>
+</ul>
+<p><strong>Returns:</strong> Dictionary containing snapshot data and metadata.</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> DataProcessor
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Create Snapshot Example</span>
+    <span style="color: #9cdcfe;">${data}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">name</span>=John    <span style="color: #dcdcaa;">age</span>=30
+    <span style="color: #9cdcfe;">${snapshot}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Data Snapshot</span>    <span style="color: #9cdcfe;">${data}</span>
+<span style="color: #6a9955; font-style: italic;">    # Result: {&quot;data&quot;: {...}, &quot;metadata&quot;: {&quot;timestamp&quot;: &quot;...&quot;, &quot;type&quot;: &quot;dict&quot;, &quot;size&quot;: 2}}</span>
+</pre></div>
+<p><strong>Metadata Fields:</strong></p>
+<table class="doc-table">
+<thead><tr>
+<th>Field</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><code>timestamp</code></td>
+<td>ISO format timestamp</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>Data type (dict, list, str, etc.)</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td>Size/length of data structure</td>
+</tr>
+<tr>
+<td><code>hash</code></td>
+<td>Hash of serialized data (for comparison)</td>
+</tr>
+</tbody></table>
+<p><strong>Use Cases:</strong></p>
+<ul>
+<li>Data versioning and comparison</li>
+<li>Audit trails</li>
+<li>Debugging data transformations</li>
+<li>Testing data integrity</li>
+</ul>
+      </div>
+    </div>
+  </div>
+</div>
+      </section>
+
+      <section class="keyword-container">
+        <div class="keyword-name">
+          <h2>Need Help?</h2>
+        </div>
+        <div class="kw-overview">
+          <div class="kw-docs">
+            <p>
+              Found an issue or have a feature request for this library? Let the maintainers know by opening a new
+              GitHub issue. Please include environment details and relevant log output to help us reproduce the problem.
+            </p>
+            <p style="margin-top: 1rem;"><a class="btn btn-primary" href="https://github.com/username/repo/issues/new" target="_blank" rel="noopener noreferrer">Open an Issue on GitHub</a></p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    Generated by <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · Data Processor Documentation · Last updated: 2026-01-01 12:45:32
+  </footer>
+
+  <script>
+    const searchInput = document.getElementById('keyword-search');
+    const keywordList = document.getElementById('keyword-list');
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.querySelector('aside');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    function searchKeywords() {
+      const term = (searchInput.value || '').toLowerCase().trim();
+      const entries = keywordList.querySelectorAll('li');
+      let matches = 0;
+
+      entries.forEach((entry) => {
+        const text = entry.textContent.toLowerCase();
+        const hit = text.includes(term);
+        entry.classList.toggle('hidden', !hit);
+        if (hit) matches++;
+      });
+
+      let noResults = keywordList.querySelector('.no-results');
+      if (!matches && term) {
+        if (!noResults) {
+          noResults = document.createElement('li');
+          noResults.className = 'no-results';
+          keywordList.appendChild(noResults);
+        }
+        noResults.textContent = 'No keywords found';
+      } else if (noResults) {
+        noResults.remove();
+      }
+    }
+
+    function toggleSidebar() {
+      if (window.innerWidth <= 1024) {
+        const isActive = sidebar.classList.contains('active');
+        const headerHeight = document.querySelector('header').offsetHeight;
+        
+        if (!isActive) {
+          // Open sidebar - set up styles first
+          sidebar.style.display = 'block';
+          sidebar.style.visibility = 'visible';
+          sidebar.style.opacity = '1';
+          sidebar.style.position = 'fixed';
+          sidebar.style.top = headerHeight + 'px';
+          sidebar.style.left = '0';
+          sidebar.style.width = '280px';
+          sidebar.style.maxWidth = '85vw';
+          sidebar.style.height = `calc(100vh - ${headerHeight}px)`;
+          sidebar.style.zIndex = '26';
+          sidebar.style.transition = 'transform 0.3s ease-in-out';
+          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+          
+          // Ensure sidebar starts off-screen
+          sidebar.style.transform = 'translateX(-100%)';
+          sidebar.style.webkitTransform = 'translateX(-100%)';
+          
+          // Use requestAnimationFrame to ensure transition is applied before changing transform
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              sidebar.style.transform = 'translateX(0)';
+              sidebar.style.webkitTransform = 'translateX(0)';
+              sidebar.classList.add('active');
+              sidebarOverlay.classList.add('active');
+            });
+          });
+        } else {
+          // Close sidebar
+          sidebar.style.transition = 'transform 0.3s ease-in-out';
+          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+          sidebar.style.transform = 'translateX(-100%)';
+          sidebar.style.webkitTransform = 'translateX(-100%)';
+          sidebar.classList.remove('active');
+          sidebarOverlay.classList.remove('active');
+        }
+      }
+    }
+
+    function closeSidebar() {
+      if (window.innerWidth <= 1024) {
+        sidebar.style.transition = 'transform 0.3s ease-in-out';
+        sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+        sidebar.style.transform = 'translateX(-100%)';
+        sidebar.style.webkitTransform = 'translateX(-100%)';
+      }
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    }
+
+    if (searchInput && keywordList) {
+      searchInput.addEventListener('input', searchKeywords);
+      searchInput.addEventListener('keyup', (event) => {
+        if (event.key === 'Escape') {
+          searchInput.value = '';
+          searchKeywords();
+          searchInput.blur();
+        }
+      });
+    }
+
+    if (menuToggle && sidebar && sidebarOverlay) {
+      menuToggle.addEventListener('click', toggleSidebar);
+      sidebarOverlay.addEventListener('click', closeSidebar);
+      
+      // Close sidebar when clicking on a link (mobile only)
+      const sidebarLinks = sidebar.querySelectorAll('a');
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 1024) {
+            closeSidebar();
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
+

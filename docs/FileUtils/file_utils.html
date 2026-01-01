@@ -1,0 +1,1445 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="Generator" content="Robot Framework Documentation Parser">
+  <link rel="icon" href="https://docs.robotframework.org/img/rf_favicon.png">
+  <title>File Utils Documentation</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-alt: #020617;
+      --card: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.15);
+      --border: #1e293b;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.8));
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo img {
+      width: 36px;
+      height: 36px;
+      display: block;
+    }
+
+    header h1 {
+      font-size: 1.05rem;
+      margin: 0;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f4f6ff;
+    }
+
+    header .tagline {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    header nav {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    header nav a {
+      color: var(--muted);
+      padding-bottom: 0.1rem;
+      border-bottom: 1px solid transparent;
+    }
+
+    header nav a:hover {
+      color: var(--text);
+      border-color: var(--accent-soft);
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      padding: 0.5rem;
+      margin-left: auto;
+      position: relative;
+      z-index: 31;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-toggle:hover {
+      color: var(--accent);
+    }
+
+    .menu-toggle svg {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      border-right: 1px solid var(--border);
+      padding: calc(1.25rem + 10px) 1.5rem 1.5rem;
+      background: linear-gradient(to bottom, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      max-height: 100vh;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    aside h2 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .toc-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .toc-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.25rem 0 0;
+    }
+
+    .toc-section li {
+      margin: 0.1rem 0;
+    }
+
+    .toc-section a {
+      color: var(--muted);
+      padding: 0.12rem 0;
+      display: inline-block;
+    }
+
+    .toc-section a:hover {
+      color: var(--text);
+    }
+
+    .keyword-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0 0;
+      font-size: 0.86rem;
+      overflow-y: auto;
+    }
+
+    .keyword-list li {
+      margin: 0;
+    }
+
+    .keyword-list li.hidden {
+      display: none;
+    }
+
+    .keyword-list a {
+      display: block;
+      color: var(--muted);
+      padding: 0.15rem 0;
+    }
+
+    .keyword-list a:hover {
+      color: var(--accent);
+    }
+
+    .search-box {
+      margin-top: 0.65rem;
+      margin-left: -5px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.8);
+      color: var(--text);
+      font-size: 0.85rem;
+    }
+
+    .search-box input:focus {
+      outline: 2px solid rgba(56,189,248,0.4);
+    }
+
+    .no-results {
+      color: var(--muted);
+      font-style: italic;
+      padding: 0.4rem 0;
+    }
+
+    main {
+      padding: 1.75rem 2.4rem 3rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+      gap: 2rem;
+      margin-bottom: 2.2rem;
+      align-items: center;
+    }
+
+    .hero h2 {
+      font-size: 2.2rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero p {
+      color: var(--muted);
+      margin-top: 0;
+      max-width: 40rem;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin: 0.8rem 0 1.25rem;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      color: var(--muted);
+      border-color: rgba(56,189,248,0.4);
+    }
+
+    .badge.primary {
+      border-color: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      border: 1px solid transparent;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: radial-gradient(circle at top left, #38bdf8, #0ea5e9 45%, #0369a1 100%);
+      border-color: rgba(56,189,248,0.4);
+      color: #0b1120;
+      box-shadow: 0 10px 30px rgba(56,189,248,0.4);
+    }
+
+    .btn-ghost {
+      background: rgba(15,23,42,0.75);
+      border-color: var(--border);
+      color: var(--muted);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 35px rgba(56,189,248,0.5);
+      text-decoration: none;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .hero-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hero-meta.meta-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      margin-top: 0.35rem;
+    }
+
+    .hero-meta.meta-grid span {
+      display: inline-flex;
+      gap: 0.25rem;
+      align-items: center;
+      color: var(--muted);
+    }
+
+    .hero-meta.meta-grid strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .hero-card {
+      border-radius: 1.2rem;
+      background: radial-gradient(circle at top, rgba(56,189,248,0.2), rgba(15,23,42,1));
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      padding: 1rem 1rem 1.2rem;
+      font-size: 0.75rem;
+    }
+
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.45rem;
+      color: var(--muted);
+    }
+
+    .hero-card-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+    }
+
+    .hero-card-lang {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.85);
+    }
+
+    pre {
+      background: rgba(2,6,23,0.95);
+      border-radius: 0.75rem;
+      padding: 0.9rem 1rem;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .keyword-container {
+      background: rgba(15,23,42,0.9);
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      padding: 1rem 1.1rem;
+      font-size: 0.92rem;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      margin-bottom: 1.5rem;
+    }
+
+    .keyword-name h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .kw-overview {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .args,
+    .return-type,
+    .kw-docs {
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 0.85rem;
+      background: rgba(2,6,23,0.75);
+    }
+
+    .args h4,
+    .return-type h4,
+    .kw-docs h4 {
+      margin: 0 0 0.4rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .arguments-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .arg-name {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      background: rgba(15,76,204,0.15);
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+      border: 1px solid rgba(15,76,204,0.3);
+    }
+
+    .arg-type {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      color: var(--muted);
+    }
+
+    .kwdoc {
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .kwdoc code {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      background: rgba(56,189,248,0.08);
+      padding: 0.2rem 0.35rem;
+      border-radius: 4px;
+    }
+
+    .kwdoc table,
+    .kwdoc .doc-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1rem 0;
+      border: 2px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: rgba(2,6,23,0.75);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .kwdoc table thead,
+    .kwdoc .doc-table thead {
+      background: rgba(56,189,248,0.1);
+    }
+
+    .kwdoc table th,
+    .kwdoc .doc-table th {
+      padding: 0.65rem 0.85rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .kwdoc table th:last-child,
+    .kwdoc .doc-table th:last-child {
+      border-right: none;
+    }
+
+    .kwdoc table td,
+    .kwdoc .doc-table td {
+      padding: 0.6rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+
+    .kwdoc table td:last-child,
+    .kwdoc .doc-table td:last-child {
+      border-right: none;
+    }
+
+    .kwdoc table tbody tr:last-child td,
+    .kwdoc .doc-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .kwdoc table tbody tr:hover,
+    .kwdoc .doc-table tbody tr:hover {
+      background: rgba(56,189,248,0.05);
+    }
+
+    .kwdoc img,
+    .kwdoc .doc img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      margin: 1rem 0;
+      display: block;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .code-block {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+
+    .code-block pre {
+      margin: 0;
+      padding: 1rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+      overflow-x: auto;
+      border-radius: 0;
+      border: none;
+      background: transparent;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.2rem 2.4rem 1.6rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      background: radial-gradient(circle at bottom, rgba(56,189,248,0.15), rgba(15,23,42,1));
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: fixed !important;
+        top: 70px;
+        left: 0;
+        width: 280px;
+        max-width: 85vw;
+        height: calc(100vh - 70px);
+        z-index: 26;
+        transform: translateX(-100%) !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
+        border-right: 1px solid var(--border);
+      }
+
+      aside.active {
+        transform: translateX(0) !important;
+      }
+
+      .sidebar-overlay {
+        display: block;
+      }
+
+      main {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      aside {
+        position: fixed !important;
+        top: 70px;
+        left: 0;
+        width: 280px;
+        max-width: 85vw;
+        height: calc(100vh - 70px);
+        z-index: 26;
+        transform: translateX(-100%) !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
+        border-right: 1px solid var(--border);
+      }
+
+      aside.active {
+        transform: translateX(0) !important;
+      }
+
+      .sidebar-overlay {
+        display: block;
+      }
+
+      main {
+        width: 100%;
+      }
+
+      main {
+        padding: 1.25rem 1.4rem 2.5rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 0.7rem 1rem;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero h2 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="https://docs.robotframework.org/img/robot-framework-dark.svg" alt="Robot Framework Logo">
+      </div>
+      <div>
+        <h1>File Utils</h1>
+        <div class="tagline">Robot Framework library documentation</div>
+      </div>
+    </div>
+    <nav><a href="../index.html">← Back to Dashboard</a>
+      <a href="#intro">Overview</a>
+      <a href="#keywords">Keywords</a>
+    </nav>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="layout">
+    <aside>
+      <div class="toc-section">
+        <h2>Getting Started</h2>
+        <ul>
+          <li><a href="#intro">Introduction</a></li>
+        </ul>
+      </div>
+
+      <div class="toc-section">
+        <h2>Keywords</h2>
+        <div class="search-box">
+          <input type="text" id="keyword-search" placeholder="Search keywords…">
+        </div>
+        <ul class="keyword-list" id="keyword-list">
+          <li><a href="#read-file-content">Read File Content</a></li>
+        <li><a href="#write-file-content">Write File Content</a></li>
+        <li><a href="#file-exists">File Exists</a></li>
+        <li><a href="#directory-exists">Directory Exists</a></li>
+        <li><a href="#create-directory">Create Directory</a></li>
+        <li><a href="#copy-file">Copy File</a></li>
+        <li><a href="#move-file">Move File</a></li>
+        <li><a href="#delete-file">Delete File</a></li>
+        <li><a href="#list-files">List Files</a></li>
+        <li><a href="#get-file-size">Get File Size</a></li>
+        <li><a href="#read-json-file">Read Json File</a></li>
+        <li><a href="#write-json-file">Write Json File</a></li>
+        <li><a href="#get-file-extension">Get File Extension</a></li>
+        <li><a href="#join-paths">Join Paths</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main>
+      <section id="intro" class="hero">
+        <div>
+          <h2>File Utils Documentation</h2>
+          
+          <div class="hero-badges">
+            <!-- <span class="badge primary">Robot Framework Library</span> -->
+            <span class="badge">Version 1.2.0</span>
+            <span class="badge">Scope GLOBAL</span>
+            <span class="badge">14 Keywords</span>
+          </div>
+          <div class="hero-actions"><a class="btn btn-primary" href="https://example.com/file_utils" target="_blank" rel="noopener noreferrer"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2Zm6.93 9H16.2a17.459 17.459 0 0 0-1.18-4.495A7.953 7.953 0 0 1 18.93 11Zm-7.93 8a15.417 15.417 0 0 1-1.458-4h2.916A15.417 15.417 0 0 1 11 19Zm-1.458-6a13.7 13.7 0 0 1 0-2h2.916a13.7 13.7 0 0 1 0 2Zm-3.25-2a13.116 13.116 0 0 1 .4-2h2.365a13.472 13.472 0 0 0 0 4H6.692a13.116 13.116 0 0 1-.4-2Zm4.708-6a15.417 15.417 0 0 1 1.458 4h-2.916A15.417 15.417 0 0 1 11 5Zm-2.02.505A17.459 17.459 0 0 0 7.8 11H5.07A7.953 7.953 0 0 1 8.98 5.505ZM5.07 13H7.8a17.459 17.459 0 0 0 1.18 4.495A7.953 7.953 0 0 1 5.07 13Zm9.95 4.495c.42-1.282.728-2.64.892-3.995h2.188a7.953 7.953 0 0 1-3.08 3.995Z"></path></svg><span>Library Website</span></a><a class="btn btn-ghost" href="https://github.com/username/repo" target="_blank" rel="noopener noreferrer"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" data-view-component="true" class="octicon octicon-mark-github v-align-middle"><path fill="currentColor" d="M12 1C5.923 1 1 5.923 1 12c0 4.867 3.149 8.979 7.521 10.436.55.096.756-.233.756-.522 0-.262-.013-1.128-.013-2.049-2.764.509-3.479-.674-3.699-1.292-.124-.317-.66-1.293-1.127-1.554-.385-.207-.936-.715-.014-.729.866-.014 1.485.797 1.691 1.128.99 1.663 2.571 1.196 3.204.907.096-.715.385-1.196.701-1.471-2.448-.275-5.005-1.224-5.005-5.432 0-1.196.426-2.186 1.128-2.956-.111-.275-.496-1.402.11-2.915 0 0 .921-.288 3.024 1.128a10.193 10.193 0 0 1 2.75-.371c.936 0 1.871.123 2.75.371 2.104-1.43 3.025-1.128 3.025-1.128.605 1.513.221 2.64.111 2.915.701.77 1.127 1.747 1.127 2.956 0 4.222-2.571 5.157-5.019 5.432.399.344.743 1.004.743 2.035 0 1.471-.014 2.654-.014 3.025 0 .289.206.632.756.522C19.851 20.979 23 16.854 23 12c0-6.077-4.922-11-11-11Z"></path></svg><span>View on GitHub</span></a><a class="btn btn-ghost" href="mailto:support@example.com"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M19.25 4H4.75A2.75 2.75 0 0 0 2 6.75v10.5A2.75 2.75 0 0 0 4.75 20h14.5A2.75 2.75 0 0 0 22 17.25V6.75A2.75 2.75 0 0 0 19.25 4Zm0 1.5c.129 0 .252.027.363.076L12 11.14 4.387 5.076A1.25 1.25 0 0 1 4.75 5.5Zm0 13H4.75A1.25 1.25 0 0 1 3.5 17.25V7.46l7.87 6.04a.75.75 0 0 0 .88 0l7.87-6.04v9.79A1.25 1.25 0 0 1 19.25 18.5Z"></path></svg><span>Contact Support</span></a></div>
+          <div class="hero-meta meta-grid"><span><strong>Author:</strong> Jane Smith</span><span><strong>Maintainer:</strong> Infrastructure Team</span><span><strong>License:</strong> Apache-2.0</span><span><strong>Robot Framework:</strong> >=7.0</span><span><strong>Python:</strong> >=3.9</span></div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-header">
+            <div class="hero-card-title">Sample Usage</div>
+            <div class="hero-card-lang">Robot</div>
+          </div>
+          <pre class="language-robot"><code><span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> File Utils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example</span>
+    [Documentation]    Demonstrates using File Utils
+<span style="color: #6a9955; font-style: italic;">    # add your keyword calls here</span></code></pre>
+        </div>
+      </section>
+
+      <section class="keyword-container intro-section"><div class="keyword-name"><h2>Introduction</h2></div><div class="kw-overview"><div class="kw-docs"><div class="intro-content"><p>File and directory utilities for Robot Framework.</p>
+<p>    This library provides comprehensive file system operations including:</p>
+<ul>
+<li>File reading and writing</li>
+<li>Directory creation and management</li>
+<li>File copying and moving</li>
+<li>Path manipulation</li>
+<li>File existence checks</li>
+</ul></div></div></div></section>
+
+      <section id="keywords">
+        <div class="keyword-container" id="read-file-content">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#read-file-content">Read File Content</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">file_path</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">encoding</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Read entire content of a file.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>file_path</code>: Path to the file to read</li>
+<li><code>encoding</code>: File encoding (default: utf-8)</li>
+</ul>
+<p><strong>Returns:</strong> File content as string</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> FileUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Read File Example</span>
+    <span style="color: #9cdcfe;">${content}</span>    <span style="color: #4ec9b0; font-weight: bold;">Read File Content</span>    /path/to/file.txt
+    <span style="color: #4ec9b0; font-weight: bold;">Should Not Be Empty</span>     <span style="color: #9cdcfe;">${content}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="write-file-content">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#write-file-content">Write File Content</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">file_path</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">content</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">encoding</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Write content to a file.</p>
+<p>Creates the file if it doesn&#x27;t exist, overwrites if it does.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>file_path</code>: Path where to write the file</li>
+<li><code>content</code>: Content to write</li>
+<li><code>encoding</code>: File encoding (default: utf-8)</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> FileUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Write File Example</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Write File Content</span>     output.txt    Hello World
+    <span style="color: #4ec9b0; font-weight: bold;">File Should Exist</span>     output.txt
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="file-exists">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#file-exists">File Exists</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">file_path</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">bool</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Check if a file exists.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>file_path</code>: Path to check</li>
+</ul>
+<p><strong>Returns:</strong> True if file exists, False otherwise</p>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="directory-exists">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#directory-exists">Directory Exists</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">dir_path</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">bool</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Check if a directory exists.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>dir_path</code>: Directory path to check</li>
+</ul>
+<p><strong>Returns:</strong> True if directory exists, False otherwise</p>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="create-directory">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#create-directory">Create Directory</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">dir_path</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">parents</span> : <span class="arg-type">bool</span></li>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Create a directory.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>dir_path</code>: Directory path to create</li>
+<li><code>parents</code>: Create parent directories if needed (default: True)</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> FileUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Create Directory Example</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Create Directory</span>     /path/to/new/directory
+    <span style="color: #4ec9b0; font-weight: bold;">Directory Should Exist</span>     /path/to/new/directory
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="copy-file">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#copy-file">Copy File</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">source</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">destination</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Copy a file from source to destination.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>source</code>: Source file path</li>
+<li><code>destination</code>: Destination file path</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> FileUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Copy File Example</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Copy File</span>     source.txt    backup/source.txt
+    <span style="color: #4ec9b0; font-weight: bold;">File Should Exist</span>     backup/source.txt
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="move-file">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#move-file">Move File</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">source</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">destination</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Move a file from source to destination.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>source</code>: Source file path</li>
+<li><code>destination</code>: Destination file path</li>
+</ul>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="delete-file">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#delete-file">Delete File</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">file_path</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Delete a file.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>file_path</code>: Path to file to delete</li>
+</ul>
+<p><strong>Raises:</strong> FileNotFoundError if file doesn&#x27;t exist</p>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="list-files">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#list-files">List Files</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">directory</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">pattern</span> : <span class="arg-type">Optional[str]</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">List[str]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>List all files in a directory.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>directory</code>: Directory path to list</li>
+<li><code>pattern</code>: Optional glob pattern to filter files (e.g., &quot;*.txt&quot;)</li>
+</ul>
+<p><strong>Returns:</strong> List of file paths</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> FileUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">List Files Example</span>
+    <span style="color: #9cdcfe;">${files}</span>    <span style="color: #4ec9b0; font-weight: bold;">List Files</span>    /path/to/dir    *.txt
+    <span style="color: #4ec9b0; font-weight: bold;">Should Not Be Empty</span>     <span style="color: #9cdcfe;">${files}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-file-size">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-file-size">Get File Size</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">file_path</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">int</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Get file size in bytes.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>file_path</code>: Path to file</li>
+</ul>
+<p><strong>Returns:</strong> File size in bytes</p>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="read-json-file">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#read-json-file">Read Json File</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">file_path</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">dict</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Read and parse a JSON file.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>file_path</code>: Path to JSON file</li>
+</ul>
+<p><strong>Returns:</strong> Parsed JSON as dictionary</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> FileUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Read JSON File Example</span>
+    <span style="color: #9cdcfe;">${data}</span>    <span style="color: #4ec9b0; font-weight: bold;">Read Json File</span>    config.json
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${data}</span>[key]    value
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="write-json-file">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#write-json-file">Write Json File</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">file_path</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">data</span> : <span class="arg-type">dict</span></li>
+            <li><span class="arg-name">indent</span> : <span class="arg-type">int</span></li>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Write data to a JSON file.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>file_path</code>: Path where to write JSON file</li>
+<li><code>data</code>: Dictionary to write as JSON</li>
+<li><code>indent</code>: JSON indentation (default: 2)</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> FileUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Write JSON File Example</span>
+    <span style="color: #9cdcfe;">${config}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">key</span>=value    <span style="color: #dcdcaa;">name</span>=test
+    <span style="color: #4ec9b0; font-weight: bold;">Write Json File</span>     config.json    <span style="color: #9cdcfe;">${config}</span>
+    <span style="color: #4ec9b0; font-weight: bold;">File Should Exist</span>     config.json
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-file-extension">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-file-extension">Get File Extension</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">file_path</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Get file extension.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>file_path</code>: File path</li>
+</ul>
+<p><strong>Returns:</strong> File extension (without dot)</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> FileUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Get File Extension Example</span>
+    <span style="color: #9cdcfe;">${ext}</span>    <span style="color: #4ec9b0; font-weight: bold;">Get File Extension</span>    document.pdf
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${ext}</span>    pdf
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="join-paths">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#join-paths">Join Paths</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Join multiple path components.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>*paths</code>: Variable number of path components</li>
+</ul>
+<p><strong>Returns:</strong> Joined path string</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> FileUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Join Paths Example</span>
+    <span style="color: #9cdcfe;">${path}</span>    <span style="color: #4ec9b0; font-weight: bold;">Join Paths</span>    /home    user    documents    file.txt
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${path}</span>    /home/user/documents/file.txt
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+      </section>
+
+      <section class="keyword-container">
+        <div class="keyword-name">
+          <h2>Need Help?</h2>
+        </div>
+        <div class="kw-overview">
+          <div class="kw-docs">
+            <p>
+              Found an issue or have a feature request for this library? Let the maintainers know by opening a new
+              GitHub issue. Please include environment details and relevant log output to help us reproduce the problem.
+            </p>
+            <p style="margin-top: 1rem;"><a class="btn btn-primary" href="https://github.com/username/repo/issues/new" target="_blank" rel="noopener noreferrer">Open an Issue on GitHub</a></p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    Generated by <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · File Utils Documentation · Last updated: 2026-01-01 12:26:23
+  </footer>
+
+  <script>
+    const searchInput = document.getElementById('keyword-search');
+    const keywordList = document.getElementById('keyword-list');
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.querySelector('aside');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    function searchKeywords() {
+      const term = (searchInput.value || '').toLowerCase().trim();
+      const entries = keywordList.querySelectorAll('li');
+      let matches = 0;
+
+      entries.forEach((entry) => {
+        const text = entry.textContent.toLowerCase();
+        const hit = text.includes(term);
+        entry.classList.toggle('hidden', !hit);
+        if (hit) matches++;
+      });
+
+      let noResults = keywordList.querySelector('.no-results');
+      if (!matches && term) {
+        if (!noResults) {
+          noResults = document.createElement('li');
+          noResults.className = 'no-results';
+          keywordList.appendChild(noResults);
+        }
+        noResults.textContent = 'No keywords found';
+      } else if (noResults) {
+        noResults.remove();
+      }
+    }
+
+    function toggleSidebar() {
+      if (window.innerWidth <= 1024) {
+        const isActive = sidebar.classList.contains('active');
+        const headerHeight = document.querySelector('header').offsetHeight;
+        
+        if (!isActive) {
+          // Open sidebar - set up styles first
+          sidebar.style.display = 'block';
+          sidebar.style.visibility = 'visible';
+          sidebar.style.opacity = '1';
+          sidebar.style.position = 'fixed';
+          sidebar.style.top = headerHeight + 'px';
+          sidebar.style.left = '0';
+          sidebar.style.width = '280px';
+          sidebar.style.maxWidth = '85vw';
+          sidebar.style.height = `calc(100vh - ${headerHeight}px)`;
+          sidebar.style.zIndex = '26';
+          sidebar.style.transition = 'transform 0.3s ease-in-out';
+          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+          
+          // Ensure sidebar starts off-screen
+          sidebar.style.transform = 'translateX(-100%)';
+          sidebar.style.webkitTransform = 'translateX(-100%)';
+          
+          // Use requestAnimationFrame to ensure transition is applied before changing transform
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              sidebar.style.transform = 'translateX(0)';
+              sidebar.style.webkitTransform = 'translateX(0)';
+              sidebar.classList.add('active');
+              sidebarOverlay.classList.add('active');
+            });
+          });
+        } else {
+          // Close sidebar
+          sidebar.style.transition = 'transform 0.3s ease-in-out';
+          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+          sidebar.style.transform = 'translateX(-100%)';
+          sidebar.style.webkitTransform = 'translateX(-100%)';
+          sidebar.classList.remove('active');
+          sidebarOverlay.classList.remove('active');
+        }
+      }
+    }
+
+    function closeSidebar() {
+      if (window.innerWidth <= 1024) {
+        sidebar.style.transition = 'transform 0.3s ease-in-out';
+        sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+        sidebar.style.transform = 'translateX(-100%)';
+        sidebar.style.webkitTransform = 'translateX(-100%)';
+      }
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    }
+
+    if (searchInput && keywordList) {
+      searchInput.addEventListener('input', searchKeywords);
+      searchInput.addEventListener('keyup', (event) => {
+        if (event.key === 'Escape') {
+          searchInput.value = '';
+          searchKeywords();
+          searchInput.blur();
+        }
+      });
+    }
+
+    if (menuToggle && sidebar && sidebarOverlay) {
+      menuToggle.addEventListener('click', toggleSidebar);
+      sidebarOverlay.addEventListener('click', closeSidebar);
+      
+      // Close sidebar when clicking on a link (mobile only)
+      const sidebarLinks = sidebar.querySelectorAll('a');
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 1024) {
+            closeSidebar();
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,1869 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="Generator" content="Robot Framework Documentation Parser">
+  <link rel="icon" href="https://docs.robotframework.org/img/rf_favicon.png">
+  <title>String Utils Documentation</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-alt: #020617;
+      --card: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.15);
+      --border: #1e293b;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.8));
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo img {
+      width: 36px;
+      height: 36px;
+      display: block;
+    }
+
+    header h1 {
+      font-size: 1.05rem;
+      margin: 0;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f4f6ff;
+    }
+
+    header .tagline {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    header nav {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    header nav a {
+      color: var(--muted);
+      padding-bottom: 0.1rem;
+      border-bottom: 1px solid transparent;
+    }
+
+    header nav a:hover {
+      color: var(--text);
+      border-color: var(--accent-soft);
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      padding: 0.5rem;
+      margin-left: auto;
+      position: relative;
+      z-index: 31;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-toggle:hover {
+      color: var(--accent);
+    }
+
+    .menu-toggle svg {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      border-right: 1px solid var(--border);
+      padding: calc(1.25rem + 10px) 1.5rem 1.5rem;
+      background: linear-gradient(to bottom, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      max-height: 100vh;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    aside h2 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .toc-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .toc-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.25rem 0 0;
+    }
+
+    .toc-section li {
+      margin: 0.1rem 0;
+    }
+
+    .toc-section a {
+      color: var(--muted);
+      padding: 0.12rem 0;
+      display: inline-block;
+    }
+
+    .toc-section a:hover {
+      color: var(--text);
+    }
+
+    .keyword-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0 0;
+      font-size: 0.86rem;
+      overflow-y: auto;
+    }
+
+    .keyword-list li {
+      margin: 0;
+    }
+
+    .keyword-list li.hidden {
+      display: none;
+    }
+
+    .keyword-list a {
+      display: block;
+      color: var(--muted);
+      padding: 0.15rem 0;
+    }
+
+    .keyword-list a:hover {
+      color: var(--accent);
+    }
+
+    .search-box {
+      margin-top: 0.65rem;
+      margin-left: -5px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.8);
+      color: var(--text);
+      font-size: 0.85rem;
+    }
+
+    .search-box input:focus {
+      outline: 2px solid rgba(56,189,248,0.4);
+    }
+
+    .no-results {
+      color: var(--muted);
+      font-style: italic;
+      padding: 0.4rem 0;
+    }
+
+    main {
+      padding: 1.75rem 2.4rem 3rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+      gap: 2rem;
+      margin-bottom: 2.2rem;
+      align-items: center;
+    }
+
+    .hero h2 {
+      font-size: 2.2rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero p {
+      color: var(--muted);
+      margin-top: 0;
+      max-width: 40rem;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin: 0.8rem 0 1.25rem;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      color: var(--muted);
+      border-color: rgba(56,189,248,0.4);
+    }
+
+    .badge.primary {
+      border-color: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      border: 1px solid transparent;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: radial-gradient(circle at top left, #38bdf8, #0ea5e9 45%, #0369a1 100%);
+      border-color: rgba(56,189,248,0.4);
+      color: #0b1120;
+      box-shadow: 0 10px 30px rgba(56,189,248,0.4);
+    }
+
+    .btn-ghost {
+      background: rgba(15,23,42,0.75);
+      border-color: var(--border);
+      color: var(--muted);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 35px rgba(56,189,248,0.5);
+      text-decoration: none;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .hero-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hero-meta.meta-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      margin-top: 0.35rem;
+    }
+
+    .hero-meta.meta-grid span {
+      display: inline-flex;
+      gap: 0.25rem;
+      align-items: center;
+      color: var(--muted);
+    }
+
+    .hero-meta.meta-grid strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .hero-card {
+      border-radius: 1.2rem;
+      background: radial-gradient(circle at top, rgba(56,189,248,0.2), rgba(15,23,42,1));
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      padding: 1rem 1rem 1.2rem;
+      font-size: 0.75rem;
+    }
+
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.45rem;
+      color: var(--muted);
+    }
+
+    .hero-card-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+    }
+
+    .hero-card-lang {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.85);
+    }
+
+    pre {
+      background: rgba(2,6,23,0.95);
+      border-radius: 0.75rem;
+      padding: 0.9rem 1rem;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .keyword-container {
+      background: rgba(15,23,42,0.9);
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      padding: 1rem 1.1rem;
+      font-size: 0.92rem;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      margin-bottom: 1.5rem;
+    }
+
+    .keyword-name h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .kw-overview {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .args,
+    .return-type,
+    .kw-docs {
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 0.85rem;
+      background: rgba(2,6,23,0.75);
+    }
+
+    .args h4,
+    .return-type h4,
+    .kw-docs h4 {
+      margin: 0 0 0.4rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .arguments-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .arg-name {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      background: rgba(15,76,204,0.15);
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+      border: 1px solid rgba(15,76,204,0.3);
+    }
+
+    .arg-type {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      color: var(--muted);
+    }
+
+    .kwdoc {
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .kwdoc code {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      background: rgba(56,189,248,0.08);
+      padding: 0.2rem 0.35rem;
+      border-radius: 4px;
+    }
+
+    .kwdoc table,
+    .kwdoc .doc-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1rem 0;
+      border: 2px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: rgba(2,6,23,0.75);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .kwdoc table thead,
+    .kwdoc .doc-table thead {
+      background: rgba(56,189,248,0.1);
+    }
+
+    .kwdoc table th,
+    .kwdoc .doc-table th {
+      padding: 0.65rem 0.85rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .kwdoc table th:last-child,
+    .kwdoc .doc-table th:last-child {
+      border-right: none;
+    }
+
+    .kwdoc table td,
+    .kwdoc .doc-table td {
+      padding: 0.6rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+
+    .kwdoc table td:last-child,
+    .kwdoc .doc-table td:last-child {
+      border-right: none;
+    }
+
+    .kwdoc table tbody tr:last-child td,
+    .kwdoc .doc-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .kwdoc table tbody tr:hover,
+    .kwdoc .doc-table tbody tr:hover {
+      background: rgba(56,189,248,0.05);
+    }
+
+    .kwdoc img,
+    .kwdoc .doc img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      margin: 1rem 0;
+      display: block;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .code-block {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+
+    .code-block pre {
+      margin: 0;
+      padding: 1rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+      overflow-x: auto;
+      border-radius: 0;
+      border: none;
+      background: transparent;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.2rem 2.4rem 1.6rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      background: radial-gradient(circle at bottom, rgba(56,189,248,0.15), rgba(15,23,42,1));
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: fixed !important;
+        top: 70px;
+        left: 0;
+        width: 280px;
+        max-width: 85vw;
+        height: calc(100vh - 70px);
+        z-index: 26;
+        transform: translateX(-100%) !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
+        border-right: 1px solid var(--border);
+      }
+
+      aside.active {
+        transform: translateX(0) !important;
+      }
+
+      .sidebar-overlay {
+        display: block;
+      }
+
+      main {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      aside {
+        position: fixed !important;
+        top: 70px;
+        left: 0;
+        width: 280px;
+        max-width: 85vw;
+        height: calc(100vh - 70px);
+        z-index: 26;
+        transform: translateX(-100%) !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
+        border-right: 1px solid var(--border);
+      }
+
+      aside.active {
+        transform: translateX(0) !important;
+      }
+
+      .sidebar-overlay {
+        display: block;
+      }
+
+      main {
+        width: 100%;
+      }
+
+      main {
+        padding: 1.25rem 1.4rem 2.5rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 0.7rem 1rem;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero h2 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="https://docs.robotframework.org/img/robot-framework-dark.svg" alt="Robot Framework Logo">
+      </div>
+      <div>
+        <h1>String Utils</h1>
+        <div class="tagline">Robot Framework library documentation</div>
+      </div>
+    </div>
+    <nav><a href="../index.html">← Back to Dashboard</a>
+      <a href="#intro">Overview</a>
+      <a href="#keywords">Keywords</a>
+    </nav>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="layout">
+    <aside>
+      <div class="toc-section">
+        <h2>Getting Started</h2>
+        <ul>
+          <li><a href="#intro">Introduction</a></li>
+        </ul>
+      </div>
+
+      <div class="toc-section">
+        <h2>Keywords</h2>
+        <div class="search-box">
+          <input type="text" id="keyword-search" placeholder="Search keywords…">
+        </div>
+        <ul class="keyword-list" id="keyword-list">
+          <li><a href="#capitalize-words">Capitalize Words</a></li>
+        <li><a href="#remove-whitespace">Remove Whitespace</a></li>
+        <li><a href="#extract-numbers">Extract Numbers</a></li>
+        <li><a href="#extract-emails">Extract Emails</a></li>
+        <li><a href="#validate-url">Validate Url</a></li>
+        <li><a href="#mask-sensitive-data">Mask Sensitive Data</a></li>
+        <li><a href="#hash-string">Hash String</a></li>
+        <li><a href="#encode-base64">Encode Base64</a></li>
+        <li><a href="#decode-base64">Decode Base64</a></li>
+        <li><a href="#replace-pattern">Replace Pattern</a></li>
+        <li><a href="#split-string">Split String</a></li>
+        <li><a href="#join-strings">Join Strings</a></li>
+        <li><a href="#format-template">Format Template</a></li>
+        <li><a href="#count-occurrences">Count Occurrences</a></li>
+        <li><a href="#truncate-string">Truncate String</a></li>
+        <li><a href="#pad-string">Pad String</a></li>
+        <li><a href="#reverse-string">Reverse String</a></li>
+        <li><a href="#remove-duplicates">Remove Duplicates</a></li>
+        <li><a href="#validate-phone-number">Validate Phone Number</a></li>
+        <li><a href="#extract-json-from-text">Extract Json From Text</a></li>
+        <li><a href="#generate-random-string">Generate Random String</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main>
+      <section id="intro" class="hero">
+        <div>
+          <h2>String Utils Documentation</h2>
+          
+          <div class="hero-badges">
+            <!-- <span class="badge primary">Robot Framework Library</span> -->
+            <span class="badge">Version 2.1.0</span>
+            <span class="badge">Scope GLOBAL</span>
+            <span class="badge">21 Keywords</span>
+          </div>
+          <div class="hero-actions"><a class="btn btn-primary" href="https://example.com/string_utils" target="_blank" rel="noopener noreferrer"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2Zm6.93 9H16.2a17.459 17.459 0 0 0-1.18-4.495A7.953 7.953 0 0 1 18.93 11Zm-7.93 8a15.417 15.417 0 0 1-1.458-4h2.916A15.417 15.417 0 0 1 11 19Zm-1.458-6a13.7 13.7 0 0 1 0-2h2.916a13.7 13.7 0 0 1 0 2Zm-3.25-2a13.116 13.116 0 0 1 .4-2h2.365a13.472 13.472 0 0 0 0 4H6.692a13.116 13.116 0 0 1-.4-2Zm4.708-6a15.417 15.417 0 0 1 1.458 4h-2.916A15.417 15.417 0 0 1 11 5Zm-2.02.505A17.459 17.459 0 0 0 7.8 11H5.07A7.953 7.953 0 0 1 8.98 5.505ZM5.07 13H7.8a17.459 17.459 0 0 0 1.18 4.495A7.953 7.953 0 0 1 5.07 13Zm9.95 4.495c.42-1.282.728-2.64.892-3.995h2.188a7.953 7.953 0 0 1-3.08 3.995Z"></path></svg><span>Library Website</span></a><a class="btn btn-ghost" href="https://github.com/username/repo" target="_blank" rel="noopener noreferrer"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" data-view-component="true" class="octicon octicon-mark-github v-align-middle"><path fill="currentColor" d="M12 1C5.923 1 1 5.923 1 12c0 4.867 3.149 8.979 7.521 10.436.55.096.756-.233.756-.522 0-.262-.013-1.128-.013-2.049-2.764.509-3.479-.674-3.699-1.292-.124-.317-.66-1.293-1.127-1.554-.385-.207-.936-.715-.014-.729.866-.014 1.485.797 1.691 1.128.99 1.663 2.571 1.196 3.204.907.096-.715.385-1.196.701-1.471-2.448-.275-5.005-1.224-5.005-5.432 0-1.196.426-2.186 1.128-2.956-.111-.275-.496-1.402.11-2.915 0 0 .921-.288 3.024 1.128a10.193 10.193 0 0 1 2.75-.371c.936 0 1.871.123 2.75.371 2.104-1.43 3.025-1.128 3.025-1.128.605 1.513.221 2.64.111 2.915.701.77 1.127 1.747 1.127 2.956 0 4.222-2.571 5.157-5.019 5.432.399.344.743 1.004.743 2.035 0 1.471-.014 2.654-.014 3.025 0 .289.206.632.756.522C19.851 20.979 23 16.854 23 12c0-6.077-4.922-11-11-11Z"></path></svg><span>View on GitHub</span></a><a class="btn btn-ghost" href="mailto:support@example.com"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M19.25 4H4.75A2.75 2.75 0 0 0 2 6.75v10.5A2.75 2.75 0 0 0 4.75 20h14.5A2.75 2.75 0 0 0 22 17.25V6.75A2.75 2.75 0 0 0 19.25 4Zm0 1.5c.129 0 .252.027.363.076L12 11.14 4.387 5.076A1.25 1.25 0 0 1 4.75 5.5Zm0 13H4.75A1.25 1.25 0 0 1 3.5 17.25V7.46l7.87 6.04a.75.75 0 0 0 .88 0l7.87-6.04v9.79A1.25 1.25 0 0 1 19.25 18.5Z"></path></svg><span>Contact Support</span></a></div>
+          <div class="hero-meta meta-grid"><span><strong>Author:</strong> Bruce Wayne</span><span><strong>Maintainer:</strong> Docs Team</span><span><strong>License:</strong> MIT</span><span><strong>Robot Framework:</strong> >=7.0</span><span><strong>Python:</strong> >=3.11</span></div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-header">
+            <div class="hero-card-title">Sample Usage</div>
+            <div class="hero-card-lang">Robot</div>
+          </div>
+          <pre class="language-robot"><code><span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> String Utils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example</span>
+    [Documentation]    Demonstrates using String Utils
+<span style="color: #6a9955; font-style: italic;">    # add your keyword calls here</span></code></pre>
+        </div>
+      </section>
+
+      <section class="keyword-container intro-section"><div class="keyword-name"><h2>Introduction</h2></div><div class="kw-overview"><div class="kw-docs"><div class="intro-content"><p>String utilities library for Robot Framework.</p>
+<p>    This library provides comprehensive string operations including:</p>
+<ul>
+<li>String manipulation and transformation</li>
+<li>Pattern matching and validation</li>
+<li>Encoding and hashing</li>
+<li>Text formatting and templating</li>
+<li>Data extraction and parsing</li>
+</ul></div></div></div></section>
+
+      <section id="keywords">
+        <div class="keyword-container" id="capitalize-words">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#capitalize-words">Capitalize Words</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Capitalize the first letter of each word in a string.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Input string to capitalize</li>
+</ul>
+<p><strong>Returns:</strong> String with each word capitalized</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Capitalize Text Example</span>
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Capitalize Words</span>    hello world
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    Hello World
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="remove-whitespace">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#remove-whitespace">Remove Whitespace</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">mode</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Remove whitespace from a string.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Input string</li>
+<li><code>mode</code>: Removal mode - &quot;all&quot; (remove all), &quot;leading&quot; (remove leading),</li>
+</ul>
+<p>          &quot;trailing&quot; (remove trailing), &quot;both&quot; (remove both ends)</p>
+<p><strong>Returns:</strong> String with whitespace removed</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Remove Whitespace Example</span>
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Remove Whitespace</span>    &quot;  hello world  &quot;    <span style="color: #dcdcaa;">mode</span>=both
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    hello world
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="extract-numbers">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#extract-numbers">Extract Numbers</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">List[int]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Extract all numbers from a string.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Input string containing numbers</li>
+</ul>
+<p><strong>Returns:</strong> List of extracted integers</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Extract Numbers Example</span>
+    <span style="color: #9cdcfe;">${numbers}</span>    <span style="color: #4ec9b0; font-weight: bold;">Extract Numbers</span>    Price: $99.99, Quantity: 5
+    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${numbers}</span>    <span style="color: #9cdcfe;">${99}</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${numbers}</span>    <span style="color: #9cdcfe;">${5}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="extract-emails">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#extract-emails">Extract Emails</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">List[str]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Extract all email addresses from a string.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Input string containing email addresses</li>
+</ul>
+<p><strong>Returns:</strong> List of extracted email addresses</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Extract Emails Example</span>
+    <span style="color: #9cdcfe;">${emails}</span>    <span style="color: #4ec9b0; font-weight: bold;">Extract Emails</span>    Contact: john@example.com or jane@test.org
+    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${emails}</span>    john@example.com
+    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${emails}</span>    jane@test.org
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="validate-url">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#validate-url">Validate Url</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">url</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">bool</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Validate if a string is a valid URL.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>url</code>: URL string to validate</li>
+</ul>
+<p><strong>Returns:</strong> True if valid URL, False otherwise</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Validate URL Example</span>
+    <span style="color: #9cdcfe;">${valid}</span>    <span style="color: #4ec9b0; font-weight: bold;">Validate Url</span>    https://example.com
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be True</span>     <span style="color: #9cdcfe;">${valid}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="mask-sensitive-data">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#mask-sensitive-data">Mask Sensitive Data</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">visible_chars</span> : <span class="arg-type">int</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Mask sensitive data, showing only first few characters.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Text to mask</li>
+<li><code>visible_chars</code>: Number of characters to keep visible (default: 4)</li>
+</ul>
+<p><strong>Returns:</strong> Masked string</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Mask Sensitive Data Example</span>
+    <span style="color: #9cdcfe;">${masked}</span>    <span style="color: #4ec9b0; font-weight: bold;">Mask Sensitive Data</span>    secret12345    <span style="color: #dcdcaa;">visible_chars</span>=3
+    <span style="color: #4ec9b0; font-weight: bold;">Should Start With</span>     <span style="color: #9cdcfe;">${masked}</span>    sec
+    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${masked}</span>    *
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="hash-string">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#hash-string">Hash String</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">algorithm</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Generate hash of a string.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Text to hash</li>
+<li><code>algorithm</code>: Hash algorithm - &quot;md5&quot;, &quot;sha1&quot;, &quot;sha256&quot; (default)</li>
+</ul>
+<p><strong>Returns:</strong> Hexadecimal hash string</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Hash String Example</span>
+    <span style="color: #9cdcfe;">${hash}</span>    <span style="color: #4ec9b0; font-weight: bold;">Hash String</span>    password123    <span style="color: #dcdcaa;">algorithm</span>=sha256
+    <span style="color: #4ec9b0; font-weight: bold;">Should Not Be Empty</span>     <span style="color: #9cdcfe;">${hash}</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Length Should Be</span>     <span style="color: #9cdcfe;">${hash}</span>    <span style="color: #9cdcfe;">${64}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="encode-base64">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#encode-base64">Encode Base64</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Encode string to Base64.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Text to encode</li>
+</ul>
+<p><strong>Returns:</strong> Base64 encoded string</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Encode Base64 Example</span>
+    <span style="color: #9cdcfe;">${encoded}</span>    <span style="color: #4ec9b0; font-weight: bold;">Encode Base64</span>    Hello World
+    <span style="color: #4ec9b0; font-weight: bold;">Should Not Be Empty</span>     <span style="color: #9cdcfe;">${encoded}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="decode-base64">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#decode-base64">Decode Base64</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">encoded_text</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Decode Base64 string.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>encoded_text</code>: Base64 encoded string</li>
+</ul>
+<p><strong>Returns:</strong> Decoded string</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Decode Base64 Example</span>
+    <span style="color: #9cdcfe;">${decoded}</span>    <span style="color: #4ec9b0; font-weight: bold;">Decode Base64</span>    SGVsbG8gV29ybGQ=
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${decoded}</span>    Hello World
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="replace-pattern">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#replace-pattern">Replace Pattern</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">pattern</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">replacement</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">case_sensitive</span> : <span class="arg-type">bool</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Replace text matching a regex pattern.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Input text</li>
+<li><code>pattern</code>: Regular expression pattern</li>
+<li><code>replacement</code>: Replacement string</li>
+<li><code>case_sensitive</code>: Whether pattern matching is case sensitive (default: True)</li>
+</ul>
+<p><strong>Returns:</strong> Text with replacements applied</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Replace Pattern Example</span>
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Replace Pattern</span>    Hello 123 World    \d+    NUMBER
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    Hello NUMBER World
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="split-string">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#split-string">Split String</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">separator</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">max_split</span> : <span class="arg-type">int</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">List[str]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Split string into a list.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Text to split</li>
+<li><code>separator</code>: Separator string (default: whitespace)</li>
+<li><code>max_split</code>: Maximum number of splits (default: -1 for unlimited)</li>
+</ul>
+<p><strong>Returns:</strong> List of strings</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Split String Example</span>
+    <span style="color: #9cdcfe;">${parts}</span>    <span style="color: #4ec9b0; font-weight: bold;">Split String</span>    apple,banana,cherry    <span style="color: #dcdcaa;">separator</span>=,
+    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${parts}</span>    apple
+    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${parts}</span>    banana
+    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${parts}</span>    cherry
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="join-strings">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#join-strings">Join Strings</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">strings</span> : <span class="arg-type">List[str]</span></li>
+            <li><span class="arg-name">separator</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Join list of strings with a separator.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>strings</code>: List of strings to join</li>
+<li><code>separator</code>: Separator string (default: space)</li>
+</ul>
+<p><strong>Returns:</strong> Joined string</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Join Strings Example</span>
+    <span style="color: #9cdcfe;">@{items}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create List</span>    apple    banana    cherry
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Join Strings</span>    <span style="color: #9cdcfe;">${items}</span>    <span style="color: #dcdcaa;">separator</span>=,
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    apple,banana,cherry
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="format-template">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#format-template">Format Template</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">template</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Format a string template with variables.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>template</code>: Template string with {variable} placeholders</li>
+<li><code><em></em>kwargs</code>: Variable name-value pairs</li>
+</ul>
+<p><strong>Returns:</strong> Formatted string</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Format Template Example</span>
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Format Template</span>    Hello {name}, you are {age} years old
+    ...    <span style="color: #dcdcaa;">name</span>=John    <span style="color: #dcdcaa;">age</span>=30
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    Hello John, you are 30 years old
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="count-occurrences">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#count-occurrences">Count Occurrences</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">substring</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">case_sensitive</span> : <span class="arg-type">bool</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">int</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Count occurrences of a substring in text.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Text to search in</li>
+<li><code>substring</code>: Substring to count</li>
+<li><code>case_sensitive</code>: Whether search is case sensitive (default: True)</li>
+</ul>
+<p><strong>Returns:</strong> Number of occurrences</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Count Occurrences Example</span>
+    <span style="color: #9cdcfe;">${count}</span>    <span style="color: #4ec9b0; font-weight: bold;">Count Occurrences</span>    hello hello world    hello
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal As Integers</span>     <span style="color: #9cdcfe;">${count}</span>    <span style="color: #9cdcfe;">${2}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="truncate-string">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#truncate-string">Truncate String</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">max_length</span> : <span class="arg-type">int</span></li>
+            <li><span class="arg-name">suffix</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Truncate string to maximum length.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Text to truncate</li>
+<li><code>max_length</code>: Maximum length</li>
+<li><code>suffix</code>: Suffix to append if truncated (default: &quot;...&quot;)</li>
+</ul>
+<p><strong>Returns:</strong> Truncated string</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Truncate String Example</span>
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Truncate String</span>    This is a very long text    10
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    This is a...
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="pad-string">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#pad-string">Pad String</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">width</span> : <span class="arg-type">int</span></li>
+            <li><span class="arg-name">padding</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">align</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Pad string to specified width.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Text to pad</li>
+<li><code>width</code>: Target width</li>
+<li><code>padding</code>: Padding character (default: space)</li>
+<li><code>align</code>: Alignment - &quot;left&quot;, &quot;right&quot;, or &quot;center&quot; (default: left)</li>
+</ul>
+<p><strong>Returns:</strong> Padded string</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Pad String Example</span>
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Pad String</span>    hello    10    <span style="color: #dcdcaa;">align</span>=right
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    <span style="color: #9cdcfe;">${SPACE * 5}</span>hello
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="reverse-string">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#reverse-string">Reverse String</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Reverse a string.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Text to reverse</li>
+</ul>
+<p><strong>Returns:</strong> Reversed string</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Reverse String Example</span>
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Reverse String</span>    hello
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    olleh
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="remove-duplicates">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#remove-duplicates">Remove Duplicates</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">separator</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Remove duplicate words/parts from a string.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Text to process</li>
+<li><code>separator</code>: Separator to split by (default: space)</li>
+</ul>
+<p><strong>Returns:</strong> String with duplicates removed</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Remove Duplicates Example</span>
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Remove Duplicates</span>    apple banana apple cherry
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    apple banana cherry
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="validate-phone-number">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#validate-phone-number">Validate Phone Number</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">phone</span> : <span class="arg-type">str</span></li>
+            <li><span class="arg-name">country</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">bool</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Validate phone number format.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>phone</code>: Phone number string</li>
+<li><code>country</code>: Country code for validation (default: US)</li>
+</ul>
+<p><strong>Returns:</strong> True if valid format, False otherwise</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Validate Phone Number Example</span>
+    <span style="color: #9cdcfe;">${valid}</span>    <span style="color: #4ec9b0; font-weight: bold;">Validate Phone Number</span>    +1-555-123-4567
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be True</span>     <span style="color: #9cdcfe;">${valid}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="extract-json-from-text">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#extract-json-from-text">Extract Json From Text</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">text</span> : <span class="arg-type">str</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">Optional[Dict[str, Any]]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Extract and parse JSON object from text.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>text</code>: Text containing JSON</li>
+</ul>
+<p><strong>Returns:</strong> Parsed JSON dictionary or None if not found</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Extract JSON From Text Example</span>
+    <span style="color: #9cdcfe;">${json}</span>    <span style="color: #4ec9b0; font-weight: bold;">Extract Json From Text</span>    Data: {&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30}
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${json}</span>[name]    John
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal As Integers</span>     <span style="color: #9cdcfe;">${json}</span>[age]    <span style="color: #9cdcfe;">${30}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="generate-random-string">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#generate-random-string">Generate Random String</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="arguments-list">
+            <li><span class="arg-name">length</span> : <span class="arg-type">int</span></li>
+            <li><span class="arg-name">include_uppercase</span> : <span class="arg-type">bool</span></li>
+            <li><span class="arg-name">include_lowercase</span> : <span class="arg-type">bool</span></li>
+            <li><span class="arg-name">include_digits</span> : <span class="arg-type">bool</span></li>
+            <li><span class="arg-name">include_special</span> : <span class="arg-type">bool</span></li>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">str</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Generate a random string.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>length</code>: Length of string (default: 10)</li>
+<li><code>include_uppercase</code>: Include uppercase letters (default: True)</li>
+<li><code>include_lowercase</code>: Include lowercase letters (default: True)</li>
+<li><code>include_digits</code>: Include digits (default: True)</li>
+<li><code>include_special</code>: Include special characters (default: False)</li>
+</ul>
+<p><strong>Returns:</strong> Random string</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span> StringUtils
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Generate Random String Example</span>
+    <span style="color: #9cdcfe;">${random}</span>    <span style="color: #4ec9b0; font-weight: bold;">Generate Random String</span>    <span style="color: #dcdcaa;">length</span>=16    <span style="color: #dcdcaa;">include_special</span>=True
+    <span style="color: #4ec9b0; font-weight: bold;">Length Should Be</span>     <span style="color: #9cdcfe;">${random}</span>    <span style="color: #9cdcfe;">${16}</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Should Match Regexp</span>     <span style="color: #9cdcfe;">${random}</span>    .+
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+      </section>
+
+      <section class="keyword-container">
+        <div class="keyword-name">
+          <h2>Need Help?</h2>
+        </div>
+        <div class="kw-overview">
+          <div class="kw-docs">
+            <p>
+              Found an issue or have a feature request for this library? Let the maintainers know by opening a new
+              GitHub issue. Please include environment details and relevant log output to help us reproduce the problem.
+            </p>
+            <p style="margin-top: 1rem;"><a class="btn btn-primary" href="https://github.com/username/repo/issues/new" target="_blank" rel="noopener noreferrer">Open an Issue on GitHub</a></p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    Generated by <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · String Utils Documentation · Last updated: 2026-01-01 12:26:23
+  </footer>
+
+  <script>
+    const searchInput = document.getElementById('keyword-search');
+    const keywordList = document.getElementById('keyword-list');
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.querySelector('aside');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    function searchKeywords() {
+      const term = (searchInput.value || '').toLowerCase().trim();
+      const entries = keywordList.querySelectorAll('li');
+      let matches = 0;
+
+      entries.forEach((entry) => {
+        const text = entry.textContent.toLowerCase();
+        const hit = text.includes(term);
+        entry.classList.toggle('hidden', !hit);
+        if (hit) matches++;
+      });
+
+      let noResults = keywordList.querySelector('.no-results');
+      if (!matches && term) {
+        if (!noResults) {
+          noResults = document.createElement('li');
+          noResults.className = 'no-results';
+          keywordList.appendChild(noResults);
+        }
+        noResults.textContent = 'No keywords found';
+      } else if (noResults) {
+        noResults.remove();
+      }
+    }
+
+    function toggleSidebar() {
+      if (window.innerWidth <= 1024) {
+        const isActive = sidebar.classList.contains('active');
+        const headerHeight = document.querySelector('header').offsetHeight;
+        
+        if (!isActive) {
+          // Open sidebar - set up styles first
+          sidebar.style.display = 'block';
+          sidebar.style.visibility = 'visible';
+          sidebar.style.opacity = '1';
+          sidebar.style.position = 'fixed';
+          sidebar.style.top = headerHeight + 'px';
+          sidebar.style.left = '0';
+          sidebar.style.width = '280px';
+          sidebar.style.maxWidth = '85vw';
+          sidebar.style.height = `calc(100vh - ${headerHeight}px)`;
+          sidebar.style.zIndex = '26';
+          sidebar.style.transition = 'transform 0.3s ease-in-out';
+          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+          
+          // Ensure sidebar starts off-screen
+          sidebar.style.transform = 'translateX(-100%)';
+          sidebar.style.webkitTransform = 'translateX(-100%)';
+          
+          // Use requestAnimationFrame to ensure transition is applied before changing transform
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              sidebar.style.transform = 'translateX(0)';
+              sidebar.style.webkitTransform = 'translateX(0)';
+              sidebar.classList.add('active');
+              sidebarOverlay.classList.add('active');
+            });
+          });
+        } else {
+          // Close sidebar
+          sidebar.style.transition = 'transform 0.3s ease-in-out';
+          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+          sidebar.style.transform = 'translateX(-100%)';
+          sidebar.style.webkitTransform = 'translateX(-100%)';
+          sidebar.classList.remove('active');
+          sidebarOverlay.classList.remove('active');
+        }
+      }
+    }
+
+    function closeSidebar() {
+      if (window.innerWidth <= 1024) {
+        sidebar.style.transition = 'transform 0.3s ease-in-out';
+        sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+        sidebar.style.transform = 'translateX(-100%)';
+        sidebar.style.webkitTransform = 'translateX(-100%)';
+      }
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    }
+
+    if (searchInput && keywordList) {
+      searchInput.addEventListener('input', searchKeywords);
+      searchInput.addEventListener('keyup', (event) => {
+        if (event.key === 'Escape') {
+          searchInput.value = '';
+          searchKeywords();
+          searchInput.blur();
+        }
+      });
+    }
+
+    if (menuToggle && sidebar && sidebarOverlay) {
+      menuToggle.addEventListener('click', toggleSidebar);
+      sidebarOverlay.addEventListener('click', closeSidebar);
+      
+      // Close sidebar when clicking on a link (mobile only)
+      const sidebarLinks = sidebar.querySelectorAll('a');
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 1024) {
+            closeSidebar();
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
+

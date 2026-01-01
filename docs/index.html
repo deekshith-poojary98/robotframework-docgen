@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="Generator" content="Robot Framework Documentation Parser">
+    <link rel="icon" href="https://docs.robotframework.org/img/rf_favicon.png">
+    <title>Robot Framework Libraries - Documentation Dashboard</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <header>
+        <div class="brand">
+            <img src="https://docs.robotframework.org/img/robot-framework-dark.svg" alt="Robot Framework" class="brand-logo" />
+            <h1>Robot Framework Libraries</h1>
+        </div>
+        <div class="header-right">
+            <div class="keyword-search">
+                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input 
+                    type="text" 
+                    id="keyword-search" 
+                    class="search-input" 
+                    data-i18n-placeholder="search_keywords"
+                    placeholder="Search keywords..."
+                    autocomplete="off"
+                >
+                <div id="keyword-search-results" class="keyword-search-results"></div>
+            </div>
+        </div>
+        <div class="language-selector">
+            <svg class="language-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <select id="language-selector">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="zh">中文</option>
+                <option value="ja">日本語</option>
+                <option value="pt">Português</option>
+                <option value="ru">Русский</option>
+                <option value="it">Italiano</option>
+                <option value="ko">한국어</option>
+            </select>
+        </div>
+    </header>
+    
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h2 data-i18n="dashboard_title">Documentation Dashboard</h2>
+            <p>Comprehensive collection of Robot Framework libraries for various use cases</p>
+        </div>
+        
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-value">6</div>
+                <div class="stat-label" data-i18n="libraries">Libraries</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">90</div>
+                <div class="stat-label" data-i18n="total_keywords">Total Keywords</div>
+            </div>
+        </div>
+        
+        <div class="search-container">
+            <div class="search-wrapper">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input 
+                    type="text" 
+                    id="global-search" 
+                    class="search-input" 
+                    data-i18n-placeholder="search_libraries"
+                    placeholder="Search libraries..."
+                    autocomplete="off"
+                >
+            </div>
+            <div id="no-results" class="no-results" data-i18n="no_libraries_found">No libraries found.</div>
+        </div>
+        
+        <div class="libraries-section">
+            <div class="libraries-section-header">
+                <h3 class="libraries-section-title" data-i18n="available_libraries">Available Libraries</h3>
+                <div class="header-controls">
+                    <div class="sort-controls">
+                        <label for="library-sort" class="sort-label" data-i18n="sort_by">Sort by:</label>
+                        <select id="library-sort" class="sort-select">
+                            <option value="name-asc" data-i18n="sort_name_asc">Name (A–Z)</option>
+                            <option value="keywords-desc" data-i18n="sort_keywords_desc">Keyword count (desc)</option>
+                        </select>
+                    </div>
+                    <button id="filters-toggle-btn" class="filters-toggle-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <span data-i18n="filters">Filters</span>
+                        <svg class="filters-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <button id="export-toggle-btn" class="export-toggle-btn">
+                        <span data-i18n="export_as">Export as</span>
+                        <svg class="export-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="libraries-grid" class="libraries-grid">
+                
+            <div class="library-card" 
+                 data-library-name="string utils" 
+                 data-library-description="a comprehensive string manipulation library providing powerful keywords for text processing, pattern matching, validation, encoding, hashing, and data transformation operations." 
+                 data-description-text="A comprehensive string manipulation library providing powerful keywords for text processing, pattern matching, validation, encoding, hashing, and data transformation operations."
+                 data-keyword-count="21"
+                 data-author="bruce wayne"
+                 data-maintainer="docs team"
+                 data-license="mit"
+                 data-robot-framework=">=7.0"
+                 data-python=">=3.11">
+                <h2><a href="StringUtils/string_utils.html">String Utils</a></h2>
+                <span class="badge"><span data-i18n="version">Version</span>: 2.1.0</span>
+                <div class="library-description">A comprehensive string manipulation library providing powerful keywords for text processing, pattern matching, validation, encoding, hashing, and data transformation operations.</div>
+                <div class="library-stats">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <span data-i18n-keyword-count="21">21 keywords</span>
+                </div>
+                
+                <div class="library-meta-header collapsed" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">
+                    <span class="meta-toggle">
+                        <svg class="meta-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                        <span>Metadata</span>
+                    </span>
+                </div>
+                <div class="library-meta-list collapsed">
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span class="meta-label" data-i18n="author">Author:</span>
+                    <span class="meta-value">Bruce Wayne</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="maintainer">Maintainer:</span>
+                    <span class="meta-value">Docs Team</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="license">License:</span>
+                    <span class="meta-value">MIT</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="rf_version">RF Version:</span>
+                    <span class="meta-value">>=7.0</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="python">Python:</span>
+                    <span class="meta-value">>=3.11</span>
+                </div>
+            </div>
+            
+            </div>
+        
+            <div class="library-card" 
+                 data-library-name="data processor" 
+                 data-library-description="a comprehensive data processing library for validation, transformation, and manipulation of json data structures with advanced filtering and merging capabilities." 
+                 data-description-text="A comprehensive data processing library for validation, transformation, and manipulation of JSON data structures with advanced filtering and merging capabilities."
+                 data-keyword-count="10"
+                 data-author="mary jane"
+                 data-maintainer="docs team"
+                 data-license="mit"
+                 data-robot-framework=">=7.0"
+                 data-python=">=3.8">
+                <h2><a href="DataProcessor/data_processor.html">Data Processor</a></h2>
+                <span class="badge"><span data-i18n="version">Version</span>: 2.5.0</span>
+                <div class="library-description">A comprehensive data processing library for validation, transformation, and manipulation of JSON data structures with advanced filtering and merging capabilities.</div>
+                <div class="library-stats">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <span data-i18n-keyword-count="10">10 keywords</span>
+                </div>
+                
+                <div class="library-meta-header collapsed" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">
+                    <span class="meta-toggle">
+                        <svg class="meta-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                        <span>Metadata</span>
+                    </span>
+                </div>
+                <div class="library-meta-list collapsed">
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span class="meta-label" data-i18n="author">Author:</span>
+                    <span class="meta-value">Mary Jane</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="maintainer">Maintainer:</span>
+                    <span class="meta-value">Docs Team</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="license">License:</span>
+                    <span class="meta-value">MIT</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="rf_version">RF Version:</span>
+                    <span class="meta-value">>=7.0</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="python">Python:</span>
+                    <span class="meta-value">>=3.8</span>
+                </div>
+            </div>
+            
+            </div>
+        
+            <div class="library-card" 
+                 data-library-name="file utils" 
+                 data-library-description="file and directory operations library providing comprehensive file system utilities for reading, writing, copying, and managing files and directories." 
+                 data-description-text="File and directory operations library providing comprehensive file system utilities for reading, writing, copying, and managing files and directories."
+                 data-keyword-count="14"
+                 data-author="jane smith"
+                 data-maintainer="infrastructure team"
+                 data-license="apache-2.0"
+                 data-robot-framework=">=7.0"
+                 data-python=">=3.9">
+                <h2><a href="FileUtils/file_utils.html">File Utils</a></h2>
+                <span class="badge"><span data-i18n="version">Version</span>: 1.2.0</span>
+                <div class="library-description">File and directory operations library providing comprehensive file system utilities for reading, writing, copying, and managing files and directories.</div>
+                <div class="library-stats">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <span data-i18n-keyword-count="14">14 keywords</span>
+                </div>
+                
+                <div class="library-meta-header collapsed" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">
+                    <span class="meta-toggle">
+                        <svg class="meta-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                        <span>Metadata</span>
+                    </span>
+                </div>
+                <div class="library-meta-list collapsed">
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span class="meta-label" data-i18n="author">Author:</span>
+                    <span class="meta-value">Jane Smith</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="maintainer">Maintainer:</span>
+                    <span class="meta-value">Infrastructure Team</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="license">License:</span>
+                    <span class="meta-value">Apache-2.0</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="rf_version">RF Version:</span>
+                    <span class="meta-value">>=7.0</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="python">Python:</span>
+                    <span class="meta-value">>=3.9</span>
+                </div>
+            </div>
+            
+            </div>
+        
+            <div class="library-card" 
+                 data-library-name="http client" 
+                 data-library-description="http client library for making rest api calls, handling authentication, and managing http requests and responses with support for get, post, put, and delete operations." 
+                 data-description-text="HTTP client library for making REST API calls, handling authentication, and managing HTTP requests and responses with support for GET, POST, PUT, and DELETE operations."
+                 data-keyword-count="13"
+                 data-author="peter parker"
+                 data-maintainer="api team"
+                 data-license="bsd-3-clause"
+                 data-robot-framework=">=5.0"
+                 data-python=">=3.10">
+                <h2><a href="HTTPClient/http_client.html">HTTP Client</a></h2>
+                <span class="badge"><span data-i18n="version">Version</span>: 2.0.0</span>
+                <div class="library-description">HTTP client library for making REST API calls, handling authentication, and managing HTTP requests and responses with support for GET, POST, PUT, and DELETE operations.</div>
+                <div class="library-stats">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <span data-i18n-keyword-count="13">13 keywords</span>
+                </div>
+                
+                <div class="library-meta-header collapsed" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">
+                    <span class="meta-toggle">
+                        <svg class="meta-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                        <span>Metadata</span>
+                    </span>
+                </div>
+                <div class="library-meta-list collapsed">
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span class="meta-label" data-i18n="author">Author:</span>
+                    <span class="meta-value">Peter Parker</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="maintainer">Maintainer:</span>
+                    <span class="meta-value">API Team</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="license">License:</span>
+                    <span class="meta-value">BSD-3-Clause</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="rf_version">RF Version:</span>
+                    <span class="meta-value">>=5.0</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="python">Python:</span>
+                    <span class="meta-value">>=3.10</span>
+                </div>
+            </div>
+            
+            </div>
+        
+            <div class="library-card" 
+                 data-library-name="db utils" 
+                 data-library-description="database utilities library for executing sql queries, managing database connections, and handling transactions with support for common database operations." 
+                 data-description-text="Database utilities library for executing SQL queries, managing database connections, and handling transactions with support for common database operations."
+                 data-keyword-count="13"
+                 data-author="tony stark"
+                 data-maintainer="database team"
+                 data-license="mit"
+                 data-robot-framework=">=6.1"
+                 data-python=">=3.8">
+                <h2><a href="DBUtils/db_utils.html">DB Utils</a></h2>
+                <span class="badge"><span data-i18n="version">Version</span>: 1.5.0</span>
+                <div class="library-description">Database utilities library for executing SQL queries, managing database connections, and handling transactions with support for common database operations.</div>
+                <div class="library-stats">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <span data-i18n-keyword-count="13">13 keywords</span>
+                </div>
+                
+                <div class="library-meta-header collapsed" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">
+                    <span class="meta-toggle">
+                        <svg class="meta-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                        <span>Metadata</span>
+                    </span>
+                </div>
+                <div class="library-meta-list collapsed">
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span class="meta-label" data-i18n="author">Author:</span>
+                    <span class="meta-value">Tony Stark</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="maintainer">Maintainer:</span>
+                    <span class="meta-value">Database Team</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="license">License:</span>
+                    <span class="meta-value">MIT</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="rf_version">RF Version:</span>
+                    <span class="meta-value">>=6.1</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="python">Python:</span>
+                    <span class="meta-value">>=3.8</span>
+                </div>
+            </div>
+            
+            </div>
+        
+            <div class="library-card" 
+                 data-library-name="datetime utils" 
+                 data-library-description="date and time utilities library providing comprehensive operations for date parsing, formatting, calculations, comparisons, and timezone handling with support for timestamps and calendar operations." 
+                 data-description-text="Date and time utilities library providing comprehensive operations for date parsing, formatting, calculations, comparisons, and timezone handling with support for timestamps and calendar operations."
+                 data-keyword-count="19"
+                 data-author="black widow"
+                 data-maintainer="core team"
+                 data-license="mit"
+                 data-robot-framework=">=7.0"
+                 data-python=">=3.9">
+                <h2><a href="DateTimeUtils/datetime_utils.html">DateTime Utils</a></h2>
+                <span class="badge"><span data-i18n="version">Version</span>: 1.3.0</span>
+                <div class="library-description">Date and time utilities library providing comprehensive operations for date parsing, formatting, calculations, comparisons, and timezone handling with support for timestamps and calendar operations.</div>
+                <div class="library-stats">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <span data-i18n-keyword-count="19">19 keywords</span>
+                </div>
+                
+                <div class="library-meta-header collapsed" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('collapsed');">
+                    <span class="meta-toggle">
+                        <svg class="meta-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                        <span>Metadata</span>
+                    </span>
+                </div>
+                <div class="library-meta-list collapsed">
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span class="meta-label" data-i18n="author">Author:</span>
+                    <span class="meta-value">Black Widow</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="maintainer">Maintainer:</span>
+                    <span class="meta-value">Core Team</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="license">License:</span>
+                    <span class="meta-value">MIT</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="rf_version">RF Version:</span>
+                    <span class="meta-value">>=7.0</span>
+                </div>
+            
+                <div class="library-meta-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                    </svg>
+                    <span class="meta-label" data-i18n="python">Python:</span>
+                    <span class="meta-value">>=3.9</span>
+                </div>
+            </div>
+            
+            </div>
+        
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <span data-i18n="generated_by">Generated by</span> <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · Robot Framework Libraries · <span data-i18n="last_updated">Last updated</span>: 2026-01-01 12:26:23
+    </footer>
+    
+    <script>
+        // Filter data for dynamic injection
+        window.filterData = {
+            authors: ["Black Widow", "Bruce Wayne", "Jane Smith", "Mary Jane", "Peter Parker", "Tony Stark"],
+            maintainers: ["API Team", "Core Team", "Database Team", "Docs Team", "Infrastructure Team"],
+            licenses: ["Apache-2.0", "BSD-3-Clause", "MIT"],
+            robotFrameworks: [">=5.0", ">=6.1", ">=7.0"],
+            pythons: [">=3.10", ">=3.11", ">=3.8", ">=3.9"]
+        };
+    </script>
+    <script src="assets/app.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="Generator" content="Robot Framework Documentation Parser">
+    <link rel="icon" href="https://docs.robotframework.org/img/rf_favicon.png">
+    <title>{site_name} - Documentation Dashboard</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <header>
+        <div class="brand">
+            <img src="https://docs.robotframework.org/img/robot-framework-dark.svg" alt="Robot Framework" class="brand-logo" />
+            <h1>{site_name}</h1>
+        </div>
+        <div class="header-right">
+            <div class="keyword-search">
+                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input 
+                    type="text" 
+                    id="keyword-search" 
+                    class="search-input" 
+                    data-i18n-placeholder="search_keywords"
+                    placeholder="Search keywords..."
+                    autocomplete="off"
+                >
+                <div id="keyword-search-results" class="keyword-search-results"></div>
+            </div>
+        </div>
+        <div class="language-selector">
+            <svg class="language-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <select id="language-selector">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="zh">中文</option>
+                <option value="ja">日本語</option>
+                <option value="pt">Português</option>
+                <option value="ru">Русский</option>
+                <option value="it">Italiano</option>
+                <option value="ko">한국어</option>
+            </select>
+        </div>
+    </header>
+    
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h2 data-i18n="dashboard_title">Documentation Dashboard</h2>
+            <p>{site_description}</p>
+        </div>
+        
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-value">{total_libraries}</div>
+                <div class="stat-label" data-i18n="libraries">Libraries</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{total_keywords}</div>
+                <div class="stat-label" data-i18n="total_keywords">Total Keywords</div>
+            </div>
+        </div>
+        
+        <div class="search-container">
+            <div class="search-wrapper">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input 
+                    type="text" 
+                    id="global-search" 
+                    class="search-input" 
+                    data-i18n-placeholder="search_libraries"
+                    placeholder="Search libraries..."
+                    autocomplete="off"
+                >
+            </div>
+            <div id="no-results" class="no-results" data-i18n="no_libraries_found">No libraries found.</div>
+        </div>
+        
+        <div class="libraries-section">
+            <div class="libraries-section-header">
+                <h3 class="libraries-section-title" data-i18n="available_libraries">Available Libraries</h3>
+                <div class="header-controls">
+                    <div class="sort-controls">
+                        <label for="library-sort" class="sort-label" data-i18n="sort_by">Sort by:</label>
+                        <select id="library-sort" class="sort-select">
+                            <option value="name-asc" data-i18n="sort_name_asc">Name (A–Z)</option>
+                            <option value="keywords-desc" data-i18n="sort_keywords_desc">Keyword count (desc)</option>
+                        </select>
+                    </div>
+                    <button id="filters-toggle-btn" class="filters-toggle-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <span data-i18n="filters">Filters</span>
+                        <svg class="filters-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <button id="export-toggle-btn" class="export-toggle-btn">
+                        <span data-i18n="export_as">Export as</span>
+                        <svg class="export-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="libraries-grid" class="libraries-grid">
+                {libraries_html}
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <span data-i18n="generated_by">Generated by</span> <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · {site_name} · <span data-i18n="last_updated">Last updated</span>: {last_updated}
+    </footer>
+    
+    <script>
+        // Filter data for dynamic injection
+        window.filterData = {{
+            authors: {filter_data_authors},
+            maintainers: {filter_data_maintainers},
+            licenses: {filter_data_licenses},
+            robotFrameworks: {filter_data_robot_frameworks},
+            pythons: {filter_data_pythons}
+        }};
+    </script>
+    <script src="assets/app.js"></script>
+</body>
+</html>
+

@@ -38,8 +38,5 @@ env/
 Thumbs.db
 
 # Project specific
-*.html
 *.md
 !README.md
-sample_library_test.*
-index.html
