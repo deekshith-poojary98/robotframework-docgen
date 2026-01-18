@@ -46,6 +46,7 @@ class StringUtils:
         *** Settings ***
         Library    StringUtils
         
+        
         *** Test Cases ***
         Capitalize Text Example
             ${result}    Capitalize Words    hello world
@@ -70,6 +71,7 @@ class StringUtils:
         ```robot
         *** Settings ***
         Library    StringUtils
+        
         
         *** Test Cases ***
         Remove Whitespace Example
@@ -102,6 +104,7 @@ class StringUtils:
         *** Settings ***
         Library    StringUtils
         
+        
         *** Test Cases ***
         Extract Numbers Example
             ${numbers}    Extract Numbers    Price: $99.99, Quantity: 5
@@ -125,6 +128,7 @@ class StringUtils:
         ```robot
         *** Settings ***
         Library    StringUtils
+        
         
         *** Test Cases ***
         Extract Emails Example
@@ -151,6 +155,7 @@ class StringUtils:
         *** Settings ***
         Library    StringUtils
         
+        
         *** Test Cases ***
         Validate URL Example
             ${valid}    Validate Url    https://example.com
@@ -175,6 +180,7 @@ class StringUtils:
         ```robot
         *** Settings ***
         Library    StringUtils
+        
         
         *** Test Cases ***
         Mask Sensitive Data Example
@@ -203,6 +209,7 @@ class StringUtils:
         *** Settings ***
         Library    StringUtils
         
+        
         *** Test Cases ***
         Hash String Example
             ${hash}    Hash String    password123    algorithm=sha256
@@ -229,6 +236,7 @@ class StringUtils:
         *** Settings ***
         Library    StringUtils
         
+        
         *** Test Cases ***
         Encode Base64 Example
             ${encoded}    Encode Base64    Hello World
@@ -251,6 +259,7 @@ class StringUtils:
         ```robot
         *** Settings ***
         Library    StringUtils
+        
         
         *** Test Cases ***
         Decode Base64 Example
@@ -279,6 +288,7 @@ class StringUtils:
         *** Settings ***
         Library    StringUtils
         
+        
         *** Test Cases ***
         Replace Pattern Example
             ${result}    Replace Pattern    Hello 123 World    \\d+    NUMBER
@@ -304,6 +314,7 @@ class StringUtils:
         ```robot
         *** Settings ***
         Library    StringUtils
+        
         
         *** Test Cases ***
         Split String Example
@@ -333,6 +344,7 @@ class StringUtils:
         *** Settings ***
         Library    StringUtils
         
+        
         *** Test Cases ***
         Join Strings Example
             @{items}    Create List    apple    banana    cherry
@@ -357,6 +369,7 @@ class StringUtils:
         ```robot
         *** Settings ***
         Library    StringUtils
+        
         
         *** Test Cases ***
         Format Template Example
@@ -383,6 +396,7 @@ class StringUtils:
         ```robot
         *** Settings ***
         Library    StringUtils
+        
         
         *** Test Cases ***
         Count Occurrences Example
@@ -411,6 +425,7 @@ class StringUtils:
         ```robot
         *** Settings ***
         Library    StringUtils
+        
         
         *** Test Cases ***
         Truncate String Example
@@ -441,6 +456,7 @@ class StringUtils:
         *** Settings ***
         Library    StringUtils
         
+        
         *** Test Cases ***
         Pad String Example
             ${result}    Pad String    hello    10    align=right
@@ -470,6 +486,7 @@ class StringUtils:
         *** Settings ***
         Library    StringUtils
         
+        
         *** Test Cases ***
         Reverse String Example
             ${result}    Reverse String    hello
@@ -493,6 +510,7 @@ class StringUtils:
         ```robot
         *** Settings ***
         Library    StringUtils
+        
         
         *** Test Cases ***
         Remove Duplicates Example
@@ -525,6 +543,7 @@ class StringUtils:
         *** Settings ***
         Library    StringUtils
         
+        
         *** Test Cases ***
         Validate Phone Number Example
             ${valid}    Validate Phone Number    +1-555-123-4567
@@ -551,6 +570,7 @@ class StringUtils:
         ```robot
         *** Settings ***
         Library    StringUtils
+        
         
         *** Test Cases ***
         Extract JSON From Text Example
@@ -591,6 +611,7 @@ class StringUtils:
         ```robot
         *** Settings ***
         Library    StringUtils
+        
         
         *** Test Cases ***
         Generate Random String Example

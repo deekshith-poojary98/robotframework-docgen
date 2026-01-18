@@ -49,6 +49,7 @@ class DBUtils:
         *** Settings ***
         Library    DBUtils
         
+        
         *** Test Cases ***
         Connect To Database Example
             Connect To Database    localhost    mydb    admin    secret123
@@ -86,6 +87,7 @@ class DBUtils:
         *** Settings ***
         Library    DBUtils
         
+        
         *** Test Cases ***
         Execute Query Example
             Connect To Database    localhost    mydb    admin    secret123
@@ -116,6 +118,7 @@ class DBUtils:
         *** Settings ***
         Library    DBUtils
         
+        
         *** Test Cases ***
         Execute Non Query Example
             Connect To Database    localhost    mydb    admin    secret123
@@ -143,6 +146,7 @@ class DBUtils:
         ```robot
         *** Settings ***
         Library    DBUtils
+        
         
         *** Test Cases ***
         Insert Record Example
@@ -175,6 +179,7 @@ class DBUtils:
         *** Settings ***
         Library    DBUtils
         
+        
         *** Test Cases ***
         Update Record Example
             Connect To Database    localhost    mydb    admin    secret123
@@ -205,6 +210,7 @@ class DBUtils:
         *** Settings ***
         Library    DBUtils
         
+        
         *** Test Cases ***
         Delete Record Example
             Connect To Database    localhost    mydb    admin    secret123
@@ -234,6 +240,7 @@ class DBUtils:
         *** Settings ***
         Library    DBUtils
         
+        
         *** Test Cases ***
         Get Table Count Example
             Connect To Database    localhost    mydb    admin    secret123
@@ -254,6 +261,7 @@ class DBUtils:
         ```robot
         *** Settings ***
         Library    DBUtils
+        
         
         *** Test Cases ***
         Transaction Example
@@ -301,6 +309,7 @@ class DBUtils:
         *** Settings ***
         Library    DBUtils
         
+        
         *** Test Cases ***
         Query Single Row Example
             Connect To Database    localhost    mydb    admin    secret123
@@ -327,6 +336,7 @@ class DBUtils:
         ```robot
         *** Settings ***
         Library    DBUtils
+        
         
         *** Test Cases ***
         Query Single Value Example

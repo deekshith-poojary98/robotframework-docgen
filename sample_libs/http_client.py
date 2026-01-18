@@ -46,6 +46,7 @@ class HTTPClient:
         *** Settings ***
         Library    HTTPClient
         
+        
         *** Test Cases ***
         HTTP GET Example
             ${response}    Http Get    https://api.example.com/users
@@ -76,6 +77,7 @@ class HTTPClient:
         ```robot
         *** Settings ***
         Library    HTTPClient
+        
         
         *** Test Cases ***
         HTTP POST Example
@@ -142,6 +144,7 @@ class HTTPClient:
         ```robot
         *** Settings ***
         Library    HTTPClient
+        
         
         *** Test Cases ***
         Set Header Example
@@ -227,6 +230,7 @@ class HTTPClient:
         *** Settings ***
         Library    HTTPClient
         
+        
         *** Test Cases ***
         Build Query String Example
             ${params}    Create Dictionary    page=1    limit=10
@@ -249,6 +253,7 @@ class HTTPClient:
         ```robot
         *** Settings ***
         Library    HTTPClient
+        
         
         *** Test Cases ***
         Set Basic Auth Example
@@ -273,6 +278,7 @@ class HTTPClient:
         ```robot
         *** Settings ***
         Library    HTTPClient
+        
         
         *** Test Cases ***
         Set Bearer Token Example

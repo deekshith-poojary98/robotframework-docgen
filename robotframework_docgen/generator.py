@@ -158,7 +158,29 @@ class DocumentationGenerator:
                 md_content.append("**Parameters:**")
                 md_content.append("")
                 for param_name, param_type in keyword.parameters:
-                    md_content.append(f"- `{param_name}` : `{param_type}`")
+                    # Check if this parameter has Enum information
+                    enum_info = keyword.parameter_enums.get(param_name) if hasattr(keyword, 'parameter_enums') and keyword.parameter_enums else None
+                    
+                    # Get default value (from Enum info or parameter_defaults)
+                    default_str = ""
+                    if enum_info and 'default' in enum_info and enum_info['default']:
+                        default_str = f" = `{enum_info['default']}`"
+                    elif hasattr(keyword, 'parameter_defaults') and keyword.parameter_defaults and param_name in keyword.parameter_defaults:
+                        default_value = keyword.parameter_defaults[param_name]
+                        default_str = f" = `{default_value}`"
+                    
+                    if enum_info:
+                        # Render Enum parameter with allowed values
+                        md_content.append(f"- `{param_name}` : `{param_type}`{default_str}")
+                        md_content.append("")
+                        md_content.append("  Allowed values:")
+                        for member in enum_info.get('members', []):
+                            member_name = member.get('name', '')
+                            member_value = member.get('value', '')
+                            md_content.append(f"  - `{member_name}` = `{repr(member_value)}`")
+                    else:
+                        # Regular parameter
+                        md_content.append(f"- `{param_name}` : `{param_type}`{default_str}")
                 md_content.append("")
 
             if keyword.return_type and keyword.return_type != "None":
@@ -210,16 +232,60 @@ class DocumentationGenerator:
                         '      <div class="args">',
                         "        <h4>Arguments</h4>",
                         '        <div class="arguments-list-container">',
-                        '          <div class="arguments-list">',
                     ]
                 )
                 for param_name, param_type in keyword.parameters:
-                    section_lines.append(
-                        f'            <li><span class="arg-name">{param_name}</span> : <span class="arg-type">{param_type}</span></li>'
-                    )
+                    # Check if this parameter has Enum information
+                    enum_info = keyword.parameter_enums.get(param_name) if hasattr(keyword, 'parameter_enums') and keyword.parameter_enums else None
+                    
+                    # Get default value (from Enum info or parameter_defaults)
+                    default_badge = ""
+                    if enum_info and 'default' in enum_info and enum_info['default']:
+                        default_badge = f' <span class="badge badge-default">default: {enum_info["default"]}</span>'
+                    elif hasattr(keyword, 'parameter_defaults') and keyword.parameter_defaults and param_name in keyword.parameter_defaults:
+                        default_value = keyword.parameter_defaults[param_name]
+                        default_badge = f' <span class="badge badge-default">default: {default_value}</span>'
+                    
+                    # Each argument in its own div container with consistent structure
+                    section_lines.append('          <div class="argument-item">')
+                    section_lines.append('            <div class="argument-header">')
+                    section_lines.append(f'              <span class="arg-name">{param_name}</span>')
+                    section_lines.append('              <span class="arg-separator">:</span>')
+                    section_lines.append(f'              <span class="arg-type">{param_type}</span>')
+                    if default_badge:
+                        section_lines.append(f'              {default_badge}')
+                    section_lines.append('            </div>')
+                    
+                    if enum_info:
+                        # Add Enum values list
+                        section_lines.append('            <div class="enum-container">')
+                        section_lines.append('              <div class="enum-header">')
+                        section_lines.append('                <span class="enum-label">Allowed values</span>')
+                        section_lines.append('                <span class="enum-count">' + str(len(enum_info.get('members', []))) + ' options</span>')
+                        section_lines.append('              </div>')
+                        section_lines.append('              <div class="enum-members-grid">')
+                        for member in enum_info.get('members', []):
+                            member_name = member.get('name', '')
+                            member_value = member.get('value', '')
+                            # Format value nicely
+                            if isinstance(member_value, str):
+                                value_display = f'"{member_value}"'
+                            else:
+                                value_display = str(member_value)
+                            section_lines.extend([
+                                '                <div class="enum-member">',
+                                f'                  <span class="enum-member-name"><code>{member_name}</code></span>',
+                                '                  <span class="enum-member-separator">=</span>',
+                                f'                  <span class="enum-member-value"><code>{value_display}</code></span>',
+                                '                </div>'
+                            ])
+                        section_lines.append('              </div>')
+                        section_lines.append('            </div>')
+                    
+                    section_lines.append('          </div>')
+                
                 section_lines.extend(
                     [
-                        "          </div>",
                         "        </div>",
                         "      </div>",
                     ]

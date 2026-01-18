@@ -45,6 +45,7 @@ class DateTimeUtils:
         *** Settings ***
         Library    DateTimeUtils
         
+        
         *** Test Cases ***
         Get Current DateTime Example
             ${now}    Get Current Datetime
@@ -72,6 +73,7 @@ class DateTimeUtils:
         *** Settings ***
         Library    DateTimeUtils
         
+        
         *** Test Cases ***
         Parse DateTime Example
             ${dt}    Parse Datetime    2024-01-15 10:30:00
@@ -96,6 +98,7 @@ class DateTimeUtils:
         ```robot
         *** Settings ***
         Library    DateTimeUtils
+        
         
         *** Test Cases ***
         Format DateTime Example
@@ -123,6 +126,7 @@ class DateTimeUtils:
         ```robot
         *** Settings ***
         Library    DateTimeUtils
+        
         
         *** Test Cases ***
         Add Days Example
@@ -153,6 +157,7 @@ class DateTimeUtils:
         *** Settings ***
         Library    DateTimeUtils
         
+        
         *** Test Cases ***
         Add Hours Example
             ${later}    Add Hours    2024-01-15 10:30:00    hours=5
@@ -180,6 +185,7 @@ class DateTimeUtils:
         ```robot
         *** Settings ***
         Library    DateTimeUtils
+        
         
         *** Test Cases ***
         Add Minutes Example
@@ -210,6 +216,7 @@ class DateTimeUtils:
         ```robot
         *** Settings ***
         Library    DateTimeUtils
+        
         
         *** Test Cases ***
         Get Date Difference Example
@@ -249,6 +256,7 @@ class DateTimeUtils:
         *** Settings ***
         Library    DateTimeUtils
         
+        
         *** Test Cases ***
         Is Date Before Example
             ${result}    Is Date Before    2024-01-15    2024-01-20
@@ -277,6 +285,7 @@ class DateTimeUtils:
         *** Settings ***
         Library    DateTimeUtils
         
+        
         *** Test Cases ***
         Is Date After Example
             ${result}    Is Date After    2024-01-20    2024-01-15
@@ -299,6 +308,7 @@ class DateTimeUtils:
         ```robot
         *** Settings ***
         Library    DateTimeUtils
+        
         
         *** Test Cases ***
         Get Timestamp Example
@@ -323,6 +333,7 @@ class DateTimeUtils:
         ```robot
         *** Settings ***
         Library    DateTimeUtils
+        
         
         *** Test Cases ***
         Timestamp To DateTime Example
@@ -351,6 +362,7 @@ class DateTimeUtils:
         *** Settings ***
         Library    DateTimeUtils
         
+        
         *** Test Cases ***
         DateTime To Timestamp Example
             ${ts}    DateTime To Timestamp    2024-01-15 10:30:00
@@ -376,6 +388,7 @@ class DateTimeUtils:
         ```robot
         *** Settings ***
         Library    DateTimeUtils
+        
         
         *** Test Cases ***
         Get Day Of Week Example
@@ -403,6 +416,7 @@ class DateTimeUtils:
         *** Settings ***
         Library    DateTimeUtils
         
+        
         *** Test Cases ***
         Get Month Name Example
             ${month}    Get Month Name    2024-01-15
@@ -428,6 +442,7 @@ class DateTimeUtils:
         ```robot
         *** Settings ***
         Library    DateTimeUtils
+        
         
         *** Test Cases ***
         Is Weekend Example
@@ -455,6 +470,7 @@ class DateTimeUtils:
         *** Settings ***
         Library    DateTimeUtils
         
+        
         *** Test Cases ***
         Is Weekday Example
             ${result}    Is Weekday    2024-01-15
@@ -480,6 +496,7 @@ class DateTimeUtils:
         ```robot
         *** Settings ***
         Library    DateTimeUtils
+        
         
         *** Test Cases ***
         Get Start Of Day Example
@@ -507,6 +524,7 @@ class DateTimeUtils:
         ```robot
         *** Settings ***
         Library    DateTimeUtils
+        
         
         *** Test Cases ***
         Get End Of Day Example
@@ -536,6 +554,7 @@ class DateTimeUtils:
         ```robot
         *** Settings ***
         Library    DateTimeUtils
+        
         
         *** Test Cases ***
         Get Age Example

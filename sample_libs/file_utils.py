@@ -48,6 +48,7 @@ class FileUtils:
         *** Settings ***
         Library    FileUtils
         
+        
         *** Test Cases ***
         Read File Example
             ${content}    Read File Content    /path/to/file.txt
@@ -73,6 +74,7 @@ class FileUtils:
         ```robot
         *** Settings ***
         Library    FileUtils
+        
         
         *** Test Cases ***
         Write File Example
@@ -122,6 +124,7 @@ class FileUtils:
         *** Settings ***
         Library    FileUtils
         
+        
         *** Test Cases ***
         Create Directory Example
             Create Directory    /path/to/new/directory
@@ -143,6 +146,7 @@ class FileUtils:
         ```robot
         *** Settings ***
         Library    FileUtils
+        
         
         *** Test Cases ***
         Copy File Example
@@ -191,6 +195,7 @@ class FileUtils:
         *** Settings ***
         Library    FileUtils
         
+        
         *** Test Cases ***
         List Files Example
             ${files}    List Files    /path/to/dir    *.txt
@@ -229,6 +234,7 @@ class FileUtils:
         *** Settings ***
         Library    FileUtils
         
+        
         *** Test Cases ***
         Read JSON File Example
             ${data}    Read Json File    config.json
@@ -252,6 +258,7 @@ class FileUtils:
         ```robot
         *** Settings ***
         Library    FileUtils
+        
         
         *** Test Cases ***
         Write JSON File Example
@@ -279,6 +286,7 @@ class FileUtils:
         *** Settings ***
         Library    FileUtils
         
+        
         *** Test Cases ***
         Get File Extension Example
             ${ext}    Get File Extension    document.pdf
@@ -301,6 +309,7 @@ class FileUtils:
         ```robot
         *** Settings ***
         Library    FileUtils
+        
         
         *** Test Cases ***
         Join Paths Example
