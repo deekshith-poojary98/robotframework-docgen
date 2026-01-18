@@ -1,0 +1,2046 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="Generator" content="Robot Framework Documentation Parser">
+  <link rel="icon" href="https://docs.robotframework.org/img/rf_favicon.png">
+  <title>EnumLibrary Documentation</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-alt: #020617;
+      --card: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.15);
+      --border: #1e293b;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.8));
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo img {
+      width: 36px;
+      height: 36px;
+      display: block;
+    }
+
+    header h1 {
+      font-size: 1.05rem;
+      margin: 0;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f4f6ff;
+    }
+
+    header .tagline {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    header nav {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    header nav a {
+      color: var(--muted);
+      padding-bottom: 0.1rem;
+      border-bottom: 1px solid transparent;
+    }
+
+    header nav a:hover {
+      color: var(--text);
+      border-color: var(--accent-soft);
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      padding: 0.5rem;
+      margin-left: auto;
+      position: relative;
+      z-index: 31;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-toggle:hover {
+      color: var(--accent);
+    }
+
+    .menu-toggle svg {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      border-right: 1px solid var(--border);
+      padding: calc(1.25rem + 10px) 1.5rem 1.5rem;
+      background: linear-gradient(to bottom, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      max-height: 100vh;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    aside h2 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .toc-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .toc-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.25rem 0 0;
+    }
+
+    .toc-section li {
+      margin: 0.1rem 0;
+    }
+
+    .toc-section a {
+      color: var(--muted);
+      padding: 0.12rem 0;
+      display: inline-block;
+    }
+
+    .toc-section a:hover {
+      color: var(--text);
+    }
+
+    .keyword-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0 0;
+      font-size: 0.86rem;
+      overflow-y: auto;
+    }
+
+    .keyword-list li {
+      margin: 0;
+    }
+
+    .keyword-list li.hidden {
+      display: none;
+    }
+
+    .keyword-list a {
+      display: block;
+      color: var(--muted);
+      padding: 0.15rem 0;
+    }
+
+    .keyword-list a:hover {
+      color: var(--accent);
+    }
+
+    .search-box {
+      margin-top: 0.65rem;
+      margin-left: -5px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,0.8);
+      color: var(--text);
+      font-size: 0.85rem;
+    }
+
+    .search-box input:focus {
+      outline: 2px solid rgba(56,189,248,0.4);
+    }
+
+    .no-results {
+      color: var(--muted);
+      font-style: italic;
+      padding: 0.4rem 0;
+    }
+
+    main {
+      padding: 1.75rem 2.4rem 3rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+      gap: 2rem;
+      margin-bottom: 2.2rem;
+      align-items: center;
+    }
+
+    .hero h2 {
+      font-size: 2.2rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero p {
+      color: var(--muted);
+      margin-top: 0;
+      max-width: 40rem;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin: 0.8rem 0 1.25rem;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      color: var(--muted);
+      border-color: rgba(56,189,248,0.4);
+    }
+
+    .badge.primary {
+      border-color: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .badge.badge-default {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      margin-left: 0.4rem;
+      background: rgba(34,197,94,0.15);
+      border-color: rgba(34,197,94,0.3);
+      color: #4ade80;
+      font-weight: 500;
+      display: inline-block;
+      line-height: 1.4;
+      border-radius: 999px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      border: 1px solid transparent;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: radial-gradient(circle at top left, #38bdf8, #0ea5e9 45%, #0369a1 100%);
+      border-color: rgba(56,189,248,0.4);
+      color: #0b1120;
+      box-shadow: 0 10px 30px rgba(56,189,248,0.4);
+    }
+
+    .btn-ghost {
+      background: rgba(15,23,42,0.75);
+      border-color: var(--border);
+      color: var(--muted);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 35px rgba(56,189,248,0.5);
+      text-decoration: none;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .hero-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hero-meta.meta-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      margin-top: 0.35rem;
+    }
+
+    .hero-meta.meta-grid span {
+      display: inline-flex;
+      gap: 0.25rem;
+      align-items: center;
+      color: var(--muted);
+    }
+
+    .hero-meta.meta-grid strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .hero-card {
+      border-radius: 1.2rem;
+      background: radial-gradient(circle at top, rgba(56,189,248,0.2), rgba(15,23,42,1));
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      padding: 1rem 1rem 1.2rem;
+      font-size: 0.75rem;
+    }
+
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.45rem;
+      color: var(--muted);
+    }
+
+    .hero-card-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+    }
+
+    .hero-card-lang {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.85);
+    }
+
+    pre {
+      background: rgba(2,6,23,0.95);
+      border-radius: 0.75rem;
+      padding: 0.9rem 1rem;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .keyword-container {
+      background: rgba(15,23,42,0.9);
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      padding: 1rem 1.1rem;
+      font-size: 0.92rem;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      margin-bottom: 1.5rem;
+    }
+
+    .keyword-name h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .kw-overview {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .args,
+    .return-type,
+    .kw-docs {
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 0.85rem;
+      background: rgba(2,6,23,0.75);
+    }
+
+    .args h4,
+    .return-type h4,
+    .kw-docs h4 {
+      margin: 0 0 0.4rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .arguments-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .argument-item {
+      background: rgba(2,6,23,0.6);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      transition: all 0.2s ease;
+    }
+
+    .argument-item:hover {
+      background: rgba(2,6,23,0.8);
+      border-color: rgba(56,189,248,0.3);
+    }
+
+    .argument-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .arg-name {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: rgba(15,76,204,0.15);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid rgba(15,76,204,0.3);
+      color: var(--accent);
+    }
+
+    .arg-separator {
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 400;
+    }
+
+    .arg-type {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(15,23,42,0.5);
+      display: inline-block;
+      line-height: 1.4;
+    }
+
+    .return-type .arg-type {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      line-height: 1.4;
+    }
+
+    .enum-values {
+      list-style: none;
+      margin: 0.75rem 0 0.5rem 0;
+      padding: 0;
+      width: 100%;
+    }
+
+    .enum-container {
+      background: rgba(2,6,23,0.6);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .enum-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.65rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .enum-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .enum-count {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-family: var(--mono);
+      padding: 0.15rem 0.4rem;
+      background: rgba(56,189,248,0.1);
+      border-radius: 4px;
+      border: 1px solid rgba(56,189,248,0.2);
+    }
+
+    .enum-members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .enum-member {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.65rem;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid rgba(56,189,248,0.15);
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+    }
+
+    .enum-member:hover {
+      background: rgba(15,23,42,0.95);
+      border-color: rgba(56,189,248,0.3);
+      transform: translateY(-1px);
+    }
+
+    .enum-member-name {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .enum-member-name code {
+      background: transparent;
+      padding: 0;
+      border: none;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .enum-member-separator {
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .enum-member-value {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    .enum-member-value code {
+      background: rgba(56,189,248,0.1);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      border: 1px solid rgba(56,189,248,0.2);
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    @media (max-width: 768px) {
+      .enum-members-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .kwdoc {
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .kwdoc code {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      background: rgba(56,189,248,0.08);
+      padding: 0.2rem 0.35rem;
+      border-radius: 4px;
+    }
+
+    .kwdoc table,
+    .kwdoc .doc-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1rem 0;
+      border: 2px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: rgba(2,6,23,0.75);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .kwdoc table thead,
+    .kwdoc .doc-table thead {
+      background: rgba(56,189,248,0.1);
+    }
+
+    .kwdoc table th,
+    .kwdoc .doc-table th {
+      padding: 0.65rem 0.85rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .kwdoc table th:last-child,
+    .kwdoc .doc-table th:last-child {
+      border-right: none;
+    }
+
+    .kwdoc table td,
+    .kwdoc .doc-table td {
+      padding: 0.6rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+
+    .kwdoc table td:last-child,
+    .kwdoc .doc-table td:last-child {
+      border-right: none;
+    }
+
+    .kwdoc table tbody tr:last-child td,
+    .kwdoc .doc-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .kwdoc table tbody tr:hover,
+    .kwdoc .doc-table tbody tr:hover {
+      background: rgba(56,189,248,0.05);
+    }
+
+    .kwdoc img,
+    .kwdoc .doc img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      margin: 1rem 0;
+      display: block;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .code-block {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+
+    .code-block pre {
+      margin: 0;
+      padding: 1rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+      white-space: pre;
+      overflow-x: auto;
+      border-radius: 0;
+      border: none;
+      background: transparent;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.2rem 2.4rem 1.6rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      background: radial-gradient(circle at bottom, rgba(56,189,248,0.15), rgba(15,23,42,1));
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: fixed !important;
+        top: 70px;
+        left: 0;
+        width: 280px;
+        max-width: 85vw;
+        height: calc(100vh - 70px);
+        z-index: 26;
+        transform: translateX(-100%) !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
+        border-right: 1px solid var(--border);
+      }
+
+      aside.active {
+        transform: translateX(0) !important;
+      }
+
+      .sidebar-overlay {
+        display: block;
+      }
+
+      main {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      aside {
+        position: fixed !important;
+        top: 70px;
+        left: 0;
+        width: 280px;
+        max-width: 85vw;
+        height: calc(100vh - 70px);
+        z-index: 26;
+        transform: translateX(-100%) !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
+        border-right: 1px solid var(--border);
+      }
+
+      aside.active {
+        transform: translateX(0) !important;
+      }
+
+      .sidebar-overlay {
+        display: block;
+      }
+
+      main {
+        width: 100%;
+      }
+
+      main {
+        padding: 1.25rem 1.4rem 2.5rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 0.7rem 1rem;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero h2 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="https://docs.robotframework.org/img/robot-framework-dark.svg" alt="Robot Framework Logo">
+      </div>
+      <div>
+        <h1>EnumLibrary</h1>
+        <div class="tagline">Robot Framework library documentation</div>
+      </div>
+    </div>
+    <nav><a href="../index.html">← Back to Dashboard</a>
+      <a href="#intro">Overview</a>
+      <a href="#keywords">Keywords</a>
+    </nav>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="layout">
+    <aside>
+      <div class="toc-section">
+        <h2>Getting Started</h2>
+        <ul>
+          <li><a href="#intro">Introduction</a></li>
+        </ul>
+      </div>
+
+      <div class="toc-section">
+        <h2>Keywords</h2>
+        <div class="search-box">
+          <input type="text" id="keyword-search" placeholder="Search keywords…">
+        </div>
+        <ul class="keyword-list" id="keyword-list">
+          <li><a href="#set-log-level">Set Log Level</a></li>
+        <li><a href="#process-with-status">Process With Status</a></li>
+        <li><a href="#filter-by-status">Filter By Status</a></li>
+        <li><a href="#set-color">Set Color</a></li>
+        <li><a href="#convert-temperature">Convert Temperature</a></li>
+        <li><a href="#get-status-info">Get Status Info</a></li>
+        <li><a href="#create-task">Create Task</a></li>
+        <li><a href="#log-message">Log Message</a></li>
+        <li><a href="#get-all-statuses">Get All Statuses</a></li>
+        <li><a href="#get-all-priorities">Get All Priorities</a></li>
+        <li><a href="#validate-status">Validate Status</a></li>
+        <li><a href="#get-status-by-value">Get Status By Value</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main>
+      <section id="intro" class="hero">
+        <div>
+          <h2>EnumLibrary Documentation</h2>
+          
+          <div class="hero-badges">
+            <!-- <span class="badge primary">Robot Framework Library</span> -->
+            <span class="badge">Version 1.0.0</span>
+            <span class="badge">Scope TEST</span>
+            <span class="badge">12 Keywords</span>
+          </div>
+          <div class="hero-actions"><a class="btn btn-primary" href="https://example.com/enum_library" target="_blank" rel="noopener noreferrer"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2Zm6.93 9H16.2a17.459 17.459 0 0 0-1.18-4.495A7.953 7.953 0 0 1 18.93 11Zm-7.93 8a15.417 15.417 0 0 1-1.458-4h2.916A15.417 15.417 0 0 1 11 19Zm-1.458-6a13.7 13.7 0 0 1 0-2h2.916a13.7 13.7 0 0 1 0 2Zm-3.25-2a13.116 13.116 0 0 1 .4-2h2.365a13.472 13.472 0 0 0 0 4H6.692a13.116 13.116 0 0 1-.4-2Zm4.708-6a15.417 15.417 0 0 1 1.458 4h-2.916A15.417 15.417 0 0 1 11 5Zm-2.02.505A17.459 17.459 0 0 0 7.8 11H5.07A7.953 7.953 0 0 1 8.98 5.505ZM5.07 13H7.8a17.459 17.459 0 0 0 1.18 4.495A7.953 7.953 0 0 1 5.07 13Zm9.95 4.495c.42-1.282.728-2.64.892-3.995h2.188a7.953 7.953 0 0 1-3.08 3.995Z"></path></svg><span>Library Website</span></a><a class="btn btn-ghost" href="https://github.com/username/repo" target="_blank" rel="noopener noreferrer"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" data-view-component="true" class="octicon octicon-mark-github v-align-middle"><path fill="currentColor" d="M12 1C5.923 1 1 5.923 1 12c0 4.867 3.149 8.979 7.521 10.436.55.096.756-.233.756-.522 0-.262-.013-1.128-.013-2.049-2.764.509-3.479-.674-3.699-1.292-.124-.317-.66-1.293-1.127-1.554-.385-.207-.936-.715-.014-.729.866-.014 1.485.797 1.691 1.128.99 1.663 2.571 1.196 3.204.907.096-.715.385-1.196.701-1.471-2.448-.275-5.005-1.224-5.005-5.432 0-1.196.426-2.186 1.128-2.956-.111-.275-.496-1.402.11-2.915 0 0 .921-.288 3.024 1.128a10.193 10.193 0 0 1 2.75-.371c.936 0 1.871.123 2.75.371 2.104-1.43 3.025-1.128 3.025-1.128.605 1.513.221 2.64.111 2.915.701.77 1.127 1.747 1.127 2.956 0 4.222-2.571 5.157-5.019 5.432.399.344.743 1.004.743 2.035 0 1.471-.014 2.654-.014 3.025 0 .289.206.632.756.522C19.851 20.979 23 16.854 23 12c0-6.077-4.922-11-11-11Z"></path></svg><span>View on GitHub</span></a><a class="btn btn-ghost" href="mailto:support@example.com"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M19.25 4H4.75A2.75 2.75 0 0 0 2 6.75v10.5A2.75 2.75 0 0 0 4.75 20h14.5A2.75 2.75 0 0 0 22 17.25V6.75A2.75 2.75 0 0 0 19.25 4Zm0 1.5c.129 0 .252.027.363.076L12 11.14 4.387 5.076A1.25 1.25 0 0 1 4.75 5.5Zm0 13H4.75A1.25 1.25 0 0 1 3.5 17.25V7.46l7.87 6.04a.75.75 0 0 0 .88 0l7.87-6.04v9.79A1.25 1.25 0 0 1 19.25 18.5Z"></path></svg><span>Contact Support</span></a></div>
+          <div class="hero-meta meta-grid"><span><strong>Author:</strong> Bruce Wayne</span><span><strong>Maintainer:</strong> Docs Team</span><span><strong>License:</strong> MIT</span><span><strong>Robot Framework:</strong> >=7.0</span><span><strong>Python:</strong> >=3.11</span></div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-header">
+            <div class="hero-card-title">Sample Usage</div>
+            <div class="hero-card-lang">Robot</div>
+          </div>
+          <pre class="language-robot"><code><span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span>    EnumLibrary
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example</span>
+    [Documentation]    Demonstrates using EnumLibrary
+<span style="color: #6a9955; font-style: italic;">    # add your keyword calls here</span></code></pre>
+        </div>
+      </section>
+
+      <section class="keyword-container intro-section"><div class="keyword-name"><h2>Introduction</h2></div><div class="kw-overview"><div class="kw-docs"><div class="intro-content"><p>Sample library demonstrating Enum type usage.</p>
+<p>    This library demonstrates Enum type support in Robot Framework keywords.</p>
+<p>    It showcases various Enum patterns including:</p>
+<ul>
+<li>Enum with default values</li>
+<li>Enum with different value types (int, str, float)</li>
+<li>Multiple Enum parameters</li>
+<li>Mixed Enum and regular parameters</li>
+</ul></div></div></div></section>
+
+      <section id="keywords">
+        <div class="keyword-container" id="set-log-level">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#set-log-level">Set Log Level</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">level</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">LogLevel</span>
+               <span class="badge badge-default">default: INFO</span>
+            </div>
+            <div class="enum-container">
+              <div class="enum-header">
+                <span class="enum-label">Allowed values</span>
+                <span class="enum-count">5 options</span>
+              </div>
+              <div class="enum-members-grid">
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>DEBUG</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"debug"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>INFO</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"info"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>WARNING</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"warning"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>ERROR</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"error"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>CRITICAL</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"critical"</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Set the logging level.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>level</code>: Log level (default: INFO)</li>
+</ul>
+<p><strong>Returns:</strong> None</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span>    EnumLibrary
+
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example Test</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Set Log Level</span>     <span style="color: #9cdcfe;">${LogLevel.INFO}</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Set Log Level</span>     <span style="color: #dcdcaa;">level</span>=ERROR
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="process-with-status">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#process-with-status">Process With Status</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">item</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">status</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Status</span>
+               <span class="badge badge-default">default: PENDING</span>
+            </div>
+            <div class="enum-container">
+              <div class="enum-header">
+                <span class="enum-label">Allowed values</span>
+                <span class="enum-count">5 options</span>
+              </div>
+              <div class="enum-members-grid">
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>PENDING</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>1</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>ACTIVE</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>2</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>COMPLETED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>3</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>CANCELLED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>4</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>FAILED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>5</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">priority</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Priority</span>
+               <span class="badge badge-default">default: MEDIUM</span>
+            </div>
+            <div class="enum-container">
+              <div class="enum-header">
+                <span class="enum-label">Allowed values</span>
+                <span class="enum-count">4 options</span>
+              </div>
+              <div class="enum-members-grid">
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>LOW</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>1</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>MEDIUM</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>2</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>HIGH</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>3</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>URGENT</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>4</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">dict</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Process an item with status and priority.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>item</code>: Item name or identifier</li>
+<li><code>status</code>: Processing status (default: PENDING)</li>
+<li><code>priority</code>: Processing priority (default: MEDIUM)</li>
+</ul>
+<p><strong>Returns:</strong> Dictionary with processing result</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span>    EnumLibrary
+
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example Test</span>
+    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Process With Status</span>    item-123    <span style="color: #dcdcaa;">status</span>=ACTIVE    <span style="color: #dcdcaa;">priority</span>=HIGH
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="filter-by-status">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#filter-by-status">Filter By Status</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">items</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">List[str]</span>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">status</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Status</span>
+            </div>
+            <div class="enum-container">
+              <div class="enum-header">
+                <span class="enum-label">Allowed values</span>
+                <span class="enum-count">5 options</span>
+              </div>
+              <div class="enum-members-grid">
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>PENDING</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>1</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>ACTIVE</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>2</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>COMPLETED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>3</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>CANCELLED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>4</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>FAILED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>5</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">List[str]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Filter items by status.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>items</code>: List of item identifiers</li>
+<li><code>status</code>: Status to filter by</li>
+</ul>
+<p><strong>Returns:</strong> Filtered list of items matching the status</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span>    EnumLibrary
+
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example Test</span>
+    <span style="color: #9cdcfe;">${items}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create List</span>    item1    item2    item3
+    <span style="color: #9cdcfe;">${filtered}</span>    <span style="color: #4ec9b0; font-weight: bold;">Filter By Status</span>    <span style="color: #9cdcfe;">${items}</span>    <span style="color: #9cdcfe;">${Status.ACTIVE}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="set-color">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#set-color">Set Color</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">color</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Color</span>
+            </div>
+            <div class="enum-container">
+              <div class="enum-header">
+                <span class="enum-label">Allowed values</span>
+                <span class="enum-count">5 options</span>
+              </div>
+              <div class="enum-members-grid">
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>RED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"red"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>GREEN</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"green"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>BLUE</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"blue"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>YELLOW</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"yellow"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>PURPLE</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"purple"</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">intensity</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Optional[int]</span>
+               <span class="badge badge-default">default: None</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Set a color with optional intensity.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>color</code>: Color to set</li>
+<li><code>intensity</code>: Optional intensity value (0-100)</li>
+</ul>
+<p><strong>Returns:</strong> None</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span>    EnumLibrary
+
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example Test</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Set Color</span>     <span style="color: #9cdcfe;">${Color.RED}</span>    <span style="color: #dcdcaa;">intensity</span>=75
+    <span style="color: #4ec9b0; font-weight: bold;">Set Color</span>     <span style="color: #dcdcaa;">color</span>=GREEN
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="convert-temperature">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#convert-temperature">Convert Temperature</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">value</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">float</span>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">from_unit</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">TemperatureUnit</span>
+            </div>
+            <div class="enum-container">
+              <div class="enum-header">
+                <span class="enum-label">Allowed values</span>
+                <span class="enum-count">3 options</span>
+              </div>
+              <div class="enum-members-grid">
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>CELSIUS</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"celsius"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>FAHRENHEIT</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"fahrenheit"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>KELVIN</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"kelvin"</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">to_unit</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">TemperatureUnit</span>
+               <span class="badge badge-default">default: CELSIUS</span>
+            </div>
+            <div class="enum-container">
+              <div class="enum-header">
+                <span class="enum-label">Allowed values</span>
+                <span class="enum-count">3 options</span>
+              </div>
+              <div class="enum-members-grid">
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>CELSIUS</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"celsius"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>FAHRENHEIT</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"fahrenheit"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>KELVIN</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"kelvin"</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">float</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Convert temperature between units.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>value</code>: Temperature value</li>
+<li><code>from_unit</code>: Source temperature unit</li>
+<li><code>to_unit</code>: Target temperature unit (default: CELSIUS)</li>
+</ul>
+<p><strong>Returns:</strong> Converted temperature value</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span>    EnumLibrary
+
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example Test</span>
+    <span style="color: #9cdcfe;">${celsius}</span>    <span style="color: #4ec9b0; font-weight: bold;">Convert Temperature</span>    32    <span style="color: #9cdcfe;">${TemperatureUnit.FAHRENHEIT}</span>    <span style="color: #9cdcfe;">${TemperatureUnit.CELSIUS}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-status-info">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-status-info">Get Status Info</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">status</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Status</span>
+            </div>
+            <div class="enum-container">
+              <div class="enum-header">
+                <span class="enum-label">Allowed values</span>
+                <span class="enum-count">5 options</span>
+              </div>
+              <div class="enum-members-grid">
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>PENDING</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>1</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>ACTIVE</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>2</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>COMPLETED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>3</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>CANCELLED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>4</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>FAILED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>5</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">dict</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Get information about a status.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>status</code>: Status to get information for</li>
+</ul>
+<p><strong>Returns:</strong> Dictionary with status information</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span>    EnumLibrary
+
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example Test</span>
+    <span style="color: #9cdcfe;">${info}</span>    <span style="color: #4ec9b0; font-weight: bold;">Get Status Info</span>    <span style="color: #9cdcfe;">${Status.ACTIVE}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="create-task">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#create-task">Create Task</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">name</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">priority</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Priority</span>
+               <span class="badge badge-default">default: MEDIUM</span>
+            </div>
+            <div class="enum-container">
+              <div class="enum-header">
+                <span class="enum-label">Allowed values</span>
+                <span class="enum-count">4 options</span>
+              </div>
+              <div class="enum-members-grid">
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>LOW</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>1</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>MEDIUM</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>2</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>HIGH</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>3</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>URGENT</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>4</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">status</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Status</span>
+               <span class="badge badge-default">default: PENDING</span>
+            </div>
+            <div class="enum-container">
+              <div class="enum-header">
+                <span class="enum-label">Allowed values</span>
+                <span class="enum-count">5 options</span>
+              </div>
+              <div class="enum-members-grid">
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>PENDING</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>1</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>ACTIVE</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>2</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>COMPLETED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>3</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>CANCELLED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>4</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>FAILED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>5</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">dict</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Create a new task with priority and status.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>name</code>: Task name</li>
+<li><code>priority</code>: Task priority (default: MEDIUM)</li>
+<li><code>status</code>: Initial status (default: PENDING)</li>
+</ul>
+<p><strong>Returns:</strong> Dictionary with task information</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span>    EnumLibrary
+
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example Test</span>
+    <span style="color: #9cdcfe;">${task}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Task</span>    Important Task    <span style="color: #dcdcaa;">priority</span>=HIGH    <span style="color: #dcdcaa;">status</span>=PENDING
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="log-message">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#log-message">Log Message</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">message</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">level</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">LogLevel</span>
+               <span class="badge badge-default">default: INFO</span>
+            </div>
+            <div class="enum-container">
+              <div class="enum-header">
+                <span class="enum-label">Allowed values</span>
+                <span class="enum-count">5 options</span>
+              </div>
+              <div class="enum-members-grid">
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>DEBUG</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"debug"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>INFO</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"info"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>WARNING</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"warning"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>ERROR</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"error"</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>CRITICAL</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>"critical"</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">color</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Optional[Color]</span>
+               <span class="badge badge-default">default: None</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Log a message with specified level and optional color.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>message</code>: Message to log</li>
+<li><code>level</code>: Log level (default: INFO)</li>
+<li><code>color</code>: Optional color for display</li>
+</ul>
+<p><strong>Returns:</strong> None</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span>    EnumLibrary
+
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example Test</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Log Message</span>     This is an error    <span style="color: #dcdcaa;">level</span>=ERROR    <span style="color: #dcdcaa;">color</span>=RED
+    <span style="color: #4ec9b0; font-weight: bold;">Log Message</span>     Information message
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-all-statuses">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-all-statuses">Get All Statuses</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">List[str]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Get all available status values.</p>
+<p><strong>Returns:</strong> List of all status names</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span>    EnumLibrary
+
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example Test</span>
+    <span style="color: #9cdcfe;">${statuses}</span>    <span style="color: #4ec9b0; font-weight: bold;">Get All Statuses</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${statuses}</span>    ACTIVE
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-all-priorities">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-all-priorities">Get All Priorities</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">List[str]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Get all available priority values.</p>
+<p><strong>Returns:</strong> List of all priority names</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span>    EnumLibrary
+
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example Test</span>
+    <span style="color: #9cdcfe;">${priorities}</span>    <span style="color: #4ec9b0; font-weight: bold;">Get All Priorities</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${priorities}</span>    HIGH
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="validate-status">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#validate-status">Validate Status</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">status</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Status</span>
+            </div>
+            <div class="enum-container">
+              <div class="enum-header">
+                <span class="enum-label">Allowed values</span>
+                <span class="enum-count">5 options</span>
+              </div>
+              <div class="enum-members-grid">
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>PENDING</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>1</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>ACTIVE</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>2</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>COMPLETED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>3</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>CANCELLED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>4</code></span>
+                </div>
+                <div class="enum-member">
+                  <span class="enum-member-name"><code>FAILED</code></span>
+                  <span class="enum-member-separator">=</span>
+                  <span class="enum-member-value"><code>5</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">bool</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Validate if a status is valid.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>status</code>: Status to validate</li>
+</ul>
+<p><strong>Returns:</strong> True if status is valid, False otherwise</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span>    EnumLibrary
+
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example Test</span>
+    <span style="color: #9cdcfe;">${valid}</span>    <span style="color: #4ec9b0; font-weight: bold;">Validate Status</span>    <span style="color: #9cdcfe;">${Status.ACTIVE}</span>
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be True</span>     <span style="color: #9cdcfe;">${valid}</span>
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-status-by-value">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-status-by-value">Get Status By Value</a></h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h4>Arguments</h4>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">value</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">int</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h4>Return Type</h4>
+        <span class="arg-type">Optional[Status]</span>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h4>Documentation</h4>
+      <div class="kwdoc doc">
+        <p>Get status enum by its integer value.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>value</code>: Status integer value</li>
+</ul>
+<p><strong>Returns:</strong> Status enum if found, None otherwise</p>
+<p><strong>Example:</strong></p>
+<div class="code-block"><pre class="language-robot">
+<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
+<span style="color: #c586c0; font-weight: bold;">Library</span>    EnumLibrary
+
+
+<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
+<span style="color: #dcdcaa; font-weight: bold;">Example Test</span>
+    <span style="color: #9cdcfe;">${status}</span>    <span style="color: #4ec9b0; font-weight: bold;">Get Status By Value</span>    2
+    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${status.name}</span>    ACTIVE
+</pre></div>
+      </div>
+    </div>
+  </div>
+</div>
+      </section>
+
+      <section class="keyword-container">
+        <div class="keyword-name">
+          <h2>Need Help?</h2>
+        </div>
+        <div class="kw-overview">
+          <div class="kw-docs">
+            <p>
+              Found an issue or have a feature request for this library? Let the maintainers know by opening a new
+              GitHub issue. Please include environment details and relevant log output to help us reproduce the problem.
+            </p>
+            <p style="margin-top: 1rem;"><a class="btn btn-primary" href="https://github.com/username/repo/issues/new" target="_blank" rel="noopener noreferrer">Open an Issue on GitHub</a></p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    Generated by <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · EnumLibrary Documentation · Last updated: 2026-01-19 01:30:06
+  </footer>
+
+  <script>
+    const searchInput = document.getElementById('keyword-search');
+    const keywordList = document.getElementById('keyword-list');
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.querySelector('aside');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    function searchKeywords() {
+      const term = (searchInput.value || '').toLowerCase().trim();
+      const entries = keywordList.querySelectorAll('li');
+      let matches = 0;
+
+      entries.forEach((entry) => {
+        const text = entry.textContent.toLowerCase();
+        const hit = text.includes(term);
+        entry.classList.toggle('hidden', !hit);
+        if (hit) matches++;
+      });
+
+      let noResults = keywordList.querySelector('.no-results');
+      if (!matches && term) {
+        if (!noResults) {
+          noResults = document.createElement('li');
+          noResults.className = 'no-results';
+          keywordList.appendChild(noResults);
+        }
+        noResults.textContent = 'No keywords found';
+      } else if (noResults) {
+        noResults.remove();
+      }
+    }
+
+    function toggleSidebar() {
+      if (window.innerWidth <= 1024) {
+        const isActive = sidebar.classList.contains('active');
+        const headerHeight = document.querySelector('header').offsetHeight;
+        
+        if (!isActive) {
+          // Open sidebar - set up styles first
+          sidebar.style.display = 'block';
+          sidebar.style.visibility = 'visible';
+          sidebar.style.opacity = '1';
+          sidebar.style.position = 'fixed';
+          sidebar.style.top = headerHeight + 'px';
+          sidebar.style.left = '0';
+          sidebar.style.width = '280px';
+          sidebar.style.maxWidth = '85vw';
+          sidebar.style.height = `calc(100vh - ${headerHeight}px)`;
+          sidebar.style.zIndex = '26';
+          sidebar.style.transition = 'transform 0.3s ease-in-out';
+          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+          
+          // Ensure sidebar starts off-screen
+          sidebar.style.transform = 'translateX(-100%)';
+          sidebar.style.webkitTransform = 'translateX(-100%)';
+          
+          // Use requestAnimationFrame to ensure transition is applied before changing transform
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              sidebar.style.transform = 'translateX(0)';
+              sidebar.style.webkitTransform = 'translateX(0)';
+              sidebar.classList.add('active');
+              sidebarOverlay.classList.add('active');
+            });
+          });
+        } else {
+          // Close sidebar
+          sidebar.style.transition = 'transform 0.3s ease-in-out';
+          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+          sidebar.style.transform = 'translateX(-100%)';
+          sidebar.style.webkitTransform = 'translateX(-100%)';
+          sidebar.classList.remove('active');
+          sidebarOverlay.classList.remove('active');
+        }
+      }
+    }
+
+    function closeSidebar() {
+      if (window.innerWidth <= 1024) {
+        sidebar.style.transition = 'transform 0.3s ease-in-out';
+        sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
+        sidebar.style.transform = 'translateX(-100%)';
+        sidebar.style.webkitTransform = 'translateX(-100%)';
+      }
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    }
+
+    if (searchInput && keywordList) {
+      searchInput.addEventListener('input', searchKeywords);
+      searchInput.addEventListener('keyup', (event) => {
+        if (event.key === 'Escape') {
+          searchInput.value = '';
+          searchKeywords();
+          searchInput.blur();
+        }
+      });
+    }
+
+    if (menuToggle && sidebar && sidebarOverlay) {
+      menuToggle.addEventListener('click', toggleSidebar);
+      sidebarOverlay.addEventListener('click', closeSidebar);
+      
+      // Close sidebar when clicking on a link (mobile only)
+      const sidebarLinks = sidebar.querySelectorAll('a');
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 1024) {
+            closeSidebar();
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
+

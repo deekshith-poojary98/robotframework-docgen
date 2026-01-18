@@ -53,6 +53,7 @@ class DataProcessor:
         *** Settings ***
         Library    DataProcessor
         
+        
         *** Test Cases ***
         Validate JSON Example
             ${schema}    Create Dictionary    name=str    age=int    email=str
@@ -107,6 +108,7 @@ class DataProcessor:
         *** Settings ***
         Library    DataProcessor
         
+        
         *** Test Cases ***
         Transform JSON Example
             ${source}    Create Dictionary    first_name=John    last_name=Doe    age=30
@@ -119,6 +121,7 @@ class DataProcessor:
         ```robot
         *** Settings ***
         Library    DataProcessor
+        
         
         *** Test Cases ***
         Advanced Transform Example
@@ -168,6 +171,7 @@ class DataProcessor:
         *** Settings ***
         Library    DataProcessor
         
+        
         *** Test Cases ***
         Filter List Example
             ${numbers}    Create List    1    5    10    15    20
@@ -189,6 +193,7 @@ class DataProcessor:
         ```robot
         *** Settings ***
         Library    DataProcessor
+        
         
         *** Test Cases ***
         Filter By Regex Example
@@ -238,6 +243,7 @@ class DataProcessor:
         *** Settings ***
         Library    DataProcessor
         
+        
         *** Test Cases ***
         Merge Dictionaries Example
             ${dict1}    Create Dictionary    name=John    age=30
@@ -259,6 +265,7 @@ class DataProcessor:
         ```robot
         *** Settings ***
         Library    DataProcessor
+        
         
         *** Test Cases ***
         Deep Merge Example
@@ -317,6 +324,7 @@ class DataProcessor:
         *** Settings ***
         Library    DataProcessor
         
+        
         *** Test Cases ***
         Format Template Example
             ${template}    Set Variable    Welcome {username}! You have {message_count} new messages.
@@ -341,6 +349,7 @@ class DataProcessor:
         ```robot
         *** Settings ***
         Library    DataProcessor
+        
         
         *** Test Cases ***
         Advanced Template Example
@@ -414,6 +423,7 @@ class DataProcessor:
         *** Settings ***
         Library    DataProcessor
         
+        
         *** Test Cases ***
         Extract Pattern Example
             ${text}    Set Variable    Contact: john@example.com or admin@test.org
@@ -425,6 +435,7 @@ class DataProcessor:
         ```robot
         *** Settings ***
         Library    DataProcessor
+        
         
         *** Test Cases ***
         Extract With Group Example
@@ -479,6 +490,7 @@ class DataProcessor:
         *** Settings ***
         Library    DataProcessor
         
+        
         *** Test Cases ***
         Compare Structures Example
             ${original}    Create Dictionary    name=John    age=30
@@ -491,6 +503,7 @@ class DataProcessor:
         ```robot
         *** Settings ***
         Library    DataProcessor
+        
         
         *** Test Cases ***
         Compare Lists Example
@@ -565,6 +578,7 @@ class DataProcessor:
         *** Settings ***
         Library    DataProcessor
         
+        
         *** Test Cases ***
         Group Items Example
             ${users}    Create List
@@ -585,6 +599,7 @@ class DataProcessor:
         ```robot
         *** Settings ***
         Library    DataProcessor
+        
         
         *** Test Cases ***
         Group By Nested Key Example
@@ -644,6 +659,7 @@ class DataProcessor:
         *** Settings ***
         Library    DataProcessor
         
+        
         *** Test Cases ***
         Calculate Statistics Example
             ${scores}    Create List    85    90    78    92    88
@@ -655,6 +671,7 @@ class DataProcessor:
         ```robot
         *** Settings ***
         Library    DataProcessor
+        
         
         *** Test Cases ***
         Statistics With Percentiles Example
@@ -719,6 +736,7 @@ class DataProcessor:
         ```robot
         *** Settings ***
         Library    DataProcessor
+        
         
         *** Test Cases ***
         Create Snapshot Example

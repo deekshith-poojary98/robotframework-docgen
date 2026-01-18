@@ -682,5 +682,98 @@
     "keyword": "Get Age",
     "url": "DateTimeUtils/datetime_utils.html#get-age",
     "library_license": "MIT"
+  },
+  {
+    "type": "library",
+    "name": "EnumLibrary",
+    "description": "A comprehensive enum library providing powerful keywords for working with enumerated types.",
+    "url": "EnumLibrary/enum_library.html",
+    "author": "Bruce Wayne",
+    "maintainer": "Docs Team",
+    "license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "EnumLibrary",
+    "keyword": "Set Log Level",
+    "url": "EnumLibrary/enum_library.html#set-log-level",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "EnumLibrary",
+    "keyword": "Process With Status",
+    "url": "EnumLibrary/enum_library.html#process-with-status",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "EnumLibrary",
+    "keyword": "Filter By Status",
+    "url": "EnumLibrary/enum_library.html#filter-by-status",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "EnumLibrary",
+    "keyword": "Set Color",
+    "url": "EnumLibrary/enum_library.html#set-color",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "EnumLibrary",
+    "keyword": "Convert Temperature",
+    "url": "EnumLibrary/enum_library.html#convert-temperature",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "EnumLibrary",
+    "keyword": "Get Status Info",
+    "url": "EnumLibrary/enum_library.html#get-status-info",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "EnumLibrary",
+    "keyword": "Create Task",
+    "url": "EnumLibrary/enum_library.html#create-task",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "EnumLibrary",
+    "keyword": "Log Message",
+    "url": "EnumLibrary/enum_library.html#log-message",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "EnumLibrary",
+    "keyword": "Get All Statuses",
+    "url": "EnumLibrary/enum_library.html#get-all-statuses",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "EnumLibrary",
+    "keyword": "Get All Priorities",
+    "url": "EnumLibrary/enum_library.html#get-all-priorities",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "EnumLibrary",
+    "keyword": "Validate Status",
+    "url": "EnumLibrary/enum_library.html#validate-status",
+    "library_license": "MIT"
+  },
+  {
+    "type": "keyword",
+    "library": "EnumLibrary",
+    "keyword": "Get Status By Value",
+    "url": "EnumLibrary/enum_library.html#get-status-by-value",
+    "library_license": "MIT"
   }
 ]

@@ -9,9 +9,10 @@ and generates comprehensive documentation from their docstrings.
 import ast
 import re
 import textwrap
+import enum
 from pathlib import Path
-from typing import List, Tuple, Optional
-from dataclasses import dataclass
+from typing import List, Tuple, Optional, Dict, Any
+from dataclasses import dataclass, field
 
 try:
     from pygments import highlight
@@ -50,6 +51,27 @@ class KeywordInfo:
     parameters: List[Tuple[str, str]]
     return_type: str
     line_number: int
+    parameter_enums: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+    """Dictionary mapping parameter names to Enum information.
+    
+    Structure: {
+        'param_name': {
+            'type_name': 'MyEnum',
+            'members': [
+                {'name': 'ValueA', 'value': 123},
+                {'name': 'ValueB', 'value': 456}
+            ],
+            'default': 'ValueA'  # Optional, if parameter has default
+        }
+    }
+    """
+    parameter_defaults: Dict[str, str] = field(default_factory=dict)
+    """Dictionary mapping parameter names to their default value representations.
+    
+    Structure: {
+        'param_name': 'default_value_string'
+    }
+    """
 
 
 @dataclass
@@ -101,6 +123,8 @@ class RobotFrameworkDocParser:
         "PASS",
         "FAIL",
         "VAR",
+        "SKIP",
+        "GROUP",
     ]
     
     # Robot Framework settings reserved keywords
@@ -123,6 +147,8 @@ class RobotFrameworkDocParser:
         "Force Tags",
         "Default Tags",
         "Keyword Tags",
+        "Name",
+        "Test Tags",
     ]
 
     def __init__(self, config: dict = None):
@@ -242,6 +268,25 @@ class RobotFrameworkDocParser:
                 content = file.read()
             tree = ast.parse(content)
             
+            # Get module globals for type resolution
+            # Try to get the module that was already loaded for LibraryDocumentation
+            module_globals = {}
+            try:
+                # First, try to get the module from sys.modules if it was loaded
+                module_name = file_name
+                if module_name in sys.modules:
+                    loaded_module = sys.modules[module_name]
+                    module_globals = {name: getattr(loaded_module, name) for name in dir(loaded_module) if not name.startswith("_")}
+                else:
+                    # Fallback: load the module ourselves
+                    spec = importlib.util.spec_from_file_location(file_name, file_path)
+                    if spec and spec.loader:
+                        temp_module = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(temp_module)
+                        module_globals = {name: getattr(temp_module, name) for name in dir(temp_module) if not name.startswith("_")}
+            except Exception:
+                pass
+            
             # Map keyword names from LibraryDocumentation to AST nodes for type hints
             keyword_ast_map = self._build_keyword_ast_map(tree)
             
@@ -252,12 +297,16 @@ class RobotFrameworkDocParser:
                 # Get type hints from AST (not available in LibraryDocumentation API)
                 # NOTE: LibraryDocumentation provides kw_doc.args but not type annotations
                 parameters = []
+                parameter_enums = {}
                 return_type = "None"
                 line_number = kw_doc.lineno if hasattr(kw_doc, 'lineno') else 0
                 
                 if keyword_name in keyword_ast_map:
                     func_node = keyword_ast_map[keyword_name]
-                    for arg in func_node.args.args:
+                    parameter_defaults = {}
+                    
+                    # Handle regular positional arguments
+                    for arg_index, arg in enumerate(func_node.args.args):
                         if arg.arg == "self":
                             continue
                         param_name = arg.arg
@@ -265,6 +314,66 @@ class RobotFrameworkDocParser:
                             self._ast_type_to_string(arg.annotation) if arg.annotation else "Any"
                         )
                         parameters.append((param_name, param_type))
+                        
+                        # Extract default value for all parameters
+                        default_value = self._get_default_value_from_ast(func_node, arg_index)
+                        if default_value is not None:
+                            default_str = self._extract_default_value(default_value)
+                            if default_str:
+                                parameter_defaults[param_name] = default_str
+                        
+                        # Check if this parameter is an Enum type
+                        if arg.annotation:
+                            enum_class = self._resolve_ast_type_to_class(arg.annotation, module_globals)
+                            if enum_class and issubclass(enum_class, enum.Enum):
+                                enum_info = self._extract_enum_info(enum_class, default_value)
+                                if enum_info:
+                                    parameter_enums[param_name] = enum_info
+                    
+                    # Handle *args (variadic arguments)
+                    if func_node.args.vararg:
+                        vararg = func_node.args.vararg
+                        param_name = f"*{vararg.arg}"
+                        param_type = (
+                            self._ast_type_to_string(vararg.annotation) if vararg.annotation else "Any"
+                        )
+                        parameters.append((param_name, param_type))
+                        
+                        # Check if variadic argument is an Enum type
+                        if vararg.annotation:
+                            enum_class = self._resolve_ast_type_to_class(vararg.annotation, module_globals)
+                            if enum_class and issubclass(enum_class, enum.Enum):
+                                enum_info = self._extract_enum_info(enum_class, None)
+                                if enum_info:
+                                    parameter_enums[param_name] = enum_info
+                    
+                    # Handle keyword-only arguments (after *args or *)
+                    if func_node.args.kwonlyargs:
+                        kw_defaults = func_node.args.kw_defaults or []
+                        for kw_index, kw_arg in enumerate(func_node.args.kwonlyargs):
+                            param_name = kw_arg.arg
+                            param_type = (
+                                self._ast_type_to_string(kw_arg.annotation) if kw_arg.annotation else "Any"
+                            )
+                            parameters.append((param_name, param_type))
+                            
+                            # Extract default value for keyword-only arguments
+                            if kw_index < len(kw_defaults) and kw_defaults[kw_index] is not None:
+                                default_value = kw_defaults[kw_index]
+                                default_str = self._extract_default_value(default_value)
+                                if default_str:
+                                    parameter_defaults[param_name] = default_str
+                            
+                            # Check if this keyword-only parameter is an Enum type
+                            if kw_arg.annotation:
+                                enum_class = self._resolve_ast_type_to_class(kw_arg.annotation, module_globals)
+                                if enum_class and issubclass(enum_class, enum.Enum):
+                                    default_value = None
+                                    if kw_index < len(kw_defaults) and kw_defaults[kw_index] is not None:
+                                        default_value = kw_defaults[kw_index]
+                                    enum_info = self._extract_enum_info(enum_class, default_value)
+                                    if enum_info:
+                                        parameter_enums[param_name] = enum_info
                     
                     if func_node.returns:
                         return_type = self._ast_type_to_string(func_node.returns)
@@ -287,6 +396,8 @@ class RobotFrameworkDocParser:
                         parameters=parameters,
                         return_type=return_type,
                         line_number=line_number,
+                        parameter_enums=parameter_enums,
+                        parameter_defaults=parameter_defaults,
                     )
                 )
             
@@ -337,6 +448,8 @@ class RobotFrameworkDocParser:
 
     def _execute_module_safely(self, file_path: str) -> dict:
         """Safely execute the module to get actual values."""
+        result = {}
+        
         try:
             import sys
             import importlib.util
@@ -348,27 +461,189 @@ class RobotFrameworkDocParser:
 
             spec = importlib.util.spec_from_file_location("temp_module", file_path)
             if spec is None or spec.loader is None:
-                return {}
+                # Fallback: try to extract Enum classes from AST
+                return self._extract_enums_from_ast(file_path)
 
             module = importlib.util.module_from_spec(spec)
+            
+            # Try to execute the module
+            try:
+                spec.loader.exec_module(module)
+            except (ImportError, ModuleNotFoundError):
+                # If import fails, try to extract Enum classes from AST
+                return self._extract_enums_from_ast(file_path)
 
-            spec.loader.exec_module(module)
-
-            result = {}
+            # Extract type objects from successfully loaded module
             for attr_name in dir(module):
                 if not attr_name.startswith("_"):
                     try:
                         attr_value = getattr(module, attr_name)
-                        if not callable(attr_value):
+                        # Store actual type objects for Enum detection
+                        if isinstance(attr_value, type):
+                            result[attr_name] = attr_value
+                        elif not callable(attr_value):
                             result[attr_name] = str(attr_value)
                     except Exception:
                         continue
 
             return result
 
-        except Exception as e:
-            print(f"Warning: Could not execute module {file_path}: {e}")
+        except Exception:
+            # Fallback: try to extract Enum classes from AST
+            return self._extract_enums_from_ast(file_path)
+    
+    def _extract_enums_from_ast(self, file_path: str) -> dict:
+        """
+        Extract Enum classes from AST when module can't be fully loaded.
+        This allows us to get Enum information even when dependencies are missing.
+        """
+        result = {}
+        try:
+            import enum
+            with open(file_path, 'r', encoding='utf-8') as f:
+                source = f.read()
+            
+            tree = ast.parse(source)
+            
+            # Create a namespace with enum module
+            namespace = {
+                '__name__': '__main__',
+                'enum': enum,
+                'Enum': enum.Enum,
+            }
+            
+            # Execute only class definitions (skip imports and other statements)
+            for node in tree.body:
+                if isinstance(node, ast.ClassDef):
+                    # Check if it's an Enum subclass
+                    is_enum = False
+                    for base in node.bases:
+                        if isinstance(base, ast.Name) and base.id in ('Enum', 'enum.Enum'):
+                            is_enum = True
+                            break
+                        elif isinstance(base, ast.Attribute):
+                            if isinstance(base.value, ast.Name) and base.value.id == 'enum' and base.attr == 'Enum':
+                                is_enum = True
+                                break
+                    
+                    if is_enum:
+                        # Compile and execute just this class
+                        try:
+                            class_code = compile(ast.Module(body=[node], type_ignores=[]), file_path, 'exec')
+                            exec(class_code, namespace)
+                            if node.name in namespace:
+                                result[node.name] = namespace[node.name]
+                        except Exception:
+                            continue
+            
+            return result
+        except Exception:
             return {}
+    
+    def _resolve_ast_type_to_class(self, annotation_node: ast.AST, module_globals: dict = None) -> Optional[type]:
+        """
+        Resolve an AST type annotation node to an actual Python class.
+        
+        Returns the class object if it can be resolved, None otherwise.
+        """
+        if annotation_node is None or module_globals is None:
+            return None
+        
+        try:
+            if isinstance(annotation_node, ast.Name):
+                type_name = annotation_node.id
+                # Check if it's a type object in module_globals
+                if type_name in module_globals:
+                    type_obj = module_globals.get(type_name)
+                    # Check if it's actually a type (class), not a string
+                    if isinstance(type_obj, type):
+                        return type_obj
+            elif isinstance(annotation_node, ast.Attribute):
+                # Handle cases like enum.Enum, typing.Optional, etc.
+                if isinstance(annotation_node.value, ast.Name):
+                    module_name = annotation_node.value.id
+                    attr_name = annotation_node.attr
+                    if module_name in module_globals:
+                        module_obj = module_globals.get(module_name)
+                        # module_obj could be a module or a type
+                        if isinstance(module_obj, type):
+                            # It's a class, check for nested attributes
+                            if hasattr(module_obj, attr_name):
+                                type_obj = getattr(module_obj, attr_name)
+                                if isinstance(type_obj, type):
+                                    return type_obj
+                        elif hasattr(module_obj, attr_name):
+                            # It's a module, get the attribute
+                            type_obj = getattr(module_obj, attr_name)
+                            if isinstance(type_obj, type):
+                                return type_obj
+        except Exception:
+            # Silently fail - this is expected for many cases
+            pass
+        
+        return None
+    
+    def _extract_enum_info(self, enum_class: type, default_value: Any = None) -> Dict[str, Any]:
+        """
+        Extract Enum information from an Enum class.
+        
+        Returns a dictionary with:
+        - type_name: Name of the Enum class
+        - members: List of dicts with 'name' and 'value' for each member
+        - default: Default value name if provided
+        """
+        if not issubclass(enum_class, enum.Enum):
+            return {}
+        
+        members = []
+        for member in enum_class:
+            members.append({
+                'name': member.name,
+                'value': member.value
+            })
+        
+        result = {
+            'type_name': enum_class.__name__,
+            'members': members
+        }
+        
+        # Try to determine default value name
+        if default_value is not None:
+            if isinstance(default_value, enum_class):
+                result['default'] = default_value.name
+            elif isinstance(default_value, ast.Attribute):
+                # AST node like MyEnum.ValueA
+                if hasattr(default_value, 'attr'):
+                    result['default'] = default_value.attr
+            elif isinstance(default_value, ast.Name):
+                # AST Name node (shouldn't happen for Enum defaults, but handle it)
+                if hasattr(default_value, 'id'):
+                    result['default'] = default_value.id
+            elif isinstance(default_value, str):
+                # String representation
+                result['default'] = default_value
+        
+        return result
+    
+    def _get_default_value_from_ast(self, func_node: ast.FunctionDef, param_index: int) -> Optional[Any]:
+        """Extract default value from AST function node for a parameter."""
+        if not func_node.args.defaults:
+            return None
+        
+        # Calculate the index in defaults list
+        # defaults correspond to the last N parameters
+        num_args = len(func_node.args.args)
+        num_defaults = len(func_node.args.defaults)
+        default_start_index = num_args - num_defaults
+        
+        if param_index < default_start_index:
+            return None
+        
+        default_index = param_index - default_start_index
+        if default_index < len(func_node.args.defaults):
+            return func_node.args.defaults[default_index]
+        
+        return None
 
     def _extract_library_info(
         self, tree: ast.AST, file_path: str, module_globals: dict = None
@@ -490,7 +765,11 @@ class RobotFrameworkDocParser:
                 if keyword_name:
                     docstring = ast.get_docstring(node) or ""
                     parameters = []
-                    for arg in node.args.args:
+                    parameter_enums = {}
+                    parameter_defaults = {}
+                    
+                    # Handle regular positional arguments
+                    for arg_index, arg in enumerate(node.args.args):
                         if arg.arg == "self":
                             continue
                         param_name = arg.arg
@@ -500,6 +779,66 @@ class RobotFrameworkDocParser:
                             else "Any"
                         )
                         parameters.append((param_name, param_type))
+                        
+                        # Extract default value for all parameters
+                        default_value = self._get_default_value_from_ast(node, arg_index)
+                        if default_value is not None:
+                            default_str = self._extract_default_value(default_value)
+                            if default_str:
+                                parameter_defaults[param_name] = default_str
+                        
+                        # Check if this parameter is an Enum type
+                        if arg.annotation:
+                            enum_class = self._resolve_ast_type_to_class(arg.annotation, module_vars)
+                            if enum_class and issubclass(enum_class, enum.Enum):
+                                enum_info = self._extract_enum_info(enum_class, default_value)
+                                if enum_info:
+                                    parameter_enums[param_name] = enum_info
+                    
+                    # Handle *args (variadic arguments)
+                    if node.args.vararg:
+                        vararg = node.args.vararg
+                        param_name = f"*{vararg.arg}"
+                        param_type = (
+                            self._ast_type_to_string(vararg.annotation) if vararg.annotation else "Any"
+                        )
+                        parameters.append((param_name, param_type))
+                        
+                        # Check if variadic argument is an Enum type
+                        if vararg.annotation:
+                            enum_class = self._resolve_ast_type_to_class(vararg.annotation, module_vars)
+                            if enum_class and issubclass(enum_class, enum.Enum):
+                                enum_info = self._extract_enum_info(enum_class, None)
+                                if enum_info:
+                                    parameter_enums[param_name] = enum_info
+                    
+                    # Handle keyword-only arguments (after *args or *)
+                    if node.args.kwonlyargs:
+                        kw_defaults = node.args.kw_defaults or []
+                        for kw_index, kw_arg in enumerate(node.args.kwonlyargs):
+                            param_name = kw_arg.arg
+                            param_type = (
+                                self._ast_type_to_string(kw_arg.annotation) if kw_arg.annotation else "Any"
+                            )
+                            parameters.append((param_name, param_type))
+                            
+                            # Extract default value for keyword-only arguments
+                            if kw_index < len(kw_defaults) and kw_defaults[kw_index] is not None:
+                                default_value = kw_defaults[kw_index]
+                                default_str = self._extract_default_value(default_value)
+                                if default_str:
+                                    parameter_defaults[param_name] = default_str
+                            
+                            # Check if this keyword-only parameter is an Enum type
+                            if kw_arg.annotation:
+                                enum_class = self._resolve_ast_type_to_class(kw_arg.annotation, module_vars)
+                                if enum_class and issubclass(enum_class, enum.Enum):
+                                    default_value = None
+                                    if kw_index < len(kw_defaults) and kw_defaults[kw_index] is not None:
+                                        default_value = kw_defaults[kw_index]
+                                    enum_info = self._extract_enum_info(enum_class, default_value)
+                                    if enum_info:
+                                        parameter_enums[param_name] = enum_info
 
                     return_type = "None"
                     if node.returns:
@@ -512,6 +851,8 @@ class RobotFrameworkDocParser:
                             "parameters": parameters,
                             "return_type": return_type,
                             "line_number": node.lineno,
+                            "parameter_enums": parameter_enums,
+                            "parameter_defaults": parameter_defaults,
                         }
                     )
 
@@ -525,6 +866,8 @@ class RobotFrameworkDocParser:
                     parameters=data["parameters"],
                     return_type=data["return_type"],
                     line_number=data["line_number"],
+                    parameter_enums=data.get("parameter_enums", {}),
+                    parameter_defaults=data.get("parameter_defaults", {}),
                 )
             )
 
@@ -662,6 +1005,8 @@ class RobotFrameworkDocParser:
         description, example = self._parse_docstring(docstring, self.config)
 
         parameters = []
+        
+        # Handle regular positional arguments
         for arg in func_node.args.args:
             if arg.arg == "self":
                 continue
@@ -670,6 +1015,24 @@ class RobotFrameworkDocParser:
                 self._ast_type_to_string(arg.annotation) if arg.annotation else "Any"
             )
             parameters.append((param_name, param_type))
+        
+        # Handle *args (variadic arguments)
+        if func_node.args.vararg:
+            vararg = func_node.args.vararg
+            param_name = f"*{vararg.arg}"
+            param_type = (
+                self._ast_type_to_string(vararg.annotation) if vararg.annotation else "Any"
+            )
+            parameters.append((param_name, param_type))
+        
+        # Handle keyword-only arguments (after *args or *)
+        if func_node.args.kwonlyargs:
+            for kw_arg in func_node.args.kwonlyargs:
+                param_name = kw_arg.arg
+                param_type = (
+                    self._ast_type_to_string(kw_arg.annotation) if kw_arg.annotation else "Any"
+                )
+                parameters.append((param_name, param_type))
 
         return_type = "None"
         if func_node.returns:
@@ -1177,9 +1540,20 @@ class RobotFrameworkDocParser:
                     setting_end_pos < len(stripped_line)
                     and stripped_line[setting_end_pos] == " "
                 ):
-                    value_part = stripped_line[setting_end_pos:].strip()
+                    # Preserve the original spacing after the setting keyword
+                    # Find the actual spacing in the original line
                     indent = line[: len(line) - len(line.lstrip())]
-                    return f'{indent}<span style="color: #c586c0; font-weight: bold;">{setting}</span> {value_part}'
+                    # Get the part after the setting keyword, preserving spaces
+                    after_setting = line[len(indent) + len(setting):]
+                    # Extract leading spaces and the rest
+                    leading_spaces = ""
+                    for char in after_setting:
+                        if char == " ":
+                            leading_spaces += " "
+                        else:
+                            break
+                    value_part = after_setting[len(leading_spaces):]
+                    return f'{indent}<span style="color: #c586c0; font-weight: bold;">{setting}</span>{leading_spaces}{value_part}'
                 elif setting_end_pos == len(stripped_line):
                     indent = line[: len(line) - len(line.lstrip())]
                     return f'{indent}<span style="color: #c586c0; font-weight: bold;">{setting}</span>'

@@ -287,6 +287,19 @@
       color: var(--accent);
     }
 
+    .badge.badge-default {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      margin-left: 0.4rem;
+      background: rgba(34,197,94,0.15);
+      border-color: rgba(34,197,94,0.3);
+      color: #4ade80;
+      font-weight: 500;
+      display: inline-block;
+      line-height: 1.4;
+      border-radius: 999px;
+    }
+
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
@@ -441,31 +454,170 @@
       color: var(--muted);
     }
 
-    .arguments-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+    .arguments-list-container {
       display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .argument-item {
+      background: rgba(2,6,23,0.6);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      transition: all 0.2s ease;
+    }
+
+    .argument-item:hover {
+      background: rgba(2,6,23,0.8);
+      border-color: rgba(56,189,248,0.3);
+    }
+
+    .argument-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       flex-wrap: wrap;
-      gap: 0.45rem;
     }
 
     .arg-name {
       font-family: var(--mono);
-      font-size: 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
       background: rgba(15,76,204,0.15);
-      padding: 0.2rem 0.4rem;
+      padding: 0.3rem 0.6rem;
       border-radius: 6px;
       border: 1px solid rgba(15,76,204,0.3);
+      color: var(--accent);
+    }
+
+    .arg-separator {
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 400;
     }
 
     .arg-type {
       font-family: var(--mono);
       font-size: 0.75rem;
       border: 1px solid rgba(255,255,255,0.2);
-      padding: 0.18rem 0.55rem;
+      padding: 0.2rem 0.6rem;
       border-radius: 999px;
       color: var(--muted);
+      background: rgba(15,23,42,0.5);
+      display: inline-block;
+      line-height: 1.4;
+    }
+
+    .return-type .arg-type {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      line-height: 1.4;
+    }
+
+    .enum-values {
+      list-style: none;
+      margin: 0.75rem 0 0.5rem 0;
+      padding: 0;
+      width: 100%;
+    }
+
+    .enum-container {
+      background: rgba(2,6,23,0.6);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .enum-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.65rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .enum-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .enum-count {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-family: var(--mono);
+      padding: 0.15rem 0.4rem;
+      background: rgba(56,189,248,0.1);
+      border-radius: 4px;
+      border: 1px solid rgba(56,189,248,0.2);
+    }
+
+    .enum-members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .enum-member {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.65rem;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid rgba(56,189,248,0.15);
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+    }
+
+    .enum-member:hover {
+      background: rgba(15,23,42,0.95);
+      border-color: rgba(56,189,248,0.3);
+      transform: translateY(-1px);
+    }
+
+    .enum-member-name {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .enum-member-name code {
+      background: transparent;
+      padding: 0;
+      border: none;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .enum-member-separator {
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .enum-member-value {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    .enum-member-value code {
+      background: rgba(56,189,248,0.1);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      border: 1px solid rgba(56,189,248,0.2);
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    @media (max-width: 768px) {
+      .enum-members-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .kwdoc {
@@ -565,6 +717,7 @@
       font-size: 0.85rem;
       line-height: 1.6;
       color: var(--text);
+      white-space: pre;
       overflow-x: auto;
       border-radius: 0;
       border: none;
@@ -761,7 +914,7 @@
             <div class="hero-card-lang">Robot</div>
           </div>
           <pre class="language-robot"><code><span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span> HTTPClient
+<span style="color: #c586c0; font-weight: bold;">Library</span>    HTTPClient
 
 <span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
 <span style="color: #dcdcaa; font-weight: bold;">Example</span>
@@ -790,9 +943,20 @@
       <div class="args">
         <h4>Arguments</h4>
         <div class="arguments-list-container">
-          <div class="arguments-list">
-            <li><span class="arg-name">url</span> : <span class="arg-type">str</span></li>
-            <li><span class="arg-name">headers</span> : <span class="arg-type">Optional[Dict[str, str]]</span></li>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">url</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">headers</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Optional[Dict[str, str]]</span>
+               <span class="badge badge-default">default: None</span>
+            </div>
           </div>
         </div>
       </div>
@@ -814,7 +978,8 @@
 <p><strong>Example:</strong></p>
 <div class="code-block"><pre class="language-robot">
 <span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span> HTTPClient
+<span style="color: #c586c0; font-weight: bold;">Library</span>    HTTPClient
+
 
 <span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
 <span style="color: #dcdcaa; font-weight: bold;">HTTP GET Example</span>
@@ -834,10 +999,28 @@
       <div class="args">
         <h4>Arguments</h4>
         <div class="arguments-list-container">
-          <div class="arguments-list">
-            <li><span class="arg-name">url</span> : <span class="arg-type">str</span></li>
-            <li><span class="arg-name">data</span> : <span class="arg-type">Optional[Dict[str, Any]]</span></li>
-            <li><span class="arg-name">headers</span> : <span class="arg-type">Optional[Dict[str, str]]</span></li>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">url</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">data</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Optional[Dict[str, Any]]</span>
+               <span class="badge badge-default">default: None</span>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">headers</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Optional[Dict[str, str]]</span>
+               <span class="badge badge-default">default: None</span>
+            </div>
           </div>
         </div>
       </div>
@@ -860,7 +1043,8 @@
 <p><strong>Example:</strong></p>
 <div class="code-block"><pre class="language-robot">
 <span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span> HTTPClient
+<span style="color: #c586c0; font-weight: bold;">Library</span>    HTTPClient
+
 
 <span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
 <span style="color: #dcdcaa; font-weight: bold;">HTTP POST Example</span>
@@ -881,10 +1065,28 @@
       <div class="args">
         <h4>Arguments</h4>
         <div class="arguments-list-container">
-          <div class="arguments-list">
-            <li><span class="arg-name">url</span> : <span class="arg-type">str</span></li>
-            <li><span class="arg-name">data</span> : <span class="arg-type">Optional[Dict[str, Any]]</span></li>
-            <li><span class="arg-name">headers</span> : <span class="arg-type">Optional[Dict[str, str]]</span></li>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">url</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">data</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Optional[Dict[str, Any]]</span>
+               <span class="badge badge-default">default: None</span>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">headers</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Optional[Dict[str, str]]</span>
+               <span class="badge badge-default">default: None</span>
+            </div>
           </div>
         </div>
       </div>
@@ -917,9 +1119,20 @@
       <div class="args">
         <h4>Arguments</h4>
         <div class="arguments-list-container">
-          <div class="arguments-list">
-            <li><span class="arg-name">url</span> : <span class="arg-type">str</span></li>
-            <li><span class="arg-name">headers</span> : <span class="arg-type">Optional[Dict[str, str]]</span></li>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">url</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">headers</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Optional[Dict[str, str]]</span>
+               <span class="badge badge-default">default: None</span>
+            </div>
           </div>
         </div>
       </div>
@@ -951,9 +1164,19 @@
       <div class="args">
         <h4>Arguments</h4>
         <div class="arguments-list-container">
-          <div class="arguments-list">
-            <li><span class="arg-name">name</span> : <span class="arg-type">str</span></li>
-            <li><span class="arg-name">value</span> : <span class="arg-type">str</span></li>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">name</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">value</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+            </div>
           </div>
         </div>
       </div>
@@ -970,7 +1193,8 @@
 <p><strong>Example:</strong></p>
 <div class="code-block"><pre class="language-robot">
 <span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span> HTTPClient
+<span style="color: #c586c0; font-weight: bold;">Library</span>    HTTPClient
+
 
 <span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
 <span style="color: #dcdcaa; font-weight: bold;">Set Header Example</span>
@@ -1005,8 +1229,12 @@
       <div class="args">
         <h4>Arguments</h4>
         <div class="arguments-list-container">
-          <div class="arguments-list">
-            <li><span class="arg-name">response</span> : <span class="arg-type">Dict[str, Any]</span></li>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">response</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Dict[str, Any]</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1037,8 +1265,12 @@
       <div class="args">
         <h4>Arguments</h4>
         <div class="arguments-list-container">
-          <div class="arguments-list">
-            <li><span class="arg-name">response</span> : <span class="arg-type">Dict[str, Any]</span></li>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">response</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Dict[str, Any]</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1069,8 +1301,12 @@
       <div class="args">
         <h4>Arguments</h4>
         <div class="arguments-list-container">
-          <div class="arguments-list">
-            <li><span class="arg-name">response</span> : <span class="arg-type">Dict[str, Any]</span></li>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">response</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Dict[str, Any]</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1097,8 +1333,12 @@
       <div class="args">
         <h4>Arguments</h4>
         <div class="arguments-list-container">
-          <div class="arguments-list">
-            <li><span class="arg-name">response</span> : <span class="arg-type">Dict[str, Any]</span></li>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">response</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Dict[str, Any]</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1129,8 +1369,12 @@
       <div class="args">
         <h4>Arguments</h4>
         <div class="arguments-list-container">
-          <div class="arguments-list">
-            <li><span class="arg-name">params</span> : <span class="arg-type">Dict[str, Any]</span></li>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">params</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">Dict[str, Any]</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1151,7 +1395,8 @@
 <p><strong>Example:</strong></p>
 <div class="code-block"><pre class="language-robot">
 <span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span> HTTPClient
+<span style="color: #c586c0; font-weight: bold;">Library</span>    HTTPClient
+
 
 <span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
 <span style="color: #dcdcaa; font-weight: bold;">Build Query String Example</span>
@@ -1172,9 +1417,19 @@
       <div class="args">
         <h4>Arguments</h4>
         <div class="arguments-list-container">
-          <div class="arguments-list">
-            <li><span class="arg-name">username</span> : <span class="arg-type">str</span></li>
-            <li><span class="arg-name">password</span> : <span class="arg-type">str</span></li>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">username</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+            </div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">password</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1191,7 +1446,8 @@
 <p><strong>Example:</strong></p>
 <div class="code-block"><pre class="language-robot">
 <span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span> HTTPClient
+<span style="color: #c586c0; font-weight: bold;">Library</span>    HTTPClient
+
 
 <span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
 <span style="color: #dcdcaa; font-weight: bold;">Set Basic Auth Example</span>
@@ -1211,8 +1467,12 @@
       <div class="args">
         <h4>Arguments</h4>
         <div class="arguments-list-container">
-          <div class="arguments-list">
-            <li><span class="arg-name">token</span> : <span class="arg-type">str</span></li>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">token</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1228,7 +1488,8 @@
 <p><strong>Example:</strong></p>
 <div class="code-block"><pre class="language-robot">
 <span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span> HTTPClient
+<span style="color: #c586c0; font-weight: bold;">Library</span>    HTTPClient
+
 
 <span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
 <span style="color: #dcdcaa; font-weight: bold;">Set Bearer Token Example</span>
@@ -1259,7 +1520,7 @@
   </div>
 
   <footer>
-    Generated by <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · HTTPClient Documentation · Last updated: 2026-01-01 12:57:53
+    Generated by <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · HTTPClient Documentation · Last updated: 2026-01-19 01:30:06
   </footer>
 
   <script>
