@@ -239,7 +239,8 @@ def _collect_library_metadata(
         "maintainer": config_source.get("maintainer") if config_source else None,
         "license": config_source.get("license") if config_source else None,
         "robot_framework": config_source.get("robot_framework") if config_source else None,
-        "python": config_source.get("python") if config_source else None
+        "python": config_source.get("python") if config_source else None,
+        "group": config_source.get("group") if config_source else None,
     }
     
     return metadata

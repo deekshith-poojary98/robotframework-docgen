@@ -67,17 +67,22 @@ def _generate_search_index(libraries_metadata: List[Dict[str, Any]]) -> List[Dic
         library_author = lib_meta.get("author", "")
         library_maintainer = lib_meta.get("maintainer", "")
         library_license = lib_meta.get("license", "")
+        library_group = lib_meta.get("group") or ""
         
         # Add library entry with metadata for filtering
-        search_index.append({
+        entry = {
             "type": "library",
             "name": library_name,
             "description": library_description,
             "url": library_url,
             "author": library_author,
             "maintainer": library_maintainer,
-            "license": library_license
-        })
+            "license": library_license,
+        }
+        # Include grouping info for potential future client-side uses
+        if library_group:
+            entry["group"] = library_group
+        search_index.append(entry)
         
         # Add keyword entries
         for keyword in lib_meta.get("keywords", []):
@@ -97,6 +102,7 @@ def _generate_search_index(libraries_metadata: List[Dict[str, Any]]) -> List[Dic
 
 def _generate_dashboard_css() -> str:
     """Generate CSS for dashboard matching library design."""
+    # TODO: Separate dashboard CSS into external asset file and load it here
     return """/* Dashboard Styles - Matching Library Design */
 :root {
     --bg: #0f172a;
@@ -561,6 +567,124 @@ header h1 {
     margin-top: 3rem;
 }
 
+.view-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.15rem;
+    border-radius: 999px;
+    background: rgba(15,23,42,0.8);
+    border: 1px solid var(--border);
+}
+
+.view-toggle-btn {
+    position: relative;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.view-toggle-btn-active {
+    background: rgba(56,189,248,0.16);
+    color: var(--accent);
+}
+
+.groups-grid {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.group-card-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.group-card:hover .group-card-title {
+    color: var(--accent);
+}
+
+.group-card-meta {
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.group-card-meta strong {
+    color: var(--accent);
+}
+
+
+.group-context {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.group-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.group-breadcrumb-root {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.group-breadcrumb-name {
+    color: var(--text);
+    font-weight: 500;
+}
+
+.group-meta {
+    font-size: 0.8rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.group-back-btn {
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(15,23,42,0.85);
+    color: var(--muted);
+    font-size: 0.8rem;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.group-back-btn:hover {
+    background: rgba(15,23,42,1);
+    border-color: var(--accent-soft);
+    color: var(--accent);
+}
+
 .libraries-section-header {
     display: flex;
     align-items: center;
@@ -624,6 +748,14 @@ header h1 {
     height: auto;
     line-height: 1.5;
     box-sizing: border-box;
+}
+
+.controls-disabled .sort-select,
+.controls-disabled .filters-toggle-btn,
+.controls-disabled .export-toggle-btn {
+    cursor: not-allowed;
+    opacity: 0.6;
+    pointer-events: auto;
 }
 
 .sort-select {
@@ -898,6 +1030,19 @@ header h1 {
     color: var(--accent);
 }
 
+.library-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0.25rem 0 0.75rem 0;
+}
+
+.badge-group {
+    border-color: rgba(147,197,253,0.4);
+    background: rgba(147,197,253,0.15);
+    color: #bfdbfe;
+}
+
 .library-meta {
     color: var(--muted);
     font-size: 0.85rem;
@@ -1160,6 +1305,7 @@ footer a:hover {
 
 def _generate_dashboard_js() -> str:
     """Generate JavaScript for dashboard functionality."""
+    # TODO: Separate dashboard JavaScript into external asset file and load it here
     return """// Dashboard JavaScript
 // Translation dictionary
 const translations = {
@@ -1534,6 +1680,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const noResults = document.getElementById('no-results');
     const librariesGrid = document.getElementById('libraries-grid');
     let libraryCards = librariesGrid ? Array.from(librariesGrid.querySelectorAll('.library-card')) : [];
+
+    // View and grouping state
+    let currentView = 'all'; // 'all' | 'groups' | 'group-libraries'
+    let activeGroupKey = null; // normalized group key or null
     
     // Sort libraries function
     function sortLibraries(sortBy) {
@@ -1566,8 +1716,25 @@ document.addEventListener('DOMContentLoaded', function() {
         if (savedSort) {
             sortSelect.value = savedSort;
         }
+
+        // Prevent native dropdown opening when disabled via view state
+        sortSelect.addEventListener('mousedown', function(e) {
+            if (currentView === 'groups') {
+                e.preventDefault();
+            }
+        });
         
         sortSelect.addEventListener('change', function(e) {
+            // Disable sort interaction when showing group cards
+            if (currentView === 'groups') {
+                e.preventDefault();
+                // Reset to last saved value to avoid visual change
+                const stored = localStorage.getItem('dashboard_sort');
+                if (stored) {
+                    sortSelect.value = stored;
+                }
+                return;
+            }
             const sortValue = e.target.value;
             sortLibraries(sortValue);
             // Save to localStorage
@@ -1622,9 +1789,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const matchesLicense = !filterLicense || cardLicense === filterLicense;
             const matchesRobotFramework = !filterRobotFramework || cardRobotFramework === filterRobotFramework;
             const matchesPython = !filterPython || cardPython === filterPython;
+
+            // Check group match when in group-libraries view
+            const cardGroup = (card.getAttribute('data-group') || '').toLowerCase();
+            const matchesGroup = (
+                currentView !== 'group-libraries' ||
+                !activeGroupKey ||
+                (activeGroupKey === '__ungrouped__' && !cardGroup) ||
+                (activeGroupKey === cardGroup)
+            );
             
             // Show card if it matches all criteria
-            if (matchesSearch && matchesAuthor && matchesMaintainer && matchesLicense && matchesRobotFramework && matchesPython) {
+            if (matchesSearch && matchesAuthor && matchesMaintainer && matchesLicense && matchesRobotFramework && matchesPython && matchesGroup) {
                 card.style.display = '';
                 visibleCount++;
             } else {
@@ -1796,6 +1972,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (filtersToggleBtn) {
         filtersToggleBtn.addEventListener('click', function() {
+            // Only allow filters when libraries are visible
+            if (currentView === 'groups') {
+                return;
+            }
             const librariesSection = document.querySelector('.libraries-section');
             if (!librariesSection) return;
             
@@ -1823,6 +2003,221 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initial filter application
     filterLibraries();
+
+    // ===== Grouping and view toggle =====
+    const viewAllBtn = document.getElementById('view-all-btn');
+    const viewGroupsBtn = document.getElementById('view-groups-btn');
+    const viewToggleEl = document.getElementById('view-toggle');
+    const groupsGrid = document.getElementById('groups-grid');
+    const groupContextEl = document.getElementById('group-context');
+    const groupBreadcrumbRoot = document.getElementById('group-breadcrumb-root');
+    const groupBreadcrumbName = document.getElementById('group-breadcrumb-name');
+    const groupMetaLibraries = document.getElementById('group-meta-libraries');
+    const groupMetaKeywords = document.getElementById('group-meta-keywords');
+    const groupBackBtn = document.getElementById('group-back-btn');
+    const headerControls = document.querySelector('.libraries-section-header .header-controls');
+
+    const groupStats = {};
+
+    function computeGroupStats() {
+        if (!libraryCards || libraryCards.length === 0) return;
+
+        let hasNamedGroups = false;
+
+        libraryCards.forEach(card => {
+            const rawGroup = (card.getAttribute('data-group') || '').trim();
+            const keywordCount = parseInt(card.getAttribute('data-keyword-count') || '0', 10);
+
+            let key;
+            let label;
+            if (!rawGroup) {
+                key = '__ungrouped__';
+                label = 'Ungrouped';
+            } else {
+                key = rawGroup.toLowerCase();
+                // Convert to Title Case for display
+                label = rawGroup
+                    .split(/\s+/)
+                    .filter(Boolean)
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+                hasNamedGroups = true;
+            }
+
+            if (!groupStats[key]) {
+                groupStats[key] = {
+                    label,
+                    libraryCount: 0,
+                    keywordCount: 0,
+                };
+            }
+
+            groupStats[key].libraryCount += 1;
+            groupStats[key].keywordCount += keywordCount;
+        });
+
+        // If no named groups, hide or disable grouped view toggle
+        if (!hasNamedGroups && viewToggleEl) {
+            viewToggleEl.style.display = 'none';
+        }
+    }
+
+    function renderGroupCards() {
+        if (!groupsGrid) return;
+
+        const keys = Object.keys(groupStats).filter(k => k !== '__ungrouped__');
+        const hasNamedGroups = keys.length > 0;
+
+        let html = '';
+
+        if (hasNamedGroups) {
+            keys.sort((a, b) => groupStats[a].label.localeCompare(groupStats[b].label));
+            keys.forEach(key => {
+                const info = groupStats[key];
+                html += `
+                    <div class="library-card group-card" data-group-key="${key}">
+                        <h2><span class="group-card-title">${info.label}</span></h2>
+                        <div class="library-stats">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <span class="group-card-meta">
+                                <span><strong>${info.libraryCount}</strong> ${info.libraryCount === 1 ? 'library' : 'libraries'}</span>
+                                <span>•</span>
+                                <span><strong>${info.keywordCount}</strong> ${info.keywordCount === 1 ? 'keyword' : 'keywords'}</span>
+                            </span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        if (groupStats['__ungrouped__']) {
+            const info = groupStats['__ungrouped__'];
+            html += `
+                <div class="library-card group-card group-card-ungrouped" data-group-key="__ungrouped__">
+                    <h2><span class="group-card-title">${info.label}</span></h2>
+                    <div class="library-stats">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        <span class="group-card-meta">
+                            <span><strong>${info.libraryCount}</strong> ${info.libraryCount === 1 ? 'library' : 'libraries'}</span>
+                            <span>•</span>
+                            <span><strong>${info.keywordCount}</strong> ${info.keywordCount === 1 ? 'keyword' : 'keywords'}</span>
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+
+        groupsGrid.innerHTML = html;
+
+        groupsGrid.querySelectorAll('.group-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const key = card.getAttribute('data-group-key');
+                if (!key) return;
+                enterGroupLibrariesView(key);
+            });
+        });
+    }
+
+    function updateGroupContext(key) {
+        if (!groupContextEl || !groupStats[key]) return;
+        const info = groupStats[key];
+
+        groupBreadcrumbName.textContent = info.label;
+        groupMetaLibraries.textContent = `${info.libraryCount} ${info.libraryCount === 1 ? 'library' : 'libraries'}`;
+        groupMetaKeywords.textContent = `${info.keywordCount} ${info.keywordCount === 1 ? 'keyword' : 'keywords'}`;
+    }
+
+    function setView(view) {
+        currentView = view;
+
+        if (viewAllBtn && viewGroupsBtn) {
+            // Highlight "Libraries" only in flat view, and "Groups" for both
+            // the group cards overview and the group-libraries sub-dashboard.
+            viewAllBtn.classList.toggle('view-toggle-btn-active', view === 'all');
+            viewGroupsBtn.classList.toggle(
+                'view-toggle-btn-active',
+                view === 'groups' || view === 'group-libraries'
+            );
+        }
+
+        if (groupsGrid) {
+            groupsGrid.style.display = view === 'groups' ? 'grid' : 'none';
+        }
+
+        if (librariesGrid) {
+            librariesGrid.style.display = view === 'all' || view === 'group-libraries' ? 'grid' : 'none';
+        }
+
+        if (groupContextEl) {
+            groupContextEl.style.display = view === 'group-libraries' ? 'flex' : 'none';
+        }
+
+        // Visually indicate disabled controls when showing group cards
+        if (headerControls) {
+            headerControls.classList.toggle('controls-disabled', view === 'groups');
+        }
+
+        // Persist current dashboard view state
+        try {
+            const state = {
+                view: currentView,
+                groupKey: activeGroupKey,
+            };
+            localStorage.setItem('dashboard_view_state', JSON.stringify(state));
+        } catch (e) {
+            // Ignore storage errors
+        }
+
+        if (view === 'all') {
+            activeGroupKey = null;
+        }
+
+        filterLibraries();
+    }
+
+    function enterGroupsView() {
+        if (!Object.keys(groupStats).length) return;
+        activeGroupKey = null;
+        if (noResults) {
+            noResults.classList.remove('active');
+        }
+        setView('groups');
+    }
+
+    function enterGroupLibrariesView(key) {
+        activeGroupKey = key;
+        updateGroupContext(key);
+        setView('group-libraries');
+    }
+
+    function backToGroups() {
+        activeGroupKey = null;
+        setView('groups');
+    }
+
+    // Initialize grouping
+    computeGroupStats();
+    if (Object.keys(groupStats).length > 0) {
+        renderGroupCards();
+    }
+
+    if (viewAllBtn && viewGroupsBtn) {
+        viewAllBtn.addEventListener('click', () => setView('all'));
+        viewGroupsBtn.addEventListener('click', () => enterGroupsView());
+    }
+
+    if (groupBreadcrumbRoot) {
+        groupBreadcrumbRoot.addEventListener('click', () => backToGroups());
+    }
+    if (groupBackBtn) {
+        groupBackBtn.addEventListener('click', () => backToGroups());
+    }
     
     // Export functionality
     function exportToCSV() {
@@ -2073,6 +2468,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (exportToggleBtn) {
         exportToggleBtn.addEventListener('click', function() {
+            // Only allow export when libraries are visible
+            if (currentView === 'groups') {
+                return;
+            }
             const librariesSection = document.querySelector('.libraries-section');
             if (!librariesSection) return;
             
@@ -2331,12 +2730,73 @@ document.addEventListener('DOMContentLoaded', function() {
         // Reset selection when new results are displayed
         selectedResultIndex = -1;
     }
+
+    // ===== Persist and restore dashboard view state across navigation =====
+
+    // When user clicks a library card link, remember current dashboard view/group
+    const libraryLinks = document.querySelectorAll('.library-card h2 a');
+    libraryLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            try {
+                const state = {
+                    view: currentView,
+                    groupKey: activeGroupKey,
+                };
+                localStorage.setItem('dashboard_last_state', JSON.stringify(state));
+            } catch (e) {
+                // Ignore storage errors
+            }
+        });
+    });
+
+    // On load, first restore persistent dashboard view (for direct visits / new tabs)
+    try {
+        const persistedRaw = localStorage.getItem('dashboard_view_state');
+        if (persistedRaw) {
+            const persisted = JSON.parse(persistedRaw);
+            if (persisted && persisted.view === 'groups' && Object.keys(groupStats).length > 0) {
+                enterGroupsView();
+            } else if (
+                persisted &&
+                persisted.view === 'group-libraries' &&
+                persisted.groupKey &&
+                groupStats[persisted.groupKey]
+            ) {
+                enterGroupLibrariesView(persisted.groupKey);
+            }
+        }
+    } catch (e) {
+        // Fail silently if localStorage is unavailable or JSON is invalid
+    }
+
+    // Then, if navigating back from a library page, override with last dashboard state (one-time)
+    try {
+        const lastStateRaw = localStorage.getItem('dashboard_last_state');
+        if (lastStateRaw) {
+            const lastState = JSON.parse(lastStateRaw);
+            localStorage.removeItem('dashboard_last_state');
+
+            if (lastState && lastState.view === 'groups' && Object.keys(groupStats).length > 0) {
+                enterGroupsView();
+            } else if (
+                lastState &&
+                lastState.view === 'group-libraries' &&
+                lastState.groupKey &&
+                groupStats[lastState.groupKey]
+            ) {
+                enterGroupLibrariesView(lastState.groupKey);
+            }
+        }
+    } catch (e) {
+        // Fail silently if localStorage is unavailable or JSON is invalid
+    }
 });
 """
 
 
 def _generate_search_js() -> str:
     """Generate search-specific JavaScript (separate file for modularity)."""
+    # TODO: Separate search-specific JavaScript into external asset file and load it here
     return """// Search functionality
 // This file is loaded by dashboard pages for search functionality
 """
@@ -2407,6 +2867,13 @@ def _generate_dashboard_html(
     # Calculate statistics
     total_libraries = len(libraries_metadata)
     total_keywords = sum(lib.get("keyword_count", 0) for lib in libraries_metadata)
+    # Count distinct named groups (ignore empty/None)
+    distinct_groups = {
+        (lib.get("group") or "").strip()
+        for lib in libraries_metadata
+        if (lib.get("group") or "").strip()
+    }
+    group_count = len(distinct_groups)
     
     # Collect unique values for filters
     unique_authors = set()
@@ -2446,9 +2913,11 @@ def _generate_dashboard_html(
         lib_license = lib.get("license", "")
         lib_robot_framework = lib.get("robot_framework", "")
         lib_python = lib.get("python", "")
+        lib_group = lib.get("group") or ""
         
         version_badge = f'<span class="badge"><span data-i18n="version">Version</span>: {lib_version}</span>' if lib_version else ''
         description_html = f'<div class="library-description">{lib_description}</div>' if lib_description else ''
+        group_badge = f'<span class="badge badge-group">{lib_group}</span>' if lib_group else ''
         
         # Build metadata list
         meta_items = []
@@ -2535,9 +3004,15 @@ def _generate_dashboard_html(
                  data-maintainer="{lib_maintainer.lower() if lib_maintainer else ''}"
                  data-license="{lib_license.lower() if lib_license else ''}"
                  data-robot-framework="{lib_robot_framework.lower() if lib_robot_framework else ''}"
-                 data-python="{lib_python.lower() if lib_python else ''}">
-                <h2><a href="{lib_url}">{lib_name}</a></h2>
-                {version_badge}
+                 data-python="{lib_python.lower() if lib_python else ''}"
+                 data-group="{lib_group.lower() if lib_group else ''}">
+                <h2>
+                    <a href="{lib_url}">{lib_name}</a>
+                </h2>
+                <div class="library-badges">
+                    {version_badge}
+                    {group_badge}
+                </div>
                 {description_html}
                 <div class="library-stats">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2550,6 +3025,17 @@ def _generate_dashboard_html(
             </div>
         """)
     
+    # Build groups stat card HTML (only when at least one named group exists)
+    if group_count > 0:
+        group_stat_html = f'''
+            <div class="stat-card">
+                <div class="stat-value">{group_count}</div>
+                <div class="stat-label">Groups</div>
+            </div>
+        '''
+    else:
+        group_stat_html = ''
+    
     # Load template
     template = _load_dashboard_template()
     
@@ -2559,6 +3045,7 @@ def _generate_dashboard_html(
         site_description=site_description,
         total_libraries=total_libraries,
         total_keywords=total_keywords,
+        group_stat_html=group_stat_html,
         libraries_html=''.join(libraries_html),
         last_updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         filter_data_authors=json.dumps(sorted_authors),

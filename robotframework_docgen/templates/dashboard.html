@@ -68,6 +68,7 @@
                 <div class="stat-value">{total_keywords}</div>
                 <div class="stat-label" data-i18n="total_keywords">Total Keywords</div>
             </div>
+            {group_stat_html}
         </div>
         
         <div class="search-container">
@@ -92,6 +93,10 @@
             <div class="libraries-section-header">
                 <h3 class="libraries-section-title" data-i18n="available_libraries">Available Libraries</h3>
                 <div class="header-controls">
+                    <div class="view-toggle" id="view-toggle">
+                        <button id="view-all-btn" class="view-toggle-btn view-toggle-btn-active">Libraries</button>
+                        <button id="view-groups-btn" class="view-toggle-btn">Groups</button>
+                    </div>
                     <div class="sort-controls">
                         <label for="library-sort" class="sort-label" data-i18n="sort_by">Sort by:</label>
                         <select id="library-sort" class="sort-select">
@@ -117,7 +122,23 @@
                     </button>
                 </div>
             </div>
-            
+
+            <div id="group-context" class="group-context" style="display: none;">
+                <div class="group-breadcrumb">
+                    <button id="group-breadcrumb-root" class="group-breadcrumb-root">Groups</button>
+                    <span class="group-breadcrumb-separator">/</span>
+                    <span id="group-breadcrumb-name" class="group-breadcrumb-name"></span>
+                </div>
+                <div class="group-meta">
+                    <span id="group-meta-libraries"></span>
+                    <span class="group-meta-separator">•</span>
+                    <span id="group-meta-keywords"></span>
+                </div>
+                <button id="group-back-btn" class="group-back-btn">← Back to Groups</button>
+            </div>
+
+            <div id="groups-grid" class="groups-grid" style="display: none;"></div>
+
             <div id="libraries-grid" class="libraries-grid">
                 {libraries_html}
             </div>
