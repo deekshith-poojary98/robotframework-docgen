@@ -71,7 +71,7 @@
             
             <div class="stat-card">
                 <div class="stat-value">4</div>
-                <div class="stat-label">Groups</div>
+                <div class="stat-label" data-i18n="groups">Groups</div>
             </div>
         
         </div>
@@ -99,8 +99,8 @@
                 <h3 class="libraries-section-title" data-i18n="available_libraries">Available Libraries</h3>
                 <div class="header-controls">
                     <div class="view-toggle" id="view-toggle">
-                        <button id="view-all-btn" class="view-toggle-btn view-toggle-btn-active">Libraries</button>
-                        <button id="view-groups-btn" class="view-toggle-btn">Groups</button>
+                        <button id="view-all-btn" class="view-toggle-btn view-toggle-btn-active" data-i18n="libraries">Libraries</button>
+                        <button id="view-groups-btn" class="view-toggle-btn" data-i18n="groups">Groups</button>
                     </div>
                     <div class="sort-controls">
                         <label for="library-sort" class="sort-label" data-i18n="sort_by">Sort by:</label>
@@ -130,7 +130,7 @@
 
             <div id="group-context" class="group-context" style="display: none;">
                 <div class="group-breadcrumb">
-                    <button id="group-breadcrumb-root" class="group-breadcrumb-root">Groups</button>
+                    <button id="group-breadcrumb-root" class="group-breadcrumb-root" data-i18n="groups">Groups</button>
                     <span class="group-breadcrumb-separator">/</span>
                     <span id="group-breadcrumb-name" class="group-breadcrumb-name"></span>
                 </div>
@@ -139,7 +139,7 @@
                     <span class="group-meta-separator">•</span>
                     <span id="group-meta-keywords"></span>
                 </div>
-                <button id="group-back-btn" class="group-back-btn">← Back to Groups</button>
+                <button id="group-back-btn" class="group-back-btn" data-i18n="back_to_groups">← Back to Groups</button>
             </div>
 
             <div id="groups-grid" class="groups-grid" style="display: none;"></div>
@@ -178,7 +178,7 @@
                         <svg class="meta-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
-                        <span>Metadata</span>
+                        <span data-i18n="metadata">Metadata</span>
                     </span>
                 </div>
                 <div class="library-meta-list collapsed">
@@ -264,7 +264,7 @@
                         <svg class="meta-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
-                        <span>Metadata</span>
+                        <span data-i18n="metadata">Metadata</span>
                     </span>
                 </div>
                 <div class="library-meta-list collapsed">
@@ -350,7 +350,7 @@
                         <svg class="meta-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
-                        <span>Metadata</span>
+                        <span data-i18n="metadata">Metadata</span>
                     </span>
                 </div>
                 <div class="library-meta-list collapsed">
@@ -436,7 +436,7 @@
                         <svg class="meta-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
-                        <span>Metadata</span>
+                        <span data-i18n="metadata">Metadata</span>
                     </span>
                 </div>
                 <div class="library-meta-list collapsed">
@@ -522,7 +522,7 @@
                         <svg class="meta-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
-                        <span>Metadata</span>
+                        <span data-i18n="metadata">Metadata</span>
                     </span>
                 </div>
                 <div class="library-meta-list collapsed">
@@ -608,7 +608,7 @@
                         <svg class="meta-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
-                        <span>Metadata</span>
+                        <span data-i18n="metadata">Metadata</span>
                     </span>
                 </div>
                 <div class="library-meta-list collapsed">
@@ -672,13 +672,13 @@
                  data-license="mit"
                  data-robot-framework=">=7.0"
                  data-python=">=3.11"
-                 data-group="core utilities">
+                 data-group="">
                 <h2>
                     <a href="EnumLibrary/enum_library.html">EnumLibrary</a>
                 </h2>
                 <div class="library-badges">
                     <span class="badge"><span data-i18n="version">Version</span>: 1.0.0</span>
-                    <span class="badge badge-group">Core Utilities</span>
+                    
                 </div>
                 <div class="library-description">A comprehensive enum library providing powerful keywords for working with enumerated types.</div>
                 <div class="library-stats">
@@ -694,7 +694,7 @@
                         <svg class="meta-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
-                        <span>Metadata</span>
+                        <span data-i18n="metadata">Metadata</span>
                     </span>
                 </div>
                 <div class="library-meta-list collapsed">
@@ -753,7 +753,7 @@
     </div>
     
     <footer>
-        <span data-i18n="generated_by">Generated by</span> <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · Robot Framework Libraries · <span data-i18n="last_updated">Last updated</span>: 2026-01-24 17:17:04
+        <span data-i18n="generated_by">Generated by</span> <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · Robot Framework Libraries · <span data-i18n="last_updated">Last updated</span>: 2026-01-24 19:31:47
     </footer>
     
     <script>

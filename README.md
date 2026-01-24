@@ -3,6 +3,9 @@
 [![PyPI version](https://badge.fury.io/py/robotframework-libdocgen.svg)](https://badge.fury.io/py/robotframework-libdocgen)
 [![Python](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://www.python.org/downloads/)
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/robotframework-libdocgen?period=total&units=international_system&left_color=gray&right_color=orange&left_text=downloads)](https://pepy.tech/project/robotframework-libdocgen)
+[![CI Lint](https://github.com/deekshith-poojary98/robotframework-docgen/actions/workflows/lint.yaml/badge.svg)](https://github.com/deekshith-poojary98/robotframework-docgen/actions/workflows/lint.yaml)
+[![CI Tests](https://github.com/deekshith-poojary98/robotframework-docgen/actions/workflows/test.yaml/badge.svg)](https://github.com/deekshith-poojary98/robotframework-docgen/actions/workflows/test.yaml)
+[![Security Scan](https://github.com/deekshith-poojary98/robotframework-docgen/actions/workflows/security.yaml/badge.svg)](https://github.com/deekshith-poojary98/robotframework-docgen/actions/workflows/security.yaml)
 
 A powerful documentation generator for Robot Framework libraries that extracts keywords, arguments, and docstrings to create professional, well-formatted HTML documentation with advanced markdown support and syntax highlighting.
 
@@ -17,6 +20,7 @@ A powerful documentation generator for Robot Framework libraries that extracts k
 - **Multiple Output Formats**: Generate documentation in HTML or Markdown
 - **Multi-Library Support**: Generate documentation for multiple libraries from a single configuration
 - **Interactive Dashboard**: Beautiful dashboard UI with library listing, global keyword search, filtering, sorting, and export
+- **Library Grouping**: Organize libraries into logical groups with dedicated group and library views
 - **Live Server**: Built-in web server to serve and preview your dashboard locally
 - **Parallel Processing**: Process multiple libraries concurrently for faster generation
 - **Markdown Integration**: Full markdown support for docstrings (tables, images, code blocks, lists)
@@ -177,13 +181,15 @@ Requires `site` object (mandatory) and `libraries` array (mandatory):
       "source": "library1.py",
       "output_file": "index.html",
       "output_format": "html",
+      "group": "Core Utilities",
       "library_url": "https://example.com/library1",
       "custom_keywords": ["Custom Keyword 1"]
     },
     {
       "name": "Library2",
       "source": "library2.py",
-      "output_format": "markdown"
+      "output_format": "markdown",
+      "group": "Data"
     }
   ]
 }
@@ -200,6 +206,7 @@ Requires `site` object (mandatory) and `libraries` array (mandatory):
 - **Links**: `github_url` (enables "View on GitHub" and "Open an Issue" buttons), `library_url` (enables "Library Website" button), `support_email` (enables "Contact Support" button)
 - **Highlighting**: `custom_keywords` (array of additional keywords to highlight)
 - **Dashboard**: `site.name` and `site.description` for dashboard branding
+- **Library Grouping (Dashboard)**: optional `library.group` field to group libraries in the dashboard; libraries without a group appear under **Ungrouped**
 
 **Note:** In multi-library mode, the `name` field in library entries is optional. If not provided, the class name will be used.
 
@@ -278,6 +285,12 @@ The interactive dashboard provides a comprehensive view of all your libraries wi
 - **Instant results**: See matching keywords with library names
 - **Keyboard navigation**: Use arrow keys to navigate, Enter to open
 - **Quick access**: Press `/` to focus the search bar
+
+### Library Grouping
+- **Normal View**: Default view showing all libraries as cards (grouping ignored)
+- **Group View**: Group cards summarizing library count and total keywords per group
+- **Group Libraries View**: Drill into a single group to see only its libraries, with breadcrumb and "Back to Groups"
+- **Ungrouped Handling**: Libraries without a `group` value are automatically shown under an **Ungrouped** group
 
 ### Filtering
 Filter libraries by:
@@ -405,8 +418,3 @@ Apache License 2.0 - See [LICENSE](LICENSE) file for details.
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 🔗 Links
-
-- **Repository**: [GitHub](https://github.com/deekshith-poojary98/robotframework-docgen)
-- **Live Demo**: [Sample Documentation](https://deekshith-poojary98.github.io/robotframework-docgen/)
