@@ -6,7 +6,7 @@ keywords, arguments, and docstrings to create professional, well-formatted HTML
 and Markdown documentation with advanced markdown support and syntax highlighting.
 """
 
-__version__ = "2.0.1"
+__version__ = "2.1.1"
 __author__ = "Deekshith Poojary"
 __email__ = "deekshithpoojary355@gmail.com"
 
