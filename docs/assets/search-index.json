@@ -6,7 +6,8 @@
     "url": "StringUtils/string_utils.html",
     "author": "Bruce Wayne",
     "maintainer": "Docs Team",
-    "license": "MIT"
+    "license": "MIT",
+    "group": "Core Utilities"
   },
   {
     "type": "keyword",
@@ -162,7 +163,8 @@
     "url": "DataProcessor/data_processor.html",
     "author": "Mary Jane",
     "maintainer": "Docs Team",
-    "license": "MIT"
+    "license": "MIT",
+    "group": "Core Utilities"
   },
   {
     "type": "keyword",
@@ -241,7 +243,8 @@
     "url": "FileUtils/file_utils.html",
     "author": "Jane Smith",
     "maintainer": "Infrastructure Team",
-    "license": "Apache-2.0"
+    "license": "Apache-2.0",
+    "group": "Infrastructure"
   },
   {
     "type": "keyword",
@@ -348,7 +351,8 @@
     "url": "HTTPClient/http_client.html",
     "author": "Peter Parker",
     "maintainer": "API Team",
-    "license": "BSD-3-Clause"
+    "license": "BSD-3-Clause",
+    "group": "API & Integration"
   },
   {
     "type": "keyword",
@@ -448,7 +452,8 @@
     "url": "DBUtils/db_utils.html",
     "author": "Tony Stark",
     "maintainer": "Database Team",
-    "license": "MIT"
+    "license": "MIT",
+    "group": "Database"
   },
   {
     "type": "keyword",
@@ -548,7 +553,8 @@
     "url": "DateTimeUtils/datetime_utils.html",
     "author": "Black Widow",
     "maintainer": "Core Team",
-    "license": "MIT"
+    "license": "MIT",
+    "group": "Core Utilities"
   },
   {
     "type": "keyword",
@@ -690,7 +696,8 @@
     "url": "EnumLibrary/enum_library.html",
     "author": "Bruce Wayne",
     "maintainer": "Docs Team",
-    "license": "MIT"
+    "license": "MIT",
+    "group": "Core Utilities"
   },
   {
     "type": "keyword",

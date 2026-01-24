@@ -68,6 +68,12 @@
                 <div class="stat-value">102</div>
                 <div class="stat-label" data-i18n="total_keywords">Total Keywords</div>
             </div>
+            
+            <div class="stat-card">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Groups</div>
+            </div>
+        
         </div>
         
         <div class="search-container">
@@ -92,6 +98,10 @@
             <div class="libraries-section-header">
                 <h3 class="libraries-section-title" data-i18n="available_libraries">Available Libraries</h3>
                 <div class="header-controls">
+                    <div class="view-toggle" id="view-toggle">
+                        <button id="view-all-btn" class="view-toggle-btn view-toggle-btn-active">Libraries</button>
+                        <button id="view-groups-btn" class="view-toggle-btn">Groups</button>
+                    </div>
                     <div class="sort-controls">
                         <label for="library-sort" class="sort-label" data-i18n="sort_by">Sort by:</label>
                         <select id="library-sort" class="sort-select">
@@ -117,7 +127,23 @@
                     </button>
                 </div>
             </div>
-            
+
+            <div id="group-context" class="group-context" style="display: none;">
+                <div class="group-breadcrumb">
+                    <button id="group-breadcrumb-root" class="group-breadcrumb-root">Groups</button>
+                    <span class="group-breadcrumb-separator">/</span>
+                    <span id="group-breadcrumb-name" class="group-breadcrumb-name"></span>
+                </div>
+                <div class="group-meta">
+                    <span id="group-meta-libraries"></span>
+                    <span class="group-meta-separator">•</span>
+                    <span id="group-meta-keywords"></span>
+                </div>
+                <button id="group-back-btn" class="group-back-btn">← Back to Groups</button>
+            </div>
+
+            <div id="groups-grid" class="groups-grid" style="display: none;"></div>
+
             <div id="libraries-grid" class="libraries-grid">
                 
             <div class="library-card" 
@@ -129,9 +155,15 @@
                  data-maintainer="docs team"
                  data-license="mit"
                  data-robot-framework=">=7.0"
-                 data-python=">=3.11">
-                <h2><a href="StringUtils/string_utils.html">StringUtils</a></h2>
-                <span class="badge"><span data-i18n="version">Version</span>: 2.1.0</span>
+                 data-python=">=3.11"
+                 data-group="core utilities">
+                <h2>
+                    <a href="StringUtils/string_utils.html">StringUtils</a>
+                </h2>
+                <div class="library-badges">
+                    <span class="badge"><span data-i18n="version">Version</span>: 2.1.0</span>
+                    <span class="badge badge-group">Core Utilities</span>
+                </div>
                 <div class="library-description">A comprehensive string manipulation library providing powerful keywords for text processing, pattern matching, validation, encoding, hashing, and data transformation operations.</div>
                 <div class="library-stats">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -209,9 +241,15 @@
                  data-maintainer="docs team"
                  data-license="mit"
                  data-robot-framework=">=7.0"
-                 data-python=">=3.8">
-                <h2><a href="DataProcessor/data_processor.html">DataProcessor</a></h2>
-                <span class="badge"><span data-i18n="version">Version</span>: 2.5.0</span>
+                 data-python=">=3.8"
+                 data-group="core utilities">
+                <h2>
+                    <a href="DataProcessor/data_processor.html">DataProcessor</a>
+                </h2>
+                <div class="library-badges">
+                    <span class="badge"><span data-i18n="version">Version</span>: 2.5.0</span>
+                    <span class="badge badge-group">Core Utilities</span>
+                </div>
                 <div class="library-description">A comprehensive data processing library for validation, transformation, and manipulation of JSON data structures with advanced filtering and merging capabilities.</div>
                 <div class="library-stats">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -289,9 +327,15 @@
                  data-maintainer="infrastructure team"
                  data-license="apache-2.0"
                  data-robot-framework=">=7.0"
-                 data-python=">=3.9">
-                <h2><a href="FileUtils/file_utils.html">FileUtils</a></h2>
-                <span class="badge"><span data-i18n="version">Version</span>: 1.2.0</span>
+                 data-python=">=3.9"
+                 data-group="infrastructure">
+                <h2>
+                    <a href="FileUtils/file_utils.html">FileUtils</a>
+                </h2>
+                <div class="library-badges">
+                    <span class="badge"><span data-i18n="version">Version</span>: 1.2.0</span>
+                    <span class="badge badge-group">Infrastructure</span>
+                </div>
                 <div class="library-description">File and directory operations library providing comprehensive file system utilities for reading, writing, copying, and managing files and directories.</div>
                 <div class="library-stats">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -369,9 +413,15 @@
                  data-maintainer="api team"
                  data-license="bsd-3-clause"
                  data-robot-framework=">=5.0"
-                 data-python=">=3.10">
-                <h2><a href="HTTPClient/http_client.html">HTTPClient</a></h2>
-                <span class="badge"><span data-i18n="version">Version</span>: 2.0.0</span>
+                 data-python=">=3.10"
+                 data-group="api & integration">
+                <h2>
+                    <a href="HTTPClient/http_client.html">HTTPClient</a>
+                </h2>
+                <div class="library-badges">
+                    <span class="badge"><span data-i18n="version">Version</span>: 2.0.0</span>
+                    <span class="badge badge-group">API & Integration</span>
+                </div>
                 <div class="library-description">HTTP client library for making REST API calls, handling authentication, and managing HTTP requests and responses with support for GET, POST, PUT, and DELETE operations.</div>
                 <div class="library-stats">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -449,9 +499,15 @@
                  data-maintainer="database team"
                  data-license="mit"
                  data-robot-framework=">=6.1"
-                 data-python=">=3.8">
-                <h2><a href="DBUtils/db_utils.html">DBUtils</a></h2>
-                <span class="badge"><span data-i18n="version">Version</span>: 1.5.0</span>
+                 data-python=">=3.8"
+                 data-group="database">
+                <h2>
+                    <a href="DBUtils/db_utils.html">DBUtils</a>
+                </h2>
+                <div class="library-badges">
+                    <span class="badge"><span data-i18n="version">Version</span>: 1.5.0</span>
+                    <span class="badge badge-group">Database</span>
+                </div>
                 <div class="library-description">Database utilities library for executing SQL queries, managing database connections, and handling transactions with support for common database operations.</div>
                 <div class="library-stats">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -529,9 +585,15 @@
                  data-maintainer="core team"
                  data-license="mit"
                  data-robot-framework=">=7.0"
-                 data-python=">=3.9">
-                <h2><a href="DateTimeUtils/datetime_utils.html">DateTimeUtils</a></h2>
-                <span class="badge"><span data-i18n="version">Version</span>: 1.3.0</span>
+                 data-python=">=3.9"
+                 data-group="core utilities">
+                <h2>
+                    <a href="DateTimeUtils/datetime_utils.html">DateTimeUtils</a>
+                </h2>
+                <div class="library-badges">
+                    <span class="badge"><span data-i18n="version">Version</span>: 1.3.0</span>
+                    <span class="badge badge-group">Core Utilities</span>
+                </div>
                 <div class="library-description">Date and time utilities library providing comprehensive operations for date parsing, formatting, calculations, comparisons, and timezone handling with support for timestamps and calendar operations.</div>
                 <div class="library-stats">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -609,9 +671,15 @@
                  data-maintainer="docs team"
                  data-license="mit"
                  data-robot-framework=">=7.0"
-                 data-python=">=3.11">
-                <h2><a href="EnumLibrary/enum_library.html">EnumLibrary</a></h2>
-                <span class="badge"><span data-i18n="version">Version</span>: 1.0.0</span>
+                 data-python=">=3.11"
+                 data-group="core utilities">
+                <h2>
+                    <a href="EnumLibrary/enum_library.html">EnumLibrary</a>
+                </h2>
+                <div class="library-badges">
+                    <span class="badge"><span data-i18n="version">Version</span>: 1.0.0</span>
+                    <span class="badge badge-group">Core Utilities</span>
+                </div>
                 <div class="library-description">A comprehensive enum library providing powerful keywords for working with enumerated types.</div>
                 <div class="library-stats">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -685,7 +753,7 @@
     </div>
     
     <footer>
-        <span data-i18n="generated_by">Generated by</span> <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · Robot Framework Libraries · <span data-i18n="last_updated">Last updated</span>: 2026-01-19 01:30:06
+        <span data-i18n="generated_by">Generated by</span> <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · Robot Framework Libraries · <span data-i18n="last_updated">Last updated</span>: 2026-01-24 17:17:04
     </footer>
     
     <script>

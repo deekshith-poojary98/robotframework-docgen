@@ -372,6 +372,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const noResults = document.getElementById('no-results');
     const librariesGrid = document.getElementById('libraries-grid');
     let libraryCards = librariesGrid ? Array.from(librariesGrid.querySelectorAll('.library-card')) : [];
+
+    // View and grouping state
+    let currentView = 'all'; // 'all' | 'groups' | 'group-libraries'
+    let activeGroupKey = null; // normalized group key or null
     
     // Sort libraries function
     function sortLibraries(sortBy) {
@@ -404,8 +408,25 @@ document.addEventListener('DOMContentLoaded', function() {
         if (savedSort) {
             sortSelect.value = savedSort;
         }
+
+        // Prevent native dropdown opening when disabled via view state
+        sortSelect.addEventListener('mousedown', function(e) {
+            if (currentView === 'groups') {
+                e.preventDefault();
+            }
+        });
         
         sortSelect.addEventListener('change', function(e) {
+            // Disable sort interaction when showing group cards
+            if (currentView === 'groups') {
+                e.preventDefault();
+                // Reset to last saved value to avoid visual change
+                const stored = localStorage.getItem('dashboard_sort');
+                if (stored) {
+                    sortSelect.value = stored;
+                }
+                return;
+            }
             const sortValue = e.target.value;
             sortLibraries(sortValue);
             // Save to localStorage
@@ -460,9 +481,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const matchesLicense = !filterLicense || cardLicense === filterLicense;
             const matchesRobotFramework = !filterRobotFramework || cardRobotFramework === filterRobotFramework;
             const matchesPython = !filterPython || cardPython === filterPython;
+
+            // Check group match when in group-libraries view
+            const cardGroup = (card.getAttribute('data-group') || '').toLowerCase();
+            const matchesGroup = (
+                currentView !== 'group-libraries' ||
+                !activeGroupKey ||
+                (activeGroupKey === '__ungrouped__' && !cardGroup) ||
+                (activeGroupKey === cardGroup)
+            );
             
             // Show card if it matches all criteria
-            if (matchesSearch && matchesAuthor && matchesMaintainer && matchesLicense && matchesRobotFramework && matchesPython) {
+            if (matchesSearch && matchesAuthor && matchesMaintainer && matchesLicense && matchesRobotFramework && matchesPython && matchesGroup) {
                 card.style.display = '';
                 visibleCount++;
             } else {
@@ -634,6 +664,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (filtersToggleBtn) {
         filtersToggleBtn.addEventListener('click', function() {
+            // Only allow filters when libraries are visible
+            if (currentView === 'groups') {
+                return;
+            }
             const librariesSection = document.querySelector('.libraries-section');
             if (!librariesSection) return;
             
@@ -661,6 +695,221 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initial filter application
     filterLibraries();
+
+    // ===== Grouping and view toggle =====
+    const viewAllBtn = document.getElementById('view-all-btn');
+    const viewGroupsBtn = document.getElementById('view-groups-btn');
+    const viewToggleEl = document.getElementById('view-toggle');
+    const groupsGrid = document.getElementById('groups-grid');
+    const groupContextEl = document.getElementById('group-context');
+    const groupBreadcrumbRoot = document.getElementById('group-breadcrumb-root');
+    const groupBreadcrumbName = document.getElementById('group-breadcrumb-name');
+    const groupMetaLibraries = document.getElementById('group-meta-libraries');
+    const groupMetaKeywords = document.getElementById('group-meta-keywords');
+    const groupBackBtn = document.getElementById('group-back-btn');
+    const headerControls = document.querySelector('.libraries-section-header .header-controls');
+
+    const groupStats = {};
+
+    function computeGroupStats() {
+        if (!libraryCards || libraryCards.length === 0) return;
+
+        let hasNamedGroups = false;
+
+        libraryCards.forEach(card => {
+            const rawGroup = (card.getAttribute('data-group') || '').trim();
+            const keywordCount = parseInt(card.getAttribute('data-keyword-count') || '0', 10);
+
+            let key;
+            let label;
+            if (!rawGroup) {
+                key = '__ungrouped__';
+                label = 'Ungrouped';
+            } else {
+                key = rawGroup.toLowerCase();
+                // Convert to Title Case for display
+                label = rawGroup
+                    .split(/\s+/)
+                    .filter(Boolean)
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+                hasNamedGroups = true;
+            }
+
+            if (!groupStats[key]) {
+                groupStats[key] = {
+                    label,
+                    libraryCount: 0,
+                    keywordCount: 0,
+                };
+            }
+
+            groupStats[key].libraryCount += 1;
+            groupStats[key].keywordCount += keywordCount;
+        });
+
+        // If no named groups, hide or disable grouped view toggle
+        if (!hasNamedGroups && viewToggleEl) {
+            viewToggleEl.style.display = 'none';
+        }
+    }
+
+    function renderGroupCards() {
+        if (!groupsGrid) return;
+
+        const keys = Object.keys(groupStats).filter(k => k !== '__ungrouped__');
+        const hasNamedGroups = keys.length > 0;
+
+        let html = '';
+
+        if (hasNamedGroups) {
+            keys.sort((a, b) => groupStats[a].label.localeCompare(groupStats[b].label));
+            keys.forEach(key => {
+                const info = groupStats[key];
+                html += `
+                    <div class="library-card group-card" data-group-key="${key}">
+                        <h2><span class="group-card-title">${info.label}</span></h2>
+                        <div class="library-stats">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <span class="group-card-meta">
+                                <span><strong>${info.libraryCount}</strong> ${info.libraryCount === 1 ? 'library' : 'libraries'}</span>
+                                <span>•</span>
+                                <span><strong>${info.keywordCount}</strong> ${info.keywordCount === 1 ? 'keyword' : 'keywords'}</span>
+                            </span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        if (groupStats['__ungrouped__']) {
+            const info = groupStats['__ungrouped__'];
+            html += `
+                <div class="library-card group-card group-card-ungrouped" data-group-key="__ungrouped__">
+                    <h2><span class="group-card-title">${info.label}</span></h2>
+                    <div class="library-stats">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        <span class="group-card-meta">
+                            <span><strong>${info.libraryCount}</strong> ${info.libraryCount === 1 ? 'library' : 'libraries'}</span>
+                            <span>•</span>
+                            <span><strong>${info.keywordCount}</strong> ${info.keywordCount === 1 ? 'keyword' : 'keywords'}</span>
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+
+        groupsGrid.innerHTML = html;
+
+        groupsGrid.querySelectorAll('.group-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const key = card.getAttribute('data-group-key');
+                if (!key) return;
+                enterGroupLibrariesView(key);
+            });
+        });
+    }
+
+    function updateGroupContext(key) {
+        if (!groupContextEl || !groupStats[key]) return;
+        const info = groupStats[key];
+
+        groupBreadcrumbName.textContent = info.label;
+        groupMetaLibraries.textContent = `${info.libraryCount} ${info.libraryCount === 1 ? 'library' : 'libraries'}`;
+        groupMetaKeywords.textContent = `${info.keywordCount} ${info.keywordCount === 1 ? 'keyword' : 'keywords'}`;
+    }
+
+    function setView(view) {
+        currentView = view;
+
+        if (viewAllBtn && viewGroupsBtn) {
+            // Highlight "Libraries" only in flat view, and "Groups" for both
+            // the group cards overview and the group-libraries sub-dashboard.
+            viewAllBtn.classList.toggle('view-toggle-btn-active', view === 'all');
+            viewGroupsBtn.classList.toggle(
+                'view-toggle-btn-active',
+                view === 'groups' || view === 'group-libraries'
+            );
+        }
+
+        if (groupsGrid) {
+            groupsGrid.style.display = view === 'groups' ? 'grid' : 'none';
+        }
+
+        if (librariesGrid) {
+            librariesGrid.style.display = view === 'all' || view === 'group-libraries' ? 'grid' : 'none';
+        }
+
+        if (groupContextEl) {
+            groupContextEl.style.display = view === 'group-libraries' ? 'flex' : 'none';
+        }
+
+        // Visually indicate disabled controls when showing group cards
+        if (headerControls) {
+            headerControls.classList.toggle('controls-disabled', view === 'groups');
+        }
+
+        // Persist current dashboard view state
+        try {
+            const state = {
+                view: currentView,
+                groupKey: activeGroupKey,
+            };
+            localStorage.setItem('dashboard_view_state', JSON.stringify(state));
+        } catch (e) {
+            // Ignore storage errors
+        }
+
+        if (view === 'all') {
+            activeGroupKey = null;
+        }
+
+        filterLibraries();
+    }
+
+    function enterGroupsView() {
+        if (!Object.keys(groupStats).length) return;
+        activeGroupKey = null;
+        if (noResults) {
+            noResults.classList.remove('active');
+        }
+        setView('groups');
+    }
+
+    function enterGroupLibrariesView(key) {
+        activeGroupKey = key;
+        updateGroupContext(key);
+        setView('group-libraries');
+    }
+
+    function backToGroups() {
+        activeGroupKey = null;
+        setView('groups');
+    }
+
+    // Initialize grouping
+    computeGroupStats();
+    if (Object.keys(groupStats).length > 0) {
+        renderGroupCards();
+    }
+
+    if (viewAllBtn && viewGroupsBtn) {
+        viewAllBtn.addEventListener('click', () => setView('all'));
+        viewGroupsBtn.addEventListener('click', () => enterGroupsView());
+    }
+
+    if (groupBreadcrumbRoot) {
+        groupBreadcrumbRoot.addEventListener('click', () => backToGroups());
+    }
+    if (groupBackBtn) {
+        groupBackBtn.addEventListener('click', () => backToGroups());
+    }
     
     // Export functionality
     function exportToCSV() {
@@ -911,6 +1160,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (exportToggleBtn) {
         exportToggleBtn.addEventListener('click', function() {
+            // Only allow export when libraries are visible
+            if (currentView === 'groups') {
+                return;
+            }
             const librariesSection = document.querySelector('.libraries-section');
             if (!librariesSection) return;
             
@@ -1168,5 +1421,65 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Reset selection when new results are displayed
         selectedResultIndex = -1;
+    }
+
+    // ===== Persist and restore dashboard view state across navigation =====
+
+    // When user clicks a library card link, remember current dashboard view/group
+    const libraryLinks = document.querySelectorAll('.library-card h2 a');
+    libraryLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            try {
+                const state = {
+                    view: currentView,
+                    groupKey: activeGroupKey,
+                };
+                localStorage.setItem('dashboard_last_state', JSON.stringify(state));
+            } catch (e) {
+                // Ignore storage errors
+            }
+        });
+    });
+
+    // On load, first restore persistent dashboard view (for direct visits / new tabs)
+    try {
+        const persistedRaw = localStorage.getItem('dashboard_view_state');
+        if (persistedRaw) {
+            const persisted = JSON.parse(persistedRaw);
+            if (persisted && persisted.view === 'groups' && Object.keys(groupStats).length > 0) {
+                enterGroupsView();
+            } else if (
+                persisted &&
+                persisted.view === 'group-libraries' &&
+                persisted.groupKey &&
+                groupStats[persisted.groupKey]
+            ) {
+                enterGroupLibrariesView(persisted.groupKey);
+            }
+        }
+    } catch (e) {
+        // Fail silently if localStorage is unavailable or JSON is invalid
+    }
+
+    // Then, if navigating back from a library page, override with last dashboard state (one-time)
+    try {
+        const lastStateRaw = localStorage.getItem('dashboard_last_state');
+        if (lastStateRaw) {
+            const lastState = JSON.parse(lastStateRaw);
+            localStorage.removeItem('dashboard_last_state');
+
+            if (lastState && lastState.view === 'groups' && Object.keys(groupStats).length > 0) {
+                enterGroupsView();
+            } else if (
+                lastState &&
+                lastState.view === 'group-libraries' &&
+                lastState.groupKey &&
+                groupStats[lastState.groupKey]
+            ) {
+                enterGroupLibrariesView(lastState.groupKey);
+            }
+        }
+    } catch (e) {
+        // Fail silently if localStorage is unavailable or JSON is invalid
     }
 });

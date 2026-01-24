@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "robotframework-libdocgen"
-version = "2.0.1"
+version = "2.1.1"
 description = "A powerful documentation generator for Robot Framework libraries that creates professional HTML and Markdown documentation"
 readme = "README.md"
 requires-python = ">=3.8"
