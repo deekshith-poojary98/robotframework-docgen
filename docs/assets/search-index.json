@@ -696,8 +696,7 @@
     "url": "EnumLibrary/enum_library.html",
     "author": "Bruce Wayne",
     "maintainer": "Docs Team",
-    "license": "MIT",
-    "group": "Core Utilities"
+    "license": "MIT"
   },
   {
     "type": "keyword",
