@@ -40,3 +40,7 @@ Thumbs.db
 # Project specific
 *.md
 !README.md
+
+
+# Scripts
+*.sh
