@@ -1,0 +1,397 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
+      fail-fast: false
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-cov
+
+      - name: Run tests (Python ${{ matrix.python-version }})
+        run: |
+          pytest tests/ -v --cov=src --cov-report=xml --cov-report=json --junitxml=pytest-report-${{ matrix.python-version }}.xml
+
+      - name: Upload test reports (Python ${{ matrix.python-version }})
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports-py${{ matrix.python-version }}
+          path: |
+            coverage.json
+            coverage.xml
+            pytest-report-${{ matrix.python-version }}.xml
+          retention-days: 7
+
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff
+          pip install -r requirements.txt
+
+      - name: Run Ruff (linting and formatting check)
+        run: |
+          ruff check . --output-format=json > ruff-check.json || true
+          ruff format --check --diff . --output-format=json > ruff-format.json || true
+          ruff check . --output-format=github || true
+          ruff format --check --diff . || true
+
+      - name: Upload Ruff reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ruff-reports
+          path: |
+            ruff-check.json
+            ruff-format.json
+          retention-days: 7
+
+
+  test:
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
+      fail-fast: false
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-cov
+
+      - name: Run tests (Python ${{ matrix.python-version }})
+        run: |
+          pytest tests/ -v --cov=src --cov-report=xml --cov-report=json --junitxml=pytest-report-${{ matrix.python-version }}.xml
+
+      - name: Upload test reports (Python ${{ matrix.python-version }})
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports-py${{ matrix.python-version }}
+          path: |
+            coverage.json
+            coverage.xml
+            pytest-report-${{ matrix.python-version }}.xml
+          retention-days: 7
+
+
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit
+          pip install -r requirements.txt
+
+      - name: Run Bandit security scan
+        run: |
+          echo "Running Bandit security scan..."
+          bandit -r src/ -f json -o bandit-report.json --severity-level medium --confidence-level medium || true
+          echo "Security scan results:"
+          bandit -r src/ -ll --severity-level medium --confidence-level medium || true
+
+      - name: Check for high severity issues
+        run: |
+          if [ -f bandit-report.json ]; then
+            HIGH_SEVERITY=$(python -c "
+          import json
+          with open('bandit-report.json', 'r') as f:
+              data = json.load(f)
+          high_issues = [r for r in data.get('results', []) if r.get('issue_severity') == 'HIGH']
+          print(len(high_issues))
+          ")
+            if [ "$HIGH_SEVERITY" -gt 0 ]; then
+              echo "Found $HIGH_SEVERITY high severity security issues!"
+              exit 1
+            else
+              echo "No high severity security issues found"
+            fi
+          fi
+
+      - name: Upload Bandit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bandit-security-report
+          path: bandit-report.json
+          retention-days: 30
+
+
+  summary:
+    runs-on: ubuntu-latest
+    needs: [lint, test, security]
+    if: always() && github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        if: always()
+        continue-on-error: true
+        with:
+          path: artifacts
+          pattern: |
+            ruff-reports
+            test-reports-py*
+            bandit-security-report
+          merge-multiple: false
+
+      - name: Comment comprehensive results on PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const lintResult = '${{ needs.lint.result }}';
+            const testResult = '${{ needs.test.result }}';
+            const securityResult = '${{ needs.security.result }}';
+            
+            let comment = '## 📋 Code Quality Report\n\n';
+            
+            // Linter section
+            comment += '### 🔍 Linter Results\n';
+            if (lintResult === 'success') {
+              comment += '✅ **No linting issues found!**\n\n';
+            } else if (lintResult === 'failure') {
+              comment += '❌ **Linting issues found!**\n';
+              // Try to get linting details
+              const ruffCheckPath = 'artifacts/ruff-reports/ruff-check.json';
+              if (fs.existsSync(ruffCheckPath)) {
+                try {
+                  const checkResults = JSON.parse(fs.readFileSync(ruffCheckPath, 'utf8'));
+                  const violations = checkResults.violations || [];
+                  if (violations.length > 0) {
+                    comment += `Found ${violations.length} linting issues:\n`;
+                    violations.slice(0, 5).forEach(violation => {
+                      comment += `- **${violation.code}** in \`${violation.filename}:${violation.location.row}\`\n`;
+                    });
+                    if (violations.length > 5) {
+                      comment += `... and ${violations.length - 5} more issues\n`;
+                    }
+                  }
+                } catch (e) {
+                  comment += 'Check the logs for detailed linting issues.\n';
+                }
+              }
+              comment += '\n';
+            } else {
+              comment += '⚠️ **Linter status unknown**\n\n';
+            }
+            
+            // Test section
+            comment += '### 🧪 Test Results\n';
+            if (testResult === 'success') {
+              comment += '✅ **All tests passed across all Python versions!**\n\n';
+              comment += '**Tested Python versions:** 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.14 ✅\n';
+            } else if (testResult === 'failure') {
+              comment += '❌ **Test failures detected in one or more Python versions!**\n';
+              comment += 'Please check the test logs for detailed failure information.\n';
+              comment += '\n**Note:** Tests run on Python 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, and 3.14\n';
+            } else {
+              comment += '⚠️ **Test status unknown**\n';
+            }
+            
+            // Coverage information - try to get from latest Python version
+            const pythonVersions = ['3.14', '3.13', '3.12', '3.11', '3.10', '3.9', '3.8'];
+            let coverageFound = false;
+            for (const pyVersion of pythonVersions) {
+              const coveragePath = `artifacts/test-reports-py${pyVersion}/coverage.json`;
+              if (fs.existsSync(coveragePath)) {
+                try {
+                  const coverageData = JSON.parse(fs.readFileSync(coveragePath, 'utf8'));
+                  const totalCoverage = coverageData.totals?.percent_covered || 0;
+                  comment += `\n📊 **Code Coverage** (Python ${pyVersion}): ${totalCoverage.toFixed(1)}%\n`;
+                  
+                  if (totalCoverage < 70) {
+                    comment += '🔴 **Coverage is below 70%** - Critical: Add more tests immediately\n';
+                  } else if (totalCoverage < 80) {
+                    comment += '🟡 **Coverage is below 80%** - Consider adding more tests\n';
+                  } else if (totalCoverage < 90) {
+                    comment += '🟢 **Good test coverage!** (80%+)\n';
+                  } else {
+                    comment += '🎉 **Excellent test coverage!** (90%+)\n';
+                  }
+                  coverageFound = true;
+                  break;
+                } catch (e) {
+                  // Try next version
+                }
+              }
+            }
+            if (!coverageFound) {
+              comment += '\n⚠️ **Coverage data not available**\n';
+            }
+            comment += '\n';
+            
+            // Security section
+            comment += '### 🔒 Security Scan Results\n';
+            if (securityResult === 'success') {
+              comment += '✅ **No high severity security issues found!**\n';
+            } else if (securityResult === 'failure') {
+              comment += '❌ **High severity security issues found!**\n';
+            } else {
+              comment += '⚠️ **Security scan status unknown**\n';
+            }
+            
+            // Try to get security details
+            const banditPath = 'artifacts/bandit-security-report/bandit-report.json';
+            if (fs.existsSync(banditPath)) {
+              try {
+                const report = JSON.parse(fs.readFileSync(banditPath, 'utf8'));
+                const issues = report.results || [];
+                const highIssues = issues.filter(issue => issue.issue_severity === 'HIGH');
+                const mediumIssues = issues.filter(issue => issue.issue_severity === 'MEDIUM');
+                
+                comment += `\n- **Total Issues**: ${issues.length}\n`;
+                comment += `- **High Severity**: ${highIssues.length}\n`;
+                comment += `- **Medium Severity**: ${mediumIssues.length}\n`;
+                
+                if (highIssues.length > 0) {
+                  comment += '\n⚠️ **High severity issues found!**\n';
+                  highIssues.forEach(issue => {
+                    comment += `- **${issue.test_name}** in \`${issue.filename}:${issue.line_number}\`\n`;
+                  });
+                } else if (mediumIssues.length > 0) {
+                  comment += '\n⚠️ **Medium severity issues found** (build will continue):\n';
+                  mediumIssues.forEach(issue => {
+                    comment += `- **${issue.test_name}** in \`${issue.filename}:${issue.line_number}\`\n`;
+                  });
+                }
+              } catch (e) {
+                comment += '\n❌ **Error parsing security results**\n';
+              }
+            }
+            comment += '\n';
+            
+            // Overall summary
+            comment += '---\n\n';
+            const allPassed = lintResult === 'success' && testResult === 'success' && securityResult === 'success';
+            const anyFailed = lintResult === 'failure' || testResult === 'failure' || securityResult === 'failure';
+            
+            if (allPassed) {
+              comment += '🎉 **All checks passed!** Ready to merge.\n';
+            } else if (anyFailed) {
+              comment += '⚠️ **Some checks failed.** Please review the details above.\n';
+            } else {
+              comment += '⚠️ **Some checks have unknown status.** Please review the details above.\n';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

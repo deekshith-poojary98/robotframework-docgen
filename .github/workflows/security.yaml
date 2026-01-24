@@ -1,0 +1,75 @@
+name: Security Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit
+          pip install -r requirements.txt
+
+      - name: Run Bandit security scan
+        run: |
+          echo "Running Bandit security scan..."
+          bandit -r src/ -f json -o bandit-report.json --severity-level medium --confidence-level medium || true
+          echo "Security scan results:"
+          bandit -r src/ -ll --severity-level medium --confidence-level medium || true
+
+      - name: Check for high severity issues
+        run: |
+          if [ -f bandit-report.json ]; then
+            HIGH_SEVERITY=$(python -c "
+          import json
+          with open('bandit-report.json', 'r') as f:
+              data = json.load(f)
+          high_issues = [r for r in data.get('results', []) if r.get('issue_severity') == 'HIGH']
+          print(len(high_issues))
+          ")
+            if [ "$HIGH_SEVERITY" -gt 0 ]; then
+              echo "Found $HIGH_SEVERITY high severity security issues!"
+              exit 1
+            else
+              echo "No high severity security issues found"
+            fi
+          fi
+
+      - name: Upload Bandit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bandit-security-report
+          path: bandit-report.json
+          retention-days: 30
+
