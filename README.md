@@ -6,6 +6,7 @@
 [![CI Lint](https://github.com/deekshith-poojary98/robotframework-docgen/actions/workflows/lint.yaml/badge.svg)](https://github.com/deekshith-poojary98/robotframework-docgen/actions/workflows/lint.yaml)
 [![CI Tests](https://github.com/deekshith-poojary98/robotframework-docgen/actions/workflows/test.yaml/badge.svg)](https://github.com/deekshith-poojary98/robotframework-docgen/actions/workflows/test.yaml)
 [![Security Scan](https://github.com/deekshith-poojary98/robotframework-docgen/actions/workflows/security.yaml/badge.svg)](https://github.com/deekshith-poojary98/robotframework-docgen/actions/workflows/security.yaml)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/deekshith-poojary98/robotframework-docgen)
 
 A powerful documentation generator for Robot Framework libraries that extracts keywords, arguments, and docstrings to create professional, well-formatted HTML documentation with advanced markdown support and syntax highlighting.
 
