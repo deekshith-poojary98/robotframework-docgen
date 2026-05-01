@@ -1069,11 +1069,14 @@ class RobotFrameworkDocParser:
         if not content:
             return ""
 
+        # We must strictly separate text segments from fenced code blocks.
+        # Do not run identifier protection or other substitutions on code blocks.
         code_pattern = re.compile(r"```(?P<lang>[^\n`]*)\n(?P<code>.*?)```", re.DOTALL)
         segments: List[str] = []
         last_end = 0
 
         for match in code_pattern.finditer(content):
+            # Text before the code fence: safe to run identifier protection and markdown conversion
             text_chunk = content[last_end : match.start()]
             text_chunk = re.sub(r"``([^`\n*]+?)\*\*(?!\*)", r"``\1``", text_chunk)
             text_chunk = self._protect_identifier_tokens(text_chunk)
@@ -1081,6 +1084,7 @@ class RobotFrameworkDocParser:
             if text_html:
                 segments.append(text_html)
 
+            # Code block content: do not run identifier protections here — render as code only
             lang = (match.group("lang") or "text").strip()
             code_block = textwrap.dedent(match.group("code") or "").rstrip("\n")
             if code_block:
@@ -1088,6 +1092,7 @@ class RobotFrameworkDocParser:
 
             last_end = match.end()
 
+        # Remainder after last code fence
         remainder = content[last_end:]
         remainder = re.sub(r"``([^`\n*]+?)\*\*(?!\*)", r"``\1``", remainder)
         remainder = self._protect_identifier_tokens(remainder)
@@ -1566,7 +1571,11 @@ class RobotFrameworkDocParser:
             and line.strip()
             and not line.startswith("[")
         ):
-            return f'<span style="color: #dcdcaa; font-weight: bold;">{line}</span>'
+            # Ensure variables and keyword-args are highlighted inside non-indented
+            # Robot lines as well. Previously these lines were returned raw which
+            # could leave internal marker tokens like __VAR_MARKER_0__ in output.
+            processed = self._highlight_variables_only(line, config)
+            return f'<span style="color: #dcdcaa; font-weight: bold;">{processed}</span>'
 
         if line.startswith("    ") or line.startswith("\t"):
             indent = ""
@@ -1630,7 +1639,7 @@ class RobotFrameworkDocParser:
         def mark_variable(match):
             nonlocal var_counter
             var = match.group(0)
-            marker = f"__VAR_MARKER_{var_counter}__"
+            marker = f"::VAR_MARKER_{var_counter}::"
             var_markers[marker] = f'<span style="color: #9cdcfe;">{var}</span>'
             var_counter += 1
             return marker
@@ -1647,7 +1656,7 @@ class RobotFrameworkDocParser:
 
         for keyword in sorted_keywords:
             if keyword in text:
-                marker_pattern = "__KW_MARKER_\\d+__"
+                marker_pattern = "::KW_MARKER_\\d+::"
                 if not re.search(marker_pattern.replace("\\d+", ".*"), text):
                     escaped_keyword = re.escape(keyword)
                     pattern = r"\b" + escaped_keyword + r"(?=\s|$|[^a-zA-Z0-9_])"
@@ -1655,7 +1664,7 @@ class RobotFrameworkDocParser:
                     def mark_keyword(match):
                         nonlocal keyword_counter
                         kw = match.group(0)
-                        marker = f"__KW_MARKER_{keyword_counter}__"
+                        marker = f"::KW_MARKER_{keyword_counter}::"
                         keyword_markers[marker] = (
                             f'<span style="color: #4ec9b0; font-weight: bold;">{kw}</span>'
                         )
@@ -1676,14 +1685,14 @@ class RobotFrameworkDocParser:
             elif arg_value in keyword_markers:
                 arg_value = keyword_markers[arg_value]
 
-            marker = f"__ARG_MARKER_{arg_counter}__"
+            marker = f"::ARG_MARKER_{arg_counter}::"
             arg_markers[marker] = (
                 f'<span style="color: #dcdcaa;">{arg_name}</span>={arg_value}'
             )
             arg_counter += 1
             return marker
 
-        arg_pattern = r'\b([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(__VAR_MARKER_\d+__|__KW_MARKER_\d+__|"[^"]*"|\'[^\']*\'|[^\s<]+)'
+        arg_pattern = r'\b([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(::VAR_MARKER_\d+::|::KW_MARKER_\d+::|"[^"]*"|\'[^\']*\'|[^\s<]+)'
         text = re.sub(arg_pattern, mark_keyword_arg, text)
 
         for marker, html in var_markers.items():
