@@ -321,10 +321,10 @@ Omitted tokens keep built-in defaults (or the chosen preset). Colors may be hex 
 
 ### Sample themes
 
-Ready-made theme files live in [`sample_configs/theme/`](sample_configs/theme/) (e.g. `graphite.json`, `sage.yml`, `matcha.yml`, `accent-only.json`, `paper.json`, `ocean.yaml`, …). Browse rendered samples in [`docs/Themes/`](docs/Themes/) ([live gallery](https://deekshith-poojary98.github.io/robotframework-docgen/Themes/)). An example multi-lib + dashboard config is [`sample_configs/lib/timetravel_with_theme.json`](sample_configs/lib/timetravel_with_theme.json).
+Ready-made theme files live in [`sample_configs/theme/`](sample_configs/theme/) (e.g. `graphite.json`, `sage.yml`, `matcha.yml`, `accent-only.json`, `paper.json`, `ocean.yaml`, …). Browse rendered samples in [`docs/Themes/`](docs/Themes/) ([live gallery](https://deekshith-poojary98.github.io/robotframework-docgen/Themes/)). An example multi-lib + dashboard config is [`sample_configs/lib/multi_lib_config.yaml`](sample_configs/lib/multi_lib_config.yaml).
 
 ```bash
-docgen -c sample_configs/lib/timetravel_with_theme.json --dashboard -d timetravel-docs
+docgen -c sample_configs/lib/multi_lib_config.yaml --dashboard -d sample-docs
 ```
 
 ## 📖 Usage
@@ -574,7 +574,7 @@ If type hints are not provided, arguments show as `Any` type.
 ## 📚 Examples
 
 - **Sample libraries / resources**: `sample_libs/` (includes `http_helpers.resource`, `auth_suite.robot`, `tests/`)
-- **Sample configs**: `sample_configs/lib/` (`multi_lib_config.json`, `single_lib_config.json`, `timetravel_with_theme.json`)
+- **Sample configs**: `sample_configs/lib/` (JSON + YAML — e.g. `multi_lib_config.yaml`, `single_lib_config.yaml`, `resources_only_config.yaml`, `dynamic_core_config.yml`)
 - **Theme configs**: `sample_configs/theme/`
 - **Theme gallery (GitHub Pages)**: [`docs/Themes/`](https://deekshith-poojary98.github.io/robotframework-docgen/Themes/)
 
@@ -591,10 +591,12 @@ docgen sample_libs/http_helpers.resource \
 ```bash
 docgen -c sample_configs/lib/multi_lib_config.json --dashboard -d docs
 
-# Themed TimeTravel sample (uses site.theme_file)
-docgen -c sample_configs/lib/timetravel_with_theme.json --dashboard -d timetravel-docs
-docgen -c sample_configs/lib/timetravel_with_theme.json --dashboard --serve -d timetravel-docs
-docgen -c sample_configs/lib/timetravel_with_theme.json --dashboard --parallel --serve --port 8080
+# Same config as YAML
+docgen -c sample_configs/lib/multi_lib_config.yaml --dashboard -d docs
+
+# Resources-only dashboard (no Python libraries)
+docgen -c sample_configs/lib/resources_only_config.yaml --dashboard -d resource-docs
+docgen -c sample_configs/lib/resources_only_config.yaml --dashboard --serve -d resource-docs
 ```
 
 **Quality gates:**

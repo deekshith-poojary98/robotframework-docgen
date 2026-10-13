@@ -1,0 +1,24 @@
+# Resources-only multi-entry config — no Python libraries required.
+# Usage: docgen -c sample_configs/lib/resources_only_config.yaml --dashboard -d resource-docs
+site:
+  name: Shared Robot Keywords
+  description: Documentation for .resource / .robot keyword files only
+  author: Docs Team
+  license: MIT
+  robot_framework: ">=7.0"
+  theme_file: ../theme/ocean.yaml
+
+resources:
+  - name: HTTP Helpers
+    source: sample_libs/http_helpers.resource
+    group: Shared
+    description: Reusable HTTP helper keywords
+    examples_from_tests:
+      - sample_libs/tests/
+    output_file: http_helpers.html
+
+  - name: Auth Suite
+    source: sample_libs/auth_suite.robot
+    group: Shared
+    description: Auth-related keywords from a .robot suite file
+    output_file: auth_suite.html
