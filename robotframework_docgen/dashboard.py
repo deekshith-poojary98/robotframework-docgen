@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import List, Dict, Any, Mapping, Optional
 from functools import lru_cache
 
+from robotframework_docgen.generator import DocumentationGenerator
 from robotframework_docgen.theme import (
     logo_url_for_theme,
     on_accent_for_theme,
@@ -93,7 +94,10 @@ def _generate_search_index(libraries_metadata: List[Dict[str, Any]]) -> List[Dic
         # Add keyword entries
         for keyword in lib_meta.get("keywords", []):
             keyword_name = keyword.get("name", "")
-            keyword_id = keyword_name.lower().replace(" ", "-")
+            # Must match DocumentationGenerator.keyword_anchor_id. A space-only
+            # slug leaves `${}` in the fragment, so embedded-argument keywords
+            # never scroll into view from dashboard search.
+            keyword_id = DocumentationGenerator.keyword_anchor_id(keyword_name)
             
             search_index.append({
                 "type": "keyword",

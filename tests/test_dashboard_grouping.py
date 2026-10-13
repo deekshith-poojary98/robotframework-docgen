@@ -5,8 +5,10 @@ Tests for dashboard grouping-related backend behavior.
 from robotframework_docgen.dashboard import (
     _generate_dashboard_html,
     _generate_dashboard_js,
+    _generate_search_index,
     _normalize_entry_kind,
 )
+from robotframework_docgen.generator import DocumentationGenerator
 
 
 def _minimal_site_config():
@@ -124,6 +126,24 @@ def test_dashboard_includes_group_stat_card_when_groups_present():
     # Two distinct named groups: "Core" and "API"
     assert "Groups" in html
     assert '<div class="stat-value">2</div>' in html
+
+
+def test_search_index_anchor_matches_keyword_page():
+    """Dashboard search must link to the same id the keyword page renders."""
+    keyword_name = "Fill ${e_type} email"
+    index = _generate_search_index(
+        [
+            {
+                "name": "MailLib",
+                "url": "MailLib/index.html",
+                "keywords": [{"name": keyword_name, "doc": ""}],
+            }
+        ]
+    )
+    keyword_entry = next(item for item in index if item["type"] == "keyword")
+    anchor = DocumentationGenerator.keyword_anchor_id(keyword_name)
+    assert keyword_entry["url"] == f"MailLib/index.html#{anchor}"
+    assert "${" not in keyword_entry["url"]
 
 
 def test_dashboard_omits_group_stat_card_when_no_groups_present():

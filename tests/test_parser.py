@@ -397,3 +397,40 @@ class TestInlineFormatting:
         assert "<em>" not in html
         assert "USER_CREDS[${cred_type}]" in html
         assert "${e_type}" in html
+
+
+def test_positional_only_and_var_keyword_arguments(tmp_path):
+    """Required positional-only arguments must not disappear from the signature."""
+    path = tmp_path / "posonly.py"
+    path.write_text(
+        '''
+from robot.api.deco import keyword
+
+class PosOnly:
+    """Positional-only arguments."""
+
+    @keyword
+    def fetch(self, url: str, /, timeout: int = 30, **options) -> str:
+        """Fetch a URL."""
+        return url
+
+    @keyword
+    def fetch_with_defaults(self, url: str = "http://example", /, timeout: int = 5) -> str:
+        """Fetch with defaults on both sides of the slash."""
+        return url
+''',
+        encoding="utf-8",
+    )
+    info = RobotFrameworkDocParser().parse_file(str(path))
+    fetch = next(kw for kw in info.keywords if kw.name == "Fetch")
+    assert fetch.parameters == [
+        ("url", "str"),
+        ("timeout", "int"),
+        ("**options", "Any"),
+    ]
+    assert fetch.parameter_defaults == {"timeout": "30"}
+
+    defaulted = next(kw for kw in info.keywords if kw.name == "Fetch With Defaults")
+    assert [name for name, _ in defaulted.parameters] == ["url", "timeout"]
+    assert defaulted.parameter_defaults["url"] == '"http://example"'
+    assert defaulted.parameter_defaults["timeout"] == "5"

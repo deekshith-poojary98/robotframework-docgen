@@ -195,6 +195,84 @@ class TestDynamicCoreTmpFixtures:
         assert info.version == "1.2.3"
         assert info.keywords == []
 
+    def test_component_init_does_not_replace_library_import_signature(
+        self, parser, tmp_path
+    ):
+        """A helper class defined above the library must not own Importing args."""
+        lib = tmp_path / "agg.py"
+        lib.write_text(
+            textwrap.dedent(
+                """
+                from robot.api.deco import keyword
+                from robotlibcore import DynamicCore
+
+                class Component:
+                    def __init__(self, token: str, retries: int = 3):
+                        self.token = token
+
+                    @keyword
+                    def greet(self, name: str) -> str:
+                        \"\"\"Greet someone.\"\"\"
+                        return name
+
+                class Aggregator(DynamicCore):
+                    \"\"\"Public library.\"\"\"
+                    ROBOT_LIBRARY_SCOPE = "GLOBAL"
+
+                    def __init__(self, base_url: str, timeout: int = 30):
+                        super().__init__([Component("x")])
+                """
+            ).strip()
+            + "\n",
+            encoding="utf-8",
+        )
+        info = parser.parse_file(str(lib))
+        assert info.name == "Aggregator"
+        assert [kw.name for kw in info.keywords] == ["Greet"]
+        assert info.inits, "expected the public library constructor"
+        init = info.inits[0]
+        assert init.parameters == [("base_url", "str"), ("timeout", "int")]
+        assert init.parameter_defaults.get("timeout") == "30"
+        assert "token" not in dict(init.parameters)
+        assert "retries" not in init.parameter_defaults
+
+    def test_plain_library_init_ignores_earlier_helper(self, parser, tmp_path):
+        """Undecorated library classes are still the import target."""
+        lib = tmp_path / "plain.py"
+        lib.write_text(
+            textwrap.dedent(
+                """
+                from robot.api.deco import keyword
+
+                class Helper:
+                    def __init__(self, token: str):
+                        self.token = token
+
+                    @keyword
+                    def help_me(self):
+                        \"\"\"Helper keyword.\"\"\"
+                        return "ok"
+
+                class PublicLib:
+                    \"\"\"Public library without @keyword on its methods.\"\"\"
+                    ROBOT_LIBRARY_SCOPE = "GLOBAL"
+
+                    def __init__(self, base_url: str):
+                        self.base_url = base_url
+
+                    def run(self, value: str) -> str:
+                        \"\"\"Run the library.\"\"\"
+                        return value
+                """
+            ).strip()
+            + "\n",
+            encoding="utf-8",
+        )
+        info = parser.parse_file(str(lib))
+        assert info.name == "PublicLib"
+        assert info.inits
+        assert info.inits[0].parameters == [("base_url", "str")]
+
 
 class TestDynamicCoreEndToEnd:
     def test_generator_html_contains_dynamic_keywords(self, parser):
