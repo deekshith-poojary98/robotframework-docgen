@@ -369,3 +369,31 @@ class RegularClass:
         finally:
             if os.path.exists(temp_path):
                 os.unlink(temp_path)
+
+
+class TestInlineFormatting:
+    """Inline markdown must not mangle Robot identifiers."""
+
+    def test_underscore_identifiers_are_not_italicized(self):
+        parser = RobotFrameworkDocParser()
+        html = parser._parse_inline_formatting(
+            "POST using ``USER_CREDS[${cred_type}]`` and `${e_type}` / `${p_type}`."
+        )
+        assert "<em>" not in html
+        assert "USER_CREDS[${cred_type}]" in html
+        assert "${e_type}" in html
+        assert "${p_type}" in html
+
+    def test_word_boundary_underscore_italic_still_works(self):
+        parser = RobotFrameworkDocParser()
+        html = parser._parse_inline_formatting("This is _italic_ text.")
+        assert "<em>italic</em>" in html
+
+    def test_docstring_keeps_underscore_identifiers(self):
+        parser = RobotFrameworkDocParser()
+        html, _ = parser._parse_docstring(
+            "Login with ``USER_CREDS[${cred_type}]`` for `${e_type}` users."
+        )
+        assert "<em>" not in html
+        assert "USER_CREDS[${cred_type}]" in html
+        assert "${e_type}" in html

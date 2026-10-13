@@ -1,0 +1,27 @@
+# Matcha cream — warm green reading theme
+bg: '#f7f8f2'
+bg_alt: '#eef2e6'
+card: '#ffffff'
+border: '#d5ddc8'
+text: '#243022'
+muted: '#5f6b55'
+accent: '#4d7c0f'
+accent_soft: rgba(77, 124, 15, 0.12)
+hero_badge_bg: '#eef2e6'
+hero_badge_text: '#243022'
+hero_badge_kind_bg: rgba(77, 124, 15, 0.12)
+hero_badge_kind_text: '#4d7c0f'
+btn_primary_bg: '#4d7c0f'
+btn_primary_text: '#f8fafc'
+btn_ghost_bg: transparent
+btn_ghost_text: '#5f6b55'
+rf_keyword: '#0f766e'
+rf_section: '#2563eb'
+rf_variable: '#0284c7'
+rf_comment: '#15803d'
+rf_name: '#a16207'
+rf_control: '#c2410c'
+rf_setting: '#7c3aed'
+rf_arg: '#a16207'
+rf_string: '#b45309'
+rf_number: '#15803d'

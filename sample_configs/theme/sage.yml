@@ -1,0 +1,27 @@
+# Soft sage light — low-fatigue long-form docs
+bg: '#f4f7f4'
+bg_alt: '#ffffff'
+card: '#ffffff'
+border: '#d5e0d6'
+text: '#1f2a24'
+muted: '#5f6f64'
+accent: '#2f6f4e'
+accent_soft: rgba(47, 111, 78, 0.12)
+hero_badge_bg: '#e8efe9'
+hero_badge_text: '#1f2a24'
+hero_badge_kind_bg: rgba(47, 111, 78, 0.12)
+hero_badge_kind_text: '#2f6f4e'
+btn_primary_bg: '#2f6f4e'
+btn_primary_text: '#f8fafc'
+btn_ghost_bg: transparent
+btn_ghost_text: '#5f6f64'
+rf_keyword: '#0f766e'
+rf_section: '#2563eb'
+rf_variable: '#0284c7'
+rf_comment: '#15803d'
+rf_name: '#a16207'
+rf_control: '#c2410c'
+rf_setting: '#7c3aed'
+rf_arg: '#a16207'
+rf_string: '#b45309'
+rf_number: '#15803d'

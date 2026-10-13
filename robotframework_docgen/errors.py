@@ -2,7 +2,7 @@
 Error handling and message generation for Robot Framework Documentation Generator
 """
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Optional
 
 # Import optional dependencies
 try:
@@ -67,70 +67,93 @@ def error_multi_lib_no_config() -> None:
 
 
 def error_missing_libraries_array(config: dict) -> None:
-    """Error: Multi-library mode requires a 'libraries' array."""
+    """Error: Multi-library mode requires a 'libraries' and/or 'resources' array."""
     libraries = config.get("libraries")
+    resources = config.get("resources")
     if RICH_AVAILABLE:
         error_text = Text()
-        error_text.append("Multi-library mode requires a 'libraries' array in the config file.\n\n", style="red")
-        if "libraries" not in config or libraries is None:
+        error_text.append(
+            "Multi-library mode requires a 'libraries' and/or 'resources' array "
+            "in the config file.\n\n",
+            style="red",
+        )
+        if "libraries" not in config and "resources" not in config:
             error_text.append("Missing: ", style="bold")
-            error_text.append("'libraries' key is missing from config file.\n\n", style="yellow")
+            error_text.append(
+                "'libraries' / 'resources' keys are missing from config file.\n\n",
+                style="yellow",
+            )
         else:
-            error_text.append("Invalid: ", style="bold")
-            error_text.append(f"'libraries' must be an array, got {type(libraries).__name__}.\n\n", style="yellow")
+            if "libraries" in config and not isinstance(libraries, list):
+                error_text.append("Invalid: ", style="bold")
+                error_text.append(
+                    f"'libraries' must be an array, got {type(libraries).__name__}.\n",
+                    style="yellow",
+                )
+            if "resources" in config and not isinstance(resources, list):
+                error_text.append("Invalid: ", style="bold")
+                error_text.append(
+                    f"'resources' must be an array, got {type(resources).__name__}.\n",
+                    style="yellow",
+                )
+            error_text.append("\n", style="")
         error_text.append("Options:\n", style="bold")
         error_text.append("  1. Use single-library mode: ", style="")
         error_text.append("docgen library.py -c config.json\n", style="cyan")
-        error_text.append("  2. Update config file to include a 'libraries' array:\n", style="")
+        error_text.append("  2. Update config file:\n", style="")
         error_text.append('     "libraries": [\n', style="dim")
-        error_text.append('       { "name": "Library1", "source": "lib1.py" },\n', style="dim")
-        error_text.append('       { "name": "Library2", "source": "lib2.py" }\n', style="dim")
+        error_text.append('       { "name": "Library1", "source": "lib1.py" }\n', style="dim")
+        error_text.append('     ],\n', style="dim")
+        error_text.append('     "resources": [\n', style="dim")
+        error_text.append(
+            '       { "name": "Helpers", "source": "helpers.resource" }\n',
+            style="dim",
+        )
         error_text.append('     ]\n', style="dim")
         error_text.append("\n", style="")
         _add_repository_link(error_text)
         _print_error("Missing Required Config", error_text)
     else:
-        if "libraries" not in config or libraries is None:
-            print("Error: Multi-library mode requires a 'libraries' array in the config file.")
-        else:
-            print(f"Error: 'libraries' must be an array, got {type(libraries).__name__}.")
-        print("Please use single-library mode or update your config file to include a 'libraries' array.")
+        print(
+            "Error: Multi-library mode requires a 'libraries' and/or "
+            "'resources' array in the config file."
+        )
         print(f"For more information, visit: {REPOSITORY_URL}")
 
 
 def error_empty_libraries_array() -> None:
-    """Error: Multi-library mode requires at least one library in the 'libraries' array."""
+    """Error: Multi-library mode requires at least one libraries/resources entry."""
     if RICH_AVAILABLE:
         error_text = Text()
-        error_text.append("Multi-library mode requires at least one library in the 'libraries' array.\n\n", style="red")
-        error_text.append("The 'libraries' array is currently empty.\n\n", style="yellow")
-        error_text.append("Add library entries to the 'libraries' array:\n", style="bold")
+        error_text.append(
+            "Multi-library mode requires at least one entry in "
+            "'libraries' and/or 'resources'.\n\n",
+            style="red",
+        )
+        error_text.append("Both arrays are currently empty (or missing).\n\n", style="yellow")
+        error_text.append("Add entries like:\n", style="bold")
         error_text.append('  "libraries": [\n', style="dim")
-        error_text.append('    {\n', style="dim")
-        error_text.append('      "name": "Library1",\n', style="cyan")
-        error_text.append('      "source": "library1.py"\n', style="cyan")
-        error_text.append('    },\n', style="dim")
-        error_text.append('    {\n', style="dim")
-        error_text.append('      "name": "Library2",\n', style="cyan")
-        error_text.append('      "source": "library2.py"\n', style="cyan")
-        error_text.append('    }\n', style="dim")
+        error_text.append('    { "name": "Library1", "source": "library1.py" }\n', style="dim")
+        error_text.append('  ],\n', style="dim")
+        error_text.append('  "resources": [\n', style="dim")
+        error_text.append(
+            '    { "name": "Helpers", "source": "helpers.resource" }\n',
+            style="dim",
+        )
         error_text.append('  ]\n', style="dim")
         error_text.append("\n", style="")
-        error_text.append("Required fields for each library:\n", style="bold")
+        error_text.append("Required fields for each entry:\n", style="bold")
         error_text.append("  - ", style="")
         error_text.append("source", style="bold yellow")
-        error_text.append(": Path to library Python file (required)\n", style="")
-        error_text.append("\n", style="")
-        error_text.append("Optional fields:\n", style="bold")
-        error_text.append("  - ", style="")
-        error_text.append("name", style="bold yellow")
-        error_text.append(": Library name (optional) - if not provided, class name will be used\n", style="")
+        error_text.append(" (path to .py / .resource / .robot file)\n", style="")
         error_text.append("\n", style="")
         _add_repository_link(error_text)
-        _print_error("Empty Libraries Array", error_text)
+        _print_error("Empty Libraries/Resources", error_text)
     else:
-        print("Error: Multi-library mode requires at least one library in the 'libraries' array.")
-        print("The 'libraries' array is currently empty.")
+        print(
+            "Error: Multi-library mode requires at least one entry in "
+            "'libraries' and/or 'resources'."
+        )
         print(f"For more information, visit: {REPOSITORY_URL}")
 
 
@@ -146,7 +169,8 @@ def error_missing_site_object() -> None:
         error_text.append("Example config structure:\n", style="bold")
         error_text.append('  {\n', style="dim")
         error_text.append('    "site": { ... },\n', style="cyan")
-        error_text.append('    "libraries": [ ... ]\n', style="cyan")
+        error_text.append('    "libraries": [ ... ],\n', style="cyan")
+        error_text.append('    "resources": [ ... ]\n', style="cyan")
         error_text.append('  }\n', style="dim")
         error_text.append("\n", style="")
         _add_repository_link(error_text)
@@ -209,7 +233,8 @@ def error_config_mismatch(forbidden_keys: list) -> None:
         error_text.append("docgen -c config.json --multi-lib\n", style="cyan")
         error_text.append("  2. Update config file for single-library mode:\n", style="")
         error_text.append("     - Remove 'site' object/dict (required in multi-lib mode)\n", style="dim")
-        error_text.append("     - Remove 'libraries' array (required in multi-lib mode)\n", style="dim")
+        error_text.append("     - Remove 'libraries' array (multi-lib mode)\n", style="dim")
+        error_text.append("     - Remove 'resources' array (multi-lib mode)\n", style="dim")
         error_text.append("\n", style="")
         _add_repository_link(error_text)
         _print_error("Config Mismatch", error_text)
@@ -253,11 +278,23 @@ def error_parse_file(input_file: str, error: Exception) -> None:
         print(f"For more information, visit: {REPOSITORY_URL}")
 
 
-def error_no_keywords() -> None:
+def error_no_keywords(libdoc_error: Optional[str] = None) -> None:
     """Error: No keywords found in the library file."""
     if RICH_AVAILABLE:
         error_text = Text()
         error_text.append("No keywords found in the library file.\n\n", style="red")
+        if libdoc_error:
+            error_text.append(
+                "Robot Framework could not load this library for documentation "
+                "(dynamic / composed keyword libraries require a successful import):\n",
+                style="",
+            )
+            error_text.append(f"{libdoc_error}\n\n", style="yellow")
+            error_text.append(
+                "Install the library's dependencies and ensure the module is importable "
+                "(same environment you use to run tests), then retry.\n\n",
+                style="",
+            )
         error_text.append("Make sure to use the ", style="")
         error_text.append("@keyword", style="bold yellow")
         error_text.append(" decorator from ", style="")
@@ -280,6 +317,16 @@ def error_no_keywords() -> None:
         _print_error("No Keywords Found", error_text)
     else:
         print("Error: No keywords found in the library file.")
+        if libdoc_error:
+            print(
+                "Robot Framework could not load this library for documentation "
+                "(dynamic / composed keyword libraries require a successful import):"
+            )
+            print(libdoc_error)
+            print(
+                "Install the library's dependencies and ensure the module is importable "
+                "(same environment you use to run tests), then retry."
+            )
         print("Make sure to use the @keyword decorator from robot.api.deco to mark your functions as Robot Framework keywords.")
         print(f"For more information, visit: {REPOSITORY_URL}")
 

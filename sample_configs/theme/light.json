@@ -1,0 +1,15 @@
+{
+  "bg": "#f8fafc",
+  "bg_alt": "#ffffff",
+  "card": "#ffffff",
+  "border": "#e2e8f0",
+  "text": "#0f172a",
+  "muted": "#64748b",
+  "accent": "#0284c7",
+  "accent_soft": "rgba(2, 132, 199, 0.12)",
+  "badge_required": "#dc2626",
+  "badge_default": "#16a34a",
+  "arg_type": "#475569",
+  "code_bg": "#f1f5f9",
+  "code_inline_bg": "rgba(2, 132, 199, 0.1)"
+}

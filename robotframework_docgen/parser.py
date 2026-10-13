@@ -72,21 +72,56 @@ class KeywordInfo:
         'param_name': 'default_value_string'
     }
     """
+    parameter_docs: Dict[str, str] = field(default_factory=dict)
+    """HTML documentation snippets keyed by parameter name (Libdoc Argument.doc)."""
+    return_doc: str = ""
+    """HTML documentation for the keyword return value when available."""
+    tags: List[str] = field(default_factory=list)
+    """Robot Framework keyword tags from Libdoc when available."""
+    source: str = ""
+    """Filesystem path where this keyword is defined (Libdoc per-keyword source)."""
+
+
+@dataclass
+class InitInfo:
+    """Library constructor / import argument documentation."""
+
+    description: str = ""
+    parameters: List[Tuple[str, str]] = field(default_factory=list)
+    parameter_defaults: Dict[str, str] = field(default_factory=dict)
+    parameter_docs: Dict[str, str] = field(default_factory=dict)
+    parameter_enums: Dict[str, Dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass
 class LibraryInfo:
-    """Information about a Robot Framework library."""
+    """Information about a Robot Framework library or resource file."""
 
     name: str
     version: str
     scope: str
     description: str
     keywords: List[KeywordInfo]
+    source_type: str = "LIBRARY"
+    """Origin of the documented source: LIBRARY, RESOURCE, or SUITE."""
+    inits: List[InitInfo] = field(default_factory=list)
+    """Library import/constructor signatures derived from Libdoc inits when available."""
+    source: str = ""
+    """Filesystem path of the parsed library/resource file when known."""
 
 
 class RobotFrameworkDocParser:
     """Parser for Robot Framework library documentation."""
+
+    # Robot Framework resource / suite file extensions supported by Libdoc.
+    ROBOT_SOURCE_EXTENSIONS = {
+        ".resource",
+        ".robot",
+        ".txt",
+        ".tsv",
+        ".rst",
+        ".rest",
+    }
     
     # Standard Robot Framework libraries to load keywords from
     ROBOT_FRAMEWORK_LIBRARIES = [
@@ -154,8 +189,21 @@ class RobotFrameworkDocParser:
     def __init__(self, config: dict = None):
         self.library_info = None
         self._cached_keywords = None
+        # Keyword names known while docs are still being parsed (before
+        # library_info is assigned). Lets the highlighter match this library's
+        # keywords in intro/docstring ```robotframework``` fences.
+        self._pending_library_keywords: Optional[List[str]] = None
+        self._last_libdoc_error: Optional[str] = None
         self.config = config
         self._identifier_pattern = re.compile(r"\b[A-Za-z0-9]*_[A-Za-z0-9_]*\b")
+
+    def _set_pending_library_keywords(self, names: List[str]) -> None:
+        self._pending_library_keywords = list(names)
+        self._cached_keywords = None
+
+    def _clear_pending_library_keywords(self) -> None:
+        self._pending_library_keywords = None
+        self._cached_keywords = None
 
     def _function_name_to_keyword_name(self, function_name: str) -> str:
         """Convert function name to keyword name by removing underscores and title casing.
@@ -167,30 +215,448 @@ class RobotFrameworkDocParser:
         """
         return function_name.replace("_", " ").title()
 
+    @classmethod
+    def _is_robot_source_file(cls, file_path: str) -> bool:
+        """Return True when the path looks like a Robot Framework resource or suite file."""
+        return Path(file_path).suffix.lower() in cls.ROBOT_SOURCE_EXTENSIONS
+
     def parse_file(self, file_path: str) -> LibraryInfo:
         """
-        Parse a Python file and extract library information.
-        
-        Uses Robot Framework's LibraryDocumentation API where possible,
-        falling back to AST parsing for information not available via the API
-        (e.g., type hints, custom docstring processing).
-        """
-        # Try to use Robot Framework's LibraryDocumentation API first
-        library_info = self._parse_with_libdoc_api(file_path)
-        
-        if library_info is None:
-            # Fallback to AST parsing if LibraryDocumentation API doesn't work
-            with open(file_path, "r", encoding="utf-8") as file:
-                content = file.read()
+        Parse a Python library or Robot Framework resource/suite file.
 
-            tree = ast.parse(content)
-            module_globals = self._execute_module_safely(file_path)
-            library_info = self._extract_library_info(tree, file_path, module_globals)
-        
+        Uses Robot Framework's LibraryDocumentation API where possible,
+        falling back to AST parsing for Python libraries when the API cannot
+        be used (e.g., type hints, custom docstring processing).
+        """
+        if self._is_robot_source_file(file_path):
+            library_info = self._parse_robot_source_with_libdoc(file_path)
+        else:
+            # Try to use Robot Framework's LibraryDocumentation API first
+            library_info = self._parse_with_libdoc_api(file_path)
+
+            if library_info is None:
+                # Fallback to AST parsing if LibraryDocumentation API doesn't work
+                with open(file_path, "r", encoding="utf-8") as file:
+                    content = file.read()
+
+                tree = ast.parse(content)
+                module_globals = self._execute_module_safely(file_path)
+                library_info = self._extract_library_info(tree, file_path, module_globals)
+
+        if library_info is not None and not getattr(library_info, "source", None):
+            library_info.source = file_path
         self.library_info = library_info
         self._cached_keywords = None
         return library_info
+
+    @staticmethod
+    def _tags_from_libdoc_keyword(kw_doc) -> List[str]:
+        """Normalize Libdoc keyword tags to a list of strings."""
+        raw = getattr(kw_doc, "tags", None)
+        if not raw:
+            return []
+        try:
+            return [str(tag).strip() for tag in raw if str(tag).strip()]
+        except TypeError:
+            return []
+
+    @staticmethod
+    def _source_from_libdoc_keyword(kw_doc) -> str:
+        """Per-keyword source path from Libdoc (falls back to empty)."""
+        raw = getattr(kw_doc, "source", None)
+        if raw:
+            return str(raw)
+        try:
+            data = kw_doc.to_dictionary()
+        except Exception:
+            return ""
+        return str(data.get("source") or "") if isinstance(data, dict) else ""
+
+    def _parse_robot_source_with_libdoc(self, file_path: str) -> LibraryInfo:
+        """
+        Parse a .resource / .robot (or other Libdoc-supported) Robot source file.
+
+        These files must not fall through to Python AST parsing.
+        """
+        from robot.libdocpkg import LibraryDocumentation
+
+        path = Path(file_path)
+        if not path.is_file():
+            raise FileNotFoundError(f"Robot source file not found: {file_path}")
+
+        try:
+            lib_doc = LibraryDocumentation(str(path.resolve()))
+        except Exception as exc:
+            raise ValueError(
+                f"Failed to parse Robot Framework source '{file_path}': {exc}"
+            ) from exc
+
+        source_type = (getattr(lib_doc, "type", None) or "RESOURCE").upper()
+        if source_type not in {"LIBRARY", "RESOURCE", "SUITE"}:
+            source_type = "RESOURCE"
+
+        public_keyword_names = [
+            (kw_doc.name or "")
+            for kw_doc in lib_doc.keywords
+            if not getattr(kw_doc, "private", False)
+            and not (kw_doc.name or "").startswith("_")
+        ]
+        self._set_pending_library_keywords(public_keyword_names)
+        try:
+            keywords = []
+            for kw_doc in lib_doc.keywords:
+                # Skip private keywords (robot:private / Libdoc private flag) and
+                # underscore-prefixed helpers, which are conventionally private.
+                keyword_name = kw_doc.name or ""
+                if getattr(kw_doc, "private", False) or keyword_name.startswith("_"):
+                    continue
+
+                parameters, parameter_defaults, libdoc_return = self._parameters_from_libdoc_args(
+                    getattr(kw_doc, "args", None)
+                )
+                parameter_docs = self._parameter_docs_from_libdoc_object(kw_doc)
+                libdoc_return_type, return_doc = self._return_meta_from_libdoc_keyword(kw_doc)
+                description, example = self._parse_docstring(kw_doc.doc or "", self.config)
+                keywords.append(
+                    KeywordInfo(
+                        name=keyword_name,
+                        description=description,
+                        example=example,
+                        parameters=parameters,
+                        return_type=libdoc_return or libdoc_return_type or "None",
+                        line_number=getattr(kw_doc, "lineno", 0) or 0,
+                        parameter_defaults=parameter_defaults,
+                        parameter_docs=parameter_docs,
+                        return_doc=return_doc,
+                        tags=self._tags_from_libdoc_keyword(kw_doc),
+                        source=self._source_from_libdoc_keyword(kw_doc),
+                    )
+                )
+
+            description = self._normalize_library_description(lib_doc.doc or "")
+        finally:
+            self._clear_pending_library_keywords()
+
+        return LibraryInfo(
+            name=lib_doc.name or path.stem,
+            version=lib_doc.version or "",
+            scope=lib_doc.scope or "GLOBAL",
+            description=description,
+            keywords=keywords,
+            source_type=source_type,
+            inits=self._inits_from_libdoc(lib_doc),
+            source=str(path.resolve()),
+        )
     
+    @staticmethod
+    def _is_dynamic_library_class(cls: type) -> bool:
+        """Return True for DynamicCore / get_keyword_names-style library classes."""
+        for base in getattr(cls, "__mro__", ()):
+            if getattr(base, "__name__", "") in {
+                "DynamicCore",
+                "HybridCore",
+                "StaticCore",
+            }:
+                return True
+        get_names = getattr(cls, "get_keyword_names", None)
+        return callable(get_names)
+
+    @staticmethod
+    def _ast_base_name(base: ast.AST) -> str:
+        if isinstance(base, ast.Name):
+            return base.id
+        if isinstance(base, ast.Attribute):
+            return base.attr
+        return ""
+
+    def _runtime_library_class_score(self, cls: type) -> int:
+        """Prefer DynamicCore aggregators over leaf ``@keyword`` component classes."""
+        score = 0
+        if self._is_dynamic_library_class(cls):
+            score += 100
+        if not cls.__name__.startswith("_"):
+            score += 5
+        if hasattr(cls, "ROBOT_LIBRARY_SCOPE") or hasattr(cls, "ROBOT_LIBRARY_VERSION"):
+            score += 10
+        for name, member in vars(cls).items():
+            if name.startswith("_"):
+                continue
+            if callable(member) and hasattr(member, "robot_name"):
+                score += 1
+        return score
+
+    def _ast_library_class_score(self, class_node: ast.ClassDef) -> int:
+        """AST counterpart of :meth:`_runtime_library_class_score`."""
+        score = 0
+        if not class_node.name.startswith("_"):
+            score += 5
+        for base in class_node.bases:
+            if self._ast_base_name(base) in {"DynamicCore", "HybridCore", "StaticCore"}:
+                score += 100
+                break
+        for node in class_node.body:
+            if isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and target.id.startswith(
+                        "ROBOT_LIBRARY_"
+                    ):
+                        score += 10
+            if isinstance(node, ast.FunctionDef):
+                if node.name == "get_keyword_names":
+                    score += 50
+                for decorator in node.decorator_list:
+                    if isinstance(decorator, ast.Name) and decorator.id == "keyword":
+                        score += 1
+                    elif (
+                        isinstance(decorator, ast.Call)
+                        and isinstance(decorator.func, ast.Name)
+                        and decorator.func.id == "keyword"
+                    ):
+                        score += 1
+        return score
+
+    _NON_PACKAGE_DIR_NAMES = frozenset(
+        {
+            "",
+            "/",
+            "Users",
+            "home",
+            "tmp",
+            "var",
+            "private",
+            "Desktop",
+            "Documents",
+            "Downloads",
+            "Library",
+            "Applications",
+        }
+    )
+
+    def _ensure_library_import_paths(self, file_path: str) -> None:
+        """Put the library directory and package parents on ``sys.path``."""
+        import sys
+        import os
+
+        abs_path = Path(file_path).resolve()
+        candidates = [str(abs_path.parent), os.getcwd()]
+        current = abs_path.parent
+        seen_non_package = False
+        for _ in range(6):
+            if current.name in self._NON_PACKAGE_DIR_NAMES:
+                break
+            parent = current.parent
+            candidates.append(str(parent))
+            if parent == current:
+                break
+            has_init = (current / "__init__.py").exists()
+            if not has_init:
+                if seen_non_package:
+                    break
+                seen_non_package = True
+            current = parent
+
+        for directory in candidates:
+            if directory and directory not in sys.path:
+                sys.path.insert(0, directory)
+
+    def _module_name_candidates(self, file_path: str) -> List[str]:
+        """Build dotted import names from a file path (deepest package first)."""
+        abs_path = Path(file_path).resolve()
+        parts = [abs_path.stem]
+        names = [abs_path.stem]
+        current = abs_path.parent
+        seen_non_package = False
+        for _ in range(6):
+            if current.name in self._NON_PACKAGE_DIR_NAMES:
+                break
+            if current.parent == current:
+                break
+            parts.insert(0, current.name)
+            names.append(".".join(parts))
+            has_init = (current / "__init__.py").exists()
+            if not has_init:
+                # Allow one namespace-package level (e.g. ``sample_libs``).
+                if seen_non_package:
+                    break
+                seen_non_package = True
+            current = current.parent
+        # Prefer longer (more specific) package paths first.
+        return list(dict.fromkeys(reversed(names)))
+
+    def _import_library_module(
+        self, file_path: str
+    ) -> Tuple[Optional[Any], Optional[str]]:
+        """Import a library module, preferring package imports over file loads."""
+        import sys
+        import importlib
+        import importlib.util
+
+        self._ensure_library_import_paths(file_path)
+        abs_path = Path(file_path).resolve()
+
+        for module_name in self._module_name_candidates(file_path):
+            try:
+                if module_name in sys.modules:
+                    module = sys.modules[module_name]
+                else:
+                    module = importlib.import_module(module_name)
+                module_file = getattr(module, "__file__", None)
+                if module_file and Path(module_file).resolve() == abs_path:
+                    return module, module_name
+            except Exception:
+                continue
+
+        # Flat-file fallback when package imports are unavailable.
+        file_name = abs_path.stem
+        try:
+            spec = importlib.util.spec_from_file_location(file_name, str(abs_path))
+            if spec is None or spec.loader is None:
+                return None, None
+            module = importlib.util.module_from_spec(spec)
+            sys.modules[file_name] = module
+            spec.loader.exec_module(module)
+            return module, file_name
+        except Exception as exc:
+            self._last_libdoc_error = str(exc)
+            return None, None
+
+    def _candidate_library_classes(
+        self, module: Any, module_name: str
+    ) -> List[type]:
+        """Return library classes defined in ``module``, highest score first."""
+        classes: List[type] = []
+        for attr_name in dir(module):
+            if attr_name.startswith("_"):
+                continue
+            try:
+                attr = getattr(module, attr_name)
+            except Exception:
+                continue
+            if not isinstance(attr, type):
+                continue
+            if getattr(attr, "__module__", None) not in {module_name, module.__name__}:
+                continue
+            if self._runtime_library_class_score(attr) <= 0 and not self._is_dynamic_library_class(
+                attr
+            ):
+                # Skip unrelated imported types with no RF signals.
+                has_robot_keyword = any(
+                    callable(getattr(attr, name, None))
+                    and hasattr(getattr(attr, name, None), "robot_name")
+                    for name in dir(attr)
+                )
+                if not has_robot_keyword:
+                    continue
+            classes.append(attr)
+        classes.sort(key=self._runtime_library_class_score, reverse=True)
+        return classes
+
+    def _init_arg_placeholders(self, cls: type) -> List[str]:
+        """Build Libdoc ``::`` placeholders for required ``__init__`` arguments."""
+        import inspect
+
+        try:
+            signature = inspect.signature(cls.__init__)
+        except (TypeError, ValueError):
+            return []
+
+        placeholders: List[str] = []
+        for name, param in signature.parameters.items():
+            if name == "self":
+                continue
+            if param.kind in (
+                inspect.Parameter.VAR_POSITIONAL,
+                inspect.Parameter.VAR_KEYWORD,
+            ):
+                continue
+            if param.default is not inspect.Parameter.empty:
+                continue
+
+            annotation = param.annotation
+            ann_name = ""
+            if annotation is not inspect.Parameter.empty:
+                ann_name = getattr(annotation, "__name__", str(annotation)).lower()
+
+            lowered = name.lower()
+            if "url" in lowered or "uri" in lowered:
+                placeholders.append("http://example.invalid")
+            elif ann_name in {"int", "float"}:
+                placeholders.append("0")
+            elif ann_name == "bool":
+                placeholders.append("False")
+            else:
+                placeholders.append("placeholder")
+        return placeholders
+
+    def _libdoc_targets_for_class(self, module_name: str, cls: type) -> List[str]:
+        """Libdoc import targets for a class, with init-arg placeholders when needed."""
+        base = f"{module_name}.{cls.__name__}"
+        placeholders = self._init_arg_placeholders(cls)
+        targets = []
+        if placeholders:
+            targets.append(f"{base}::{'::'.join(placeholders)}")
+        targets.append(base)
+        return targets
+
+    def _library_documentation_from_path(self, file_path: str):
+        """
+        Resolve LibraryDocumentation for a Python library file.
+
+        File-path Libdoc often returns zero keywords for DynamicCore aggregators
+        (especially package modules). Prefer class-qualified targets and supply
+        ``::`` init placeholders when the constructor requires arguments.
+        """
+        from robot.libdocpkg import LibraryDocumentation
+
+        self._ensure_library_import_paths(file_path)
+        errors: List[str] = []
+        best = None
+        best_score = -1
+
+        def consider(target: str) -> None:
+            nonlocal best, best_score
+            try:
+                doc = LibraryDocumentation(target)
+            except Exception as exc:
+                errors.append(f"{target}: {exc}")
+                return
+            score = len(getattr(doc, "keywords", []) or [])
+            # Prefer a target that actually exposes keywords.
+            if score > best_score:
+                best = doc
+                best_score = score
+
+        consider(str(Path(file_path).resolve()))
+        consider(file_path)
+
+        # Always attempt class-qualified resolution when file-path Libdoc is empty
+        # or failed — this is the DynamicCore / required-init fix for issue #7.
+        if best is None or best_score == 0:
+            module, module_name = self._import_library_module(file_path)
+            if module is not None and module_name:
+                classes = self._candidate_library_classes(module, module_name)
+                # Prefer DynamicCore / get_keyword_names aggregators. Trying leaf
+                # ``@keyword`` component classes first produces the wrong library
+                # when the aggregator fails to initialize (GitHub issue #7).
+                dynamic_classes = [
+                    cls for cls in classes if self._is_dynamic_library_class(cls)
+                ]
+                to_try = dynamic_classes if dynamic_classes else classes
+                for cls in to_try:
+                    for target in self._libdoc_targets_for_class(module_name, cls):
+                        consider(target)
+                    if best_score > 0:
+                        break
+
+        if errors and (best is None or best_score == 0):
+            self._last_libdoc_error = errors[-1]
+        elif best is not None and best_score > 0:
+            self._last_libdoc_error = None
+
+        if best is None or best_score == 0:
+            return None
+        return best
+
     def _parse_with_libdoc_api(self, file_path: str) -> Optional[LibraryInfo]:
         """
         Parse library using Robot Framework's LibraryDocumentation API.
@@ -202,217 +668,228 @@ class RobotFrameworkDocParser:
         If the library cannot be imported or LibraryDocumentation fails,
         this returns None and the code falls back to AST parsing.
         """
+        self._last_libdoc_error = None
         try:
-            from robot.libdocpkg import LibraryDocumentation
             import sys
-            import os
             import importlib.util
-            
-            # Make the library importable by adding its directory to sys.path
-            file_dir = os.path.dirname(os.path.abspath(file_path))
+
             file_name = Path(file_path).stem
-            
-            if file_dir not in sys.path:
-                sys.path.insert(0, file_dir)
-            
-            # Try to use LibraryDocumentation with file path first
-            try:
-                lib_doc = LibraryDocumentation(file_path)
-            except Exception:
-                # If file path doesn't work, try importing as module
-                # This is needed because LibraryDocumentation may require importable modules
-                spec = importlib.util.spec_from_file_location(file_name, file_path)
-                if spec is None or spec.loader is None:
-                    return None
-                module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(module)
-                
-                # Find the library class in the module
-                library_class = None
-                for attr_name in dir(module):
-                    if not attr_name.startswith("_"):
-                        attr = getattr(module, attr_name)
-                        if (isinstance(attr, type) and 
-                            hasattr(attr, '__module__') and
-                            attr.__module__ == file_name):
-                            # Check if it has @keyword decorated methods
-                            for method_name in dir(attr):
-                                method = getattr(attr, method_name, None)
-                                if callable(method) and hasattr(method, 'robot_name'):
-                                    library_class = attr
-                                    break
-                            if library_class:
-                                break
-                
-                if library_class is None:
-                    return None
-                
-                # Use module name for LibraryDocumentation
-                lib_doc = LibraryDocumentation(f"{file_name}.{library_class.__name__}")
-            
+            lib_doc = self._library_documentation_from_path(file_path)
+            if lib_doc is None:
+                return None
+
             # Extract library metadata from LibraryDocumentation (using public API)
             library_name = lib_doc.name
-            library_version = lib_doc.version or "Unknown"
+            library_version = lib_doc.version or ""
             library_scope = lib_doc.scope or "TEST"
-            library_description = lib_doc.doc or ""
-            
+
             # If no keywords found via API, fall back to AST parsing
             # This can happen if the library structure doesn't match what LibraryDocumentation expects
             if len(lib_doc.keywords) == 0:
                 return None
-            
-            # Extract keywords from LibraryDocumentation
-            keywords = []
-            # We still need AST for type hints (not available in LibraryDocumentation API)
-            with open(file_path, "r", encoding="utf-8") as file:
-                content = file.read()
-            tree = ast.parse(content)
-            
-            # Get module globals for type resolution
-            # Try to get the module that was already loaded for LibraryDocumentation
-            module_globals = {}
+
+            # Make this library's keyword names available to the highlighter while
+            # rendering the intro and keyword docstrings (library_info is set later).
+            self._set_pending_library_keywords(
+                [kw.name for kw in lib_doc.keywords if kw.name]
+            )
             try:
-                # First, try to get the module from sys.modules if it was loaded
-                module_name = file_name
-                if module_name in sys.modules:
-                    loaded_module = sys.modules[module_name]
-                    module_globals = {name: getattr(loaded_module, name) for name in dir(loaded_module) if not name.startswith("_")}
-                else:
-                    # Fallback: load the module ourselves
-                    spec = importlib.util.spec_from_file_location(file_name, file_path)
-                    if spec and spec.loader:
-                        temp_module = importlib.util.module_from_spec(spec)
-                        spec.loader.exec_module(temp_module)
-                        module_globals = {name: getattr(temp_module, name) for name in dir(temp_module) if not name.startswith("_")}
-            except Exception:
-                pass
-            
-            # Map keyword names from LibraryDocumentation to AST nodes for type hints
-            keyword_ast_map = self._build_keyword_ast_map(tree)
-            
-            for kw_doc in lib_doc.keywords:
-                keyword_name = kw_doc.name
-                keyword_docstring = kw_doc.doc or ""
+                library_description = self._normalize_library_description(
+                    lib_doc.doc or ""
+                )
+
+                # Extract keywords from LibraryDocumentation
+                keywords = []
+                # We still need AST for type hints (not available in LibraryDocumentation API)
+                with open(file_path, "r", encoding="utf-8") as file:
+                    content = file.read()
+                tree = ast.parse(content)
+
+                # Get module globals for type resolution
+                # Try to get the module that was already loaded for LibraryDocumentation
+                module_globals = {}
+                try:
+                    module, module_name = self._import_library_module(file_path)
+                    if module is not None:
+                        module_globals = {
+                            name: getattr(module, name)
+                            for name in dir(module)
+                            if not name.startswith("_")
+                        }
+                    elif file_name in sys.modules:
+                        loaded_module = sys.modules[file_name]
+                        module_globals = {
+                            name: getattr(loaded_module, name)
+                            for name in dir(loaded_module)
+                            if not name.startswith("_")
+                        }
+                    else:
+                        spec = importlib.util.spec_from_file_location(file_name, file_path)
+                        if spec and spec.loader:
+                            temp_module = importlib.util.module_from_spec(spec)
+                            spec.loader.exec_module(temp_module)
+                            module_globals = {
+                                name: getattr(temp_module, name)
+                                for name in dir(temp_module)
+                                if not name.startswith("_")
+                            }
+                except Exception:
+                    pass
+
+                # Map keyword names from LibraryDocumentation to AST nodes for type hints
+                keyword_ast_map = self._build_keyword_ast_map(tree)
+
+                for kw_doc in lib_doc.keywords:
+                    keyword_name = kw_doc.name
+                    keyword_docstring = kw_doc.doc or ""
                 
-                # Get type hints from AST (not available in LibraryDocumentation API)
-                # NOTE: LibraryDocumentation provides kw_doc.args but not type annotations
-                parameters = []
-                parameter_enums = {}
-                return_type = "None"
-                line_number = kw_doc.lineno if hasattr(kw_doc, 'lineno') else 0
-                
-                if keyword_name in keyword_ast_map:
-                    func_node = keyword_ast_map[keyword_name]
+                    # Get type hints from AST (not available in LibraryDocumentation API)
+                    # NOTE: LibraryDocumentation provides kw_doc.args but not type annotations
+                    parameters = []
+                    parameter_enums = {}
                     parameter_defaults = {}
+                    return_type = "None"
+                    line_number = kw_doc.lineno if hasattr(kw_doc, 'lineno') else 0
+                
+                    if keyword_name in keyword_ast_map:
+                        func_node = keyword_ast_map[keyword_name]
                     
-                    # Handle regular positional arguments
-                    for arg_index, arg in enumerate(func_node.args.args):
-                        if arg.arg == "self":
-                            continue
-                        param_name = arg.arg
-                        param_type = (
-                            self._ast_type_to_string(arg.annotation) if arg.annotation else "Any"
-                        )
-                        parameters.append((param_name, param_type))
-                        
-                        # Extract default value for all parameters
-                        default_value = self._get_default_value_from_ast(func_node, arg_index)
-                        if default_value is not None:
-                            default_str = self._extract_default_value(default_value)
-                            if default_str:
-                                parameter_defaults[param_name] = default_str
-                        
-                        # Check if this parameter is an Enum type
-                        if arg.annotation:
-                            enum_class = self._resolve_ast_type_to_class(arg.annotation, module_globals)
-                            if enum_class and issubclass(enum_class, enum.Enum):
-                                enum_info = self._extract_enum_info(enum_class, default_value)
-                                if enum_info:
-                                    parameter_enums[param_name] = enum_info
-                    
-                    # Handle *args (variadic arguments)
-                    if func_node.args.vararg:
-                        vararg = func_node.args.vararg
-                        param_name = f"*{vararg.arg}"
-                        param_type = (
-                            self._ast_type_to_string(vararg.annotation) if vararg.annotation else "Any"
-                        )
-                        parameters.append((param_name, param_type))
-                        
-                        # Check if variadic argument is an Enum type
-                        if vararg.annotation:
-                            enum_class = self._resolve_ast_type_to_class(vararg.annotation, module_globals)
-                            if enum_class and issubclass(enum_class, enum.Enum):
-                                enum_info = self._extract_enum_info(enum_class, None)
-                                if enum_info:
-                                    parameter_enums[param_name] = enum_info
-                    
-                    # Handle keyword-only arguments (after *args or *)
-                    if func_node.args.kwonlyargs:
-                        kw_defaults = func_node.args.kw_defaults or []
-                        for kw_index, kw_arg in enumerate(func_node.args.kwonlyargs):
-                            param_name = kw_arg.arg
+                        # Handle regular positional arguments
+                        for arg_index, arg in enumerate(func_node.args.args):
+                            if arg.arg == "self":
+                                continue
+                            param_name = arg.arg
                             param_type = (
-                                self._ast_type_to_string(kw_arg.annotation) if kw_arg.annotation else "Any"
+                                self._ast_type_to_string(arg.annotation) if arg.annotation else "Any"
                             )
                             parameters.append((param_name, param_type))
-                            
-                            # Extract default value for keyword-only arguments
-                            if kw_index < len(kw_defaults) and kw_defaults[kw_index] is not None:
-                                default_value = kw_defaults[kw_index]
+                        
+                            # Extract default value for all parameters
+                            default_value = self._get_default_value_from_ast(func_node, arg_index)
+                            if default_value is not None:
                                 default_str = self._extract_default_value(default_value)
                                 if default_str:
                                     parameter_defaults[param_name] = default_str
-                            
-                            # Check if this keyword-only parameter is an Enum type
-                            if kw_arg.annotation:
-                                enum_class = self._resolve_ast_type_to_class(kw_arg.annotation, module_globals)
+                        
+                            # Check if this parameter is an Enum type
+                            if arg.annotation:
+                                enum_class = self._resolve_ast_type_to_class(arg.annotation, module_globals)
                                 if enum_class and issubclass(enum_class, enum.Enum):
-                                    default_value = None
-                                    if kw_index < len(kw_defaults) and kw_defaults[kw_index] is not None:
-                                        default_value = kw_defaults[kw_index]
                                     enum_info = self._extract_enum_info(enum_class, default_value)
                                     if enum_info:
                                         parameter_enums[param_name] = enum_info
                     
-                    if func_node.returns:
-                        return_type = self._ast_type_to_string(func_node.returns)
-                else:
-                    # Fallback: use args from LibraryDocumentation if AST mapping fails
-                    # LibraryDocumentation provides kw_doc.args as a list of argument names
-                    if hasattr(kw_doc, 'args') and kw_doc.args:
-                        for arg_name in kw_doc.args:
-                            parameters.append((arg_name, "Any"))
-                
-                # Parse docstring with our custom markdown processing
-                # NOTE: We preserve our custom docstring parsing for markdown support
-                description, example = self._parse_docstring(keyword_docstring, self.config)
-                
-                keywords.append(
-                    KeywordInfo(
-                        name=keyword_name,
-                        description=description,
-                        example=example,
-                        parameters=parameters,
-                        return_type=return_type,
-                        line_number=line_number,
-                        parameter_enums=parameter_enums,
-                        parameter_defaults=parameter_defaults,
+                        # Handle *args (variadic arguments)
+                        if func_node.args.vararg:
+                            vararg = func_node.args.vararg
+                            param_name = f"*{vararg.arg}"
+                            param_type = (
+                                self._ast_type_to_string(vararg.annotation) if vararg.annotation else "Any"
+                            )
+                            parameters.append((param_name, param_type))
+                        
+                            # Check if variadic argument is an Enum type
+                            if vararg.annotation:
+                                enum_class = self._resolve_ast_type_to_class(vararg.annotation, module_globals)
+                                if enum_class and issubclass(enum_class, enum.Enum):
+                                    enum_info = self._extract_enum_info(enum_class, None)
+                                    if enum_info:
+                                        parameter_enums[param_name] = enum_info
+                    
+                        # Handle keyword-only arguments (after *args or *)
+                        if func_node.args.kwonlyargs:
+                            kw_defaults = func_node.args.kw_defaults or []
+                            for kw_index, kw_arg in enumerate(func_node.args.kwonlyargs):
+                                param_name = kw_arg.arg
+                                param_type = (
+                                    self._ast_type_to_string(kw_arg.annotation) if kw_arg.annotation else "Any"
+                                )
+                                parameters.append((param_name, param_type))
+                            
+                                # Extract default value for keyword-only arguments
+                                if kw_index < len(kw_defaults) and kw_defaults[kw_index] is not None:
+                                    default_value = kw_defaults[kw_index]
+                                    default_str = self._extract_default_value(default_value)
+                                    if default_str:
+                                        parameter_defaults[param_name] = default_str
+                            
+                                # Check if this keyword-only parameter is an Enum type
+                                if kw_arg.annotation:
+                                    enum_class = self._resolve_ast_type_to_class(kw_arg.annotation, module_globals)
+                                    if enum_class and issubclass(enum_class, enum.Enum):
+                                        default_value = None
+                                        if kw_index < len(kw_defaults) and kw_defaults[kw_index] is not None:
+                                            default_value = kw_defaults[kw_index]
+                                        enum_info = self._extract_enum_info(enum_class, default_value)
+                                        if enum_info:
+                                            parameter_enums[param_name] = enum_info
+                    
+                        if func_node.returns:
+                            return_type = self._ast_type_to_string(func_node.returns)
+                    else:
+                        # Keyword is not in the AST map (auto keywords, camelCase names,
+                        # or module-level keywords). Read arguments from Libdoc instead of
+                        # aborting the whole library parse.
+                        parameters, parameter_defaults, libdoc_return = (
+                            self._parameters_from_libdoc_args(getattr(kw_doc, "args", None))
+                        )
+                        if libdoc_return:
+                            return_type = libdoc_return
+
+                    parameter_docs = self._parameter_docs_from_libdoc_object(kw_doc)
+                    libdoc_return_type, return_doc = self._return_meta_from_libdoc_keyword(
+                        kw_doc
                     )
+                    if (not return_type or return_type == "None") and libdoc_return_type:
+                        return_type = libdoc_return_type
+                
+                    # Parse docstring with our custom markdown processing
+                    # NOTE: We preserve our custom docstring parsing for markdown support
+                    description, example = self._parse_docstring(keyword_docstring, self.config)
+                
+                    keywords.append(
+                        KeywordInfo(
+                            name=keyword_name,
+                            description=description,
+                            example=example,
+                            parameters=parameters,
+                            return_type=return_type,
+                            line_number=line_number,
+                            parameter_enums=parameter_enums,
+                            parameter_defaults=parameter_defaults,
+                            parameter_docs=parameter_docs,
+                            return_doc=return_doc,
+                            tags=self._tags_from_libdoc_keyword(kw_doc),
+                            source=self._source_from_libdoc_keyword(kw_doc),
+                        )
+                    )
+            
+                # Prefer a clean class name over dotted Libdoc import paths.
+                display_name = library_name
+                if "." in (library_name or ""):
+                    display_name = library_name.rsplit(".", 1)[-1]
+
+                return LibraryInfo(
+                    name=display_name,
+                    version=library_version,
+                    scope=library_scope,
+                    description=library_description,
+                    keywords=keywords,
+                    source_type="LIBRARY",
+                    inits=self._inits_from_libdoc(
+                        lib_doc, tree=tree, module_globals=module_globals
+                    ),
+                    source=file_path,
                 )
+            finally:
+                self._clear_pending_library_keywords()
+
             
-            return LibraryInfo(
-                name=library_name,
-                version=library_version,
-                scope=library_scope,
-                description=library_description,
-                keywords=keywords,
-            )
-            
-        except Exception:
+        except Exception as exc:
             # LibraryDocumentation API failed, will fall back to AST parsing
             # This is expected for some edge cases (e.g., non-importable modules, 
             # libraries that don't follow standard RF patterns)
+            self._last_libdoc_error = str(exc)
             return None
     
     def _build_keyword_ast_map(self, tree: ast.AST) -> dict:
@@ -429,7 +906,7 @@ class RobotFrameworkDocParser:
                         keyword_name = None
                         for decorator in class_node.decorator_list:
                             if isinstance(decorator, ast.Name) and decorator.id == "keyword":
-                                keyword_name = self._function_name_to_keyword_name(class_node.name)
+                                keyword_name = self._robot_keyword_name(class_node.name)
                             elif isinstance(decorator, ast.Call) and isinstance(
                                 decorator.func, ast.Name
                             ):
@@ -437,7 +914,7 @@ class RobotFrameworkDocParser:
                                     if decorator.args and isinstance(decorator.args[0], ast.Constant):
                                         keyword_name = decorator.args[0].value
                                     else:
-                                        keyword_name = self._function_name_to_keyword_name(
+                                        keyword_name = self._robot_keyword_name(
                                             class_node.name
                                         )
                         
@@ -445,6 +922,229 @@ class RobotFrameworkDocParser:
                             keyword_map[keyword_name] = class_node
         
         return keyword_map
+
+    def _robot_keyword_name(self, function_name: str) -> str:
+        """Return the keyword name Robot Framework derives from a function name."""
+        try:
+            from robot.utils import printable_name
+
+            return printable_name(function_name, code_style=True)
+        except Exception:
+            return self._function_name_to_keyword_name(function_name)
+
+    def _parameters_from_libdoc_args(self, args) -> Tuple[List[Tuple[str, str]], Dict[str, str], str]:
+        """Convert a Libdoc ArgumentSpec (or legacy argument list) into parameter metadata.
+
+        Returns (parameters, defaults, return_type). return_type is empty when Libdoc
+        does not report one.
+        """
+        parameters: List[Tuple[str, str]] = []
+        defaults: Dict[str, str] = {}
+        if args is None:
+            return parameters, defaults, ""
+
+        # An ArgumentSpec with no parameters is falsy, but it can still carry
+        # a return type. Read that before treating an empty spec as "no args".
+        return_type = ""
+        return_info = getattr(args, "return_type", None)
+        if return_info:
+            return_type = str(return_info)
+
+        if not args:
+            return parameters, defaults, return_type
+
+        for arg in args:
+            if isinstance(arg, str):
+                parameters.append((arg, ""))
+                continue
+            if getattr(arg, "is_marker", False):
+                continue
+
+            name = getattr(arg, "name", "") or ""
+            if not name:
+                continue
+
+            kind = getattr(arg, "kind", "")
+            if kind == "VAR_POSITIONAL":
+                name = f"*{name}"
+            elif kind == "VAR_NAMED":
+                name = f"**{name}"
+
+            type_info = getattr(arg, "type", None)
+            param_type = str(type_info) if type_info else ""
+            parameters.append((name, param_type))
+
+            default_repr = getattr(arg, "default_repr", None)
+            if default_repr:
+                defaults[name] = default_repr
+
+        return parameters, defaults, return_type
+
+    def _normalize_short_doc(self, text: str) -> str:
+        """Render short Arg/Returns/Import docs to HTML without double-processing."""
+        if not text:
+            return ""
+        if self._looks_like_html_fragment(text):
+            return text
+        rendered, _ = self._parse_docstring(text, self.config)
+        return rendered
+
+    def _parameter_docs_from_libdoc_args(self, args) -> Dict[str, str]:
+        """Extract per-argument documentation from a Libdoc ArgumentSpec."""
+        docs: Dict[str, str] = {}
+        if not args:
+            return docs
+        for arg in args:
+            if isinstance(arg, str) or getattr(arg, "is_marker", False):
+                continue
+            name = getattr(arg, "name", "") or ""
+            if not name:
+                continue
+            kind = getattr(arg, "kind", "")
+            if kind == "VAR_POSITIONAL":
+                name = f"*{name}"
+            elif kind == "VAR_NAMED":
+                name = f"**{name}"
+            doc = getattr(arg, "doc", None) or ""
+            if doc:
+                docs[name] = self._normalize_short_doc(str(doc))
+        return docs
+
+    def _parameter_docs_from_libdoc_object(self, libdoc_obj) -> Dict[str, str]:
+        """Extract argument docs from a KeywordDoc/InitDoc (RF 7.5+ includes ``doc``)."""
+        docs: Dict[str, str] = {}
+        try:
+            data = libdoc_obj.to_dictionary()
+        except Exception:
+            data = {}
+        for arg in data.get("args") or []:
+            if not isinstance(arg, dict):
+                continue
+            name = (arg.get("name") or "").strip()
+            if not name:
+                continue
+            kind = arg.get("kind") or ""
+            if kind == "VAR_POSITIONAL":
+                name = f"*{name}"
+            elif kind == "VAR_NAMED":
+                name = f"**{name}"
+            doc = (arg.get("doc") or "").strip()
+            if doc:
+                docs[name] = self._normalize_short_doc(doc)
+        if docs:
+            return docs
+        return self._parameter_docs_from_libdoc_args(getattr(libdoc_obj, "args", None))
+
+    def _return_meta_from_libdoc_keyword(self, kw_doc) -> Tuple[str, str]:
+        """Return ``(return_type, return_doc_html)`` from a Libdoc KeywordDoc."""
+        return_type = ""
+        return_doc = ""
+        try:
+            data = kw_doc.to_dictionary()
+        except Exception:
+            data = {}
+
+        if data:
+            rt = data.get("returnType")
+            if isinstance(rt, dict):
+                return_type = (rt.get("name") or "").strip()
+            elif rt:
+                return_type = str(rt).strip()
+            return_doc = (data.get("returnDoc") or "").strip()
+        else:
+            args = getattr(kw_doc, "args", None)
+            return_info = getattr(args, "return_type", None) if args is not None else None
+            if return_info:
+                return_type = str(return_info).strip()
+
+        if return_doc:
+            return_doc = self._normalize_short_doc(return_doc)
+        return return_type, return_doc
+
+    def _inits_from_libdoc(
+        self,
+        lib_doc,
+        tree: Optional[ast.AST] = None,
+        module_globals: Optional[dict] = None,
+    ) -> List[InitInfo]:
+        """Build InitInfo entries from Libdoc library ``inits``."""
+        init_enums: Dict[str, Dict[str, Any]] = {}
+        init_params_from_ast: List[Tuple[str, str]] = []
+        init_defaults_from_ast: Dict[str, str] = {}
+        if tree is not None:
+            init_params_from_ast, init_defaults_from_ast, init_enums = (
+                self._extract_init_signature_from_ast(tree, module_globals or {})
+            )
+
+        inits: List[InitInfo] = []
+        for init in getattr(lib_doc, "inits", None) or []:
+            parameters, parameter_defaults, _ = self._parameters_from_libdoc_args(
+                getattr(init, "args", None)
+            )
+            # Prefer AST types/defaults when Libdoc omits annotations.
+            if init_params_from_ast:
+                parameters = init_params_from_ast
+            if init_defaults_from_ast:
+                parameter_defaults = {**parameter_defaults, **init_defaults_from_ast}
+            parameter_docs = self._parameter_docs_from_libdoc_object(init)
+            description = self._normalize_short_doc(getattr(init, "doc", None) or "")
+            inits.append(
+                InitInfo(
+                    description=description,
+                    parameters=parameters,
+                    parameter_defaults=parameter_defaults,
+                    parameter_docs=parameter_docs,
+                    parameter_enums=dict(init_enums),
+                )
+            )
+        return inits
+
+    def _extract_init_signature_from_ast(
+        self, tree: ast.AST, module_globals: dict
+    ) -> Tuple[List[Tuple[str, str]], Dict[str, str], Dict[str, Dict[str, Any]]]:
+        """Return ``(parameters, defaults, enums)`` for the library ``__init__``."""
+        parameters: List[Tuple[str, str]] = []
+        parameter_defaults: Dict[str, str] = {}
+        parameter_enums: Dict[str, Dict[str, Any]] = {}
+
+        init_node: Optional[ast.FunctionDef] = None
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef) and self._is_robot_library_class(node):
+                for child in node.body:
+                    if isinstance(child, ast.FunctionDef) and child.name == "__init__":
+                        init_node = child
+                        break
+            if init_node is not None:
+                break
+
+        if init_node is None:
+            return parameters, parameter_defaults, parameter_enums
+
+        for arg_index, arg in enumerate(init_node.args.args):
+            if arg.arg == "self":
+                continue
+            param_name = arg.arg
+            param_type = (
+                self._ast_type_to_string(arg.annotation) if arg.annotation else "Any"
+            )
+            parameters.append((param_name, param_type))
+
+            default_value = self._get_default_value_from_ast(init_node, arg_index)
+            if default_value is not None:
+                default_str = self._extract_default_value(default_value)
+                if default_str:
+                    parameter_defaults[param_name] = default_str
+
+            if arg.annotation:
+                enum_class = self._resolve_ast_type_to_class(
+                    arg.annotation, module_globals
+                )
+                if enum_class and issubclass(enum_class, enum.Enum):
+                    enum_info = self._extract_enum_info(enum_class, default_value)
+                    if enum_info:
+                        parameter_enums[param_name] = enum_info
+
+        return parameters, parameter_defaults, parameter_enums
 
     def _execute_module_safely(self, file_path: str) -> dict:
         """Safely execute the module to get actual values."""
@@ -663,21 +1363,27 @@ class RobotFrameworkDocParser:
 
         module_vars.update(module_globals)
 
-        for node in ast.walk(tree):
-            if isinstance(node, ast.ClassDef):
-                if self._is_robot_library_class(node):
-                    return self._parse_library_class(node, module_vars)
+        library_classes = [
+            node
+            for node in tree.body
+            if isinstance(node, ast.ClassDef) and self._is_robot_library_class(node)
+        ]
+        if library_classes:
+            library_classes.sort(key=self._ast_library_class_score, reverse=True)
+            return self._parse_library_class(library_classes[0], module_vars)
 
         filename = Path(file_path).stem
         return LibraryInfo(
             name=filename,
             version=self._get_module_attribute(
-                "ROBOT_LIBRARY_VERSION", module_vars, "Unknown"
+                "ROBOT_LIBRARY_VERSION", module_vars, ""
             ),
             scope=self._get_module_attribute(
                 "ROBOT_LIBRARY_SCOPE", module_vars, "TEST"
             ),
-            description=self._get_module_docstring(tree),
+            description=self._normalize_library_description(
+                self._get_module_docstring(tree)
+            ),
             keywords=self._extract_module_keywords(tree),
         )
 
@@ -702,8 +1408,18 @@ class RobotFrameworkDocParser:
 
     def _is_robot_library_class(self, class_node: ast.ClassDef) -> bool:
         """Check if a class is a Robot Framework library."""
+        for base in class_node.bases:
+            if self._ast_base_name(base) in {
+                "DynamicCore",
+                "HybridCore",
+                "StaticCore",
+            }:
+                return True
+
         for node in class_node.body:
             if isinstance(node, ast.FunctionDef):
+                if node.name == "get_keyword_names":
+                    return True
                 for decorator in node.decorator_list:
                     if isinstance(decorator, ast.Name) and decorator.id == "keyword":
                         return True
@@ -729,7 +1445,7 @@ class RobotFrameworkDocParser:
             module_vars = {}
 
         version = self._get_class_attribute(
-            class_node, "ROBOT_LIBRARY_VERSION", "Unknown", module_vars
+            class_node, "ROBOT_LIBRARY_VERSION", "", module_vars
         )
         scope = self._get_class_attribute(
             class_node, "ROBOT_LIBRARY_SCOPE", "TEST", module_vars
@@ -740,7 +1456,9 @@ class RobotFrameworkDocParser:
         if scope in module_vars:
             scope = module_vars[scope]
 
-        description = self._get_class_docstring(class_node)
+        description = self._normalize_library_description(
+            self._get_class_docstring(class_node)
+        )
 
         keyword_data = []
         for node in class_node.body:
@@ -871,12 +1589,32 @@ class RobotFrameworkDocParser:
                 )
             )
 
+        init_params, init_defaults, init_enums = self._extract_init_signature_from_ast(
+            class_node, module_vars
+        )
+        init_doc = ""
+        for child in class_node.body:
+            if isinstance(child, ast.FunctionDef) and child.name == "__init__":
+                init_doc = self._normalize_short_doc(ast.get_docstring(child) or "")
+                break
+        inits: List[InitInfo] = []
+        if init_params or init_doc:
+            inits.append(
+                InitInfo(
+                    description=init_doc,
+                    parameters=init_params,
+                    parameter_defaults=init_defaults,
+                    parameter_enums=init_enums,
+                )
+            )
+
         library_info = LibraryInfo(
             name=class_node.name,
             version=version,
             scope=scope,
             description=description,
             keywords=keywords,
+            inits=inits,
         )
         self.library_info = library_info
         self._cached_keywords = None
@@ -1047,16 +1785,151 @@ class RobotFrameworkDocParser:
             line_number=func_node.lineno,
         )
 
+    @staticmethod
+    def _markdown_block_kind(stripped: str) -> Optional[str]:
+        """Classify a line as a markdown block marker, or None for prose."""
+        if stripped.startswith("|"):
+            return "table"
+        # Require a space after *, -, + so **bold** headings stay prose.
+        if re.match(r"^[-*+]\s", stripped):
+            return "list-ul"
+        if re.match(r"^\d+\.\s", stripped):
+            return "list-ol"
+        if stripped.startswith("!!!"):
+            return "admonition"
+        # Definition-list values (`:   definition`) and footnote defs stay blocks.
+        if re.match(r"^:\s", stripped) or re.match(r"^\[\^[^\]]+\]:", stripped):
+            return "deflist"
+        if stripped.startswith("#"):
+            return "heading"
+        if stripped.startswith(">"):
+            return "quote"
+        if re.match(r"^(-{3,}|\*{3,}|_{3,})$", stripped):
+            return "hr"
+        if re.match(r"^(Arguments|Returns|Examples?)\s*:?\s*$", stripped, re.I):
+            return "label"
+        return None
+
+    @staticmethod
+    def _markdown_block_compatible(prev_kind: Optional[str], kind: str) -> bool:
+        """Whether two block kinds may sit adjacent without a blank line."""
+        if prev_kind == kind:
+            return True
+        # Nested ul/ol under the same list section can stay tight when indented;
+        # switching ul ↔ ol at the same level still needs a blank line.
+        if {prev_kind, kind} <= {"list-ul", "list-ol"}:
+            return False
+        return False
+
+    def _join_soft_wrapped_lines(self, text: str) -> str:
+        """Join soft-wrapped RF doc lines into paragraphs.
+
+        Blank lines and list/code/table markers still start new blocks.
+        Lines inside fenced code blocks (``` ... ```) are left untouched so
+        indentation, blank lines, and statement boundaries stay intact.
+
+        Python-Markdown needs a blank line before tables and lists; insert one
+        when a block marker follows prose or a different block kind.
+        """
+        if not text:
+            return ""
+
+        lines = textwrap.dedent(text).splitlines()
+        out: List[str] = []
+        buffer: List[str] = []
+        in_fence = False
+
+        def flush() -> None:
+            if buffer:
+                out.append(" ".join(buffer))
+                buffer.clear()
+
+        def emit_block(content: str, kind: str) -> None:
+            flush()
+            if out and out[-1] != "":
+                prev_kind = self._markdown_block_kind(out[-1].lstrip())
+                if not self._markdown_block_compatible(prev_kind, kind):
+                    out.append("")
+            out.append(content)
+
+        for line in lines:
+            stripped = line.strip()
+
+            # Toggle fence state on opening/closing fences. Fence marker lines
+            # themselves are emitted as-is (stripped) like other block markers.
+            if stripped.startswith("```"):
+                flush()
+                # Blank line only before an opening fence (markdown block rule).
+                if not in_fence and out and out[-1] != "":
+                    out.append("")
+                out.append(stripped)
+                in_fence = not in_fence
+                continue
+
+            if in_fence:
+                # Preserve relative indentation and blank lines inside the fence.
+                out.append(line)
+                continue
+
+            if not stripped:
+                flush()
+                out.append("")
+                continue
+
+            kind = self._markdown_block_kind(stripped)
+            if kind:
+                # Keep leading spaces so nested markdown lists stay nested.
+                if kind in {"list-ul", "list-ol"}:
+                    leading = len(line) - len(line.lstrip(" "))
+                    emit_block((" " * leading) + stripped, kind)
+                else:
+                    emit_block(stripped, kind)
+                continue
+
+            leading = len(line) - len(line.lstrip(" "))
+            # Indented continuations (admonition bodies, nested prose) must keep
+            # their indent and must not be soft-joined into the previous line.
+            if leading >= 4:
+                flush()
+                out.append(line.rstrip())
+                continue
+
+            buffer.append(stripped)
+        flush()
+        return "\n".join(out)
+
+    @staticmethod
+    def _looks_like_html_fragment(text: str) -> bool:
+        """Return True when *text* already looks like rendered HTML documentation."""
+        stripped = (text or "").lstrip()
+        if not stripped.startswith("<"):
+            return False
+        return bool(
+            re.match(
+                r"<(p|div|h[1-6]|ul|ol|pre|table|section|blockquote)\b",
+                stripped,
+                re.I,
+            )
+        )
+
+    def _normalize_library_description(self, description: str) -> str:
+        """Render library-level docs to HTML without double-processing HTML input."""
+        if not description:
+            return ""
+        if self._looks_like_html_fragment(description):
+            return description
+        rendered, _ = self._parse_docstring(description, self.config)
+        return rendered
+
     def _parse_docstring(self, docstring: str, config: dict = None) -> Tuple[str, str]:
-        """Parse docstring using our custom syntax format."""
+        """Parse docstring using markdown when available, else custom syntax."""
         if not docstring:
             return "", ""
 
+        normalized = self._join_soft_wrapped_lines(docstring)
         if MARKDOWN_AVAILABLE:
-            parsed_content = self._render_docstring_with_markdown(docstring, config)
-        parsed_content = self._parse_custom_syntax(docstring, config)
-
-        return parsed_content, ""
+            return self._render_docstring_with_markdown(normalized, config), ""
+        return self._parse_custom_syntax(normalized, config), ""
 
     def _render_docstring_with_markdown(
         self, docstring: str, config: dict = None
@@ -1078,7 +1951,9 @@ class RobotFrameworkDocParser:
         for match in code_pattern.finditer(content):
             # Text before the code fence: safe to run identifier protection and markdown conversion
             text_chunk = content[last_end : match.start()]
-            text_chunk = re.sub(r"``([^`\n*]+?)\*\*(?!\*)", r"``\1``", text_chunk)
+            text_chunk = re.sub(
+                r"``([A-Za-z0-9_./+-]+)\*\*(?!\*)", r"``\1``", text_chunk
+            )
             text_chunk = self._protect_identifier_tokens(text_chunk)
             text_html = self._markdown_to_html(text_chunk)
             if text_html:
@@ -1094,7 +1969,9 @@ class RobotFrameworkDocParser:
 
         # Remainder after last code fence
         remainder = content[last_end:]
-        remainder = re.sub(r"``([^`\n*]+?)\*\*(?!\*)", r"``\1``", remainder)
+        remainder = re.sub(
+            r"``([A-Za-z0-9_./+-]+)\*\*(?!\*)", r"``\1``", remainder
+        )
         remainder = self._protect_identifier_tokens(remainder)
         remainder_html = self._markdown_to_html(remainder)
         if remainder_html:
@@ -1102,13 +1979,35 @@ class RobotFrameworkDocParser:
 
         return "\n".join(segments)
 
+    # Python-Markdown extensions aligned with RF Libdoc 7.5+ plus common extras.
+    # Fenced code / codehilite are handled separately so Robot highlighting stays
+    # consistent with Example / sample-usage blocks.
+    _MARKDOWN_EXTENSIONS = [
+        "sane_lists",
+        "tables",
+        "toc",
+        "admonition",
+        "def_list",
+        "footnotes",
+        "abbr",
+        "attr_list",
+        "md_in_html",
+    ]
+    _MARKDOWN_EXTENSION_CONFIGS = {
+        # toc_depth is measured on the *output* heading level after baselevel,
+        # so depth 6 is required for ### / #### sections to appear in %TOC%.
+        "toc": {"baselevel": 2, "toc_depth": 6, "marker": "%TOC%"},
+    }
+
     def _markdown_to_html(self, text: str) -> str:
         """Convert markdown text (without fenced code blocks) to HTML."""
         cleaned = textwrap.dedent(text).strip()
         if not cleaned:
             return ""
 
-        cleaned = re.sub(r"``([^`\n]+?)\*\*(?!\*)", r"``\1``", cleaned)
+        # Only close unclosed ``identifier** forms. Do not let the capture span
+        # across commas/spaces to a later **bold** marker on the same line.
+        cleaned = re.sub(r"``([A-Za-z0-9_./+-]+)\*\*(?!\*)", r"``\1``", cleaned)
 
         cleaned = re.sub(r"!\s+\[", "![", cleaned)
 
@@ -1123,54 +2022,121 @@ class RobotFrameworkDocParser:
         image_pattern = r"!\[([^\]]+)\]\(([^\)]+)\)"
         cleaned = re.sub(image_pattern, convert_image, cleaned)
 
-        return markdown.markdown(
+        html_out = markdown.markdown(
             cleaned,
-            extensions=[
-                "sane_lists",
-                "tables",
-                "toc",
-            ],
+            extensions=list(self._MARKDOWN_EXTENSIONS),
+            extension_configs=dict(self._MARKDOWN_EXTENSION_CONFIGS),
+            output_format="html",
         )
+        return self._linkify_bare_urls(html_out)
+
+    @staticmethod
+    def _linkify_bare_urls(html_text: str) -> str:
+        """Turn bare http(s) URLs in text nodes into links (RF Linkify-style)."""
+        if not html_text or "http" not in html_text:
+            return html_text
+
+        url_re = re.compile(r"(https?://[^\s<>\"']+[^\s<>\"'.,);:])")
+        parts = re.split(r"(<[^>]+>)", html_text)
+        out: List[str] = []
+        in_anchor = 0
+        for part in parts:
+            if not part:
+                continue
+            if part.startswith("<"):
+                lower = part.lower()
+                if lower.startswith("<a ") or lower.startswith("<a>"):
+                    in_anchor += 1
+                elif lower.startswith("</a"):
+                    in_anchor = max(0, in_anchor - 1)
+                out.append(part)
+                continue
+            if in_anchor:
+                out.append(part)
+                continue
+
+            def repl(match: re.Match) -> str:
+                url = match.group(1)
+                import html as html_lib
+
+                safe = html_lib.escape(url, quote=True)
+                return f'<a href="{safe}">{safe}</a>'
+
+            out.append(url_re.sub(repl, part))
+        return "".join(out)
 
     def _render_code_block(self, code: str, language: str, config: dict = None) -> str:
         """Render a fenced code block with appropriate syntax highlighting."""
         language = (language or "text").strip() or "text"
-        normalized = language.lower()
+        normalized = language.lower().replace("_", "-")
 
         code = code.rstrip()
 
-        if normalized == "robot":
+        # Use Docgen's Robot highlighter for all RF fence aliases so docstring
+        # examples match the dedicated Example section / sample-usage style.
+        robot_aliases = {
+            "robot",
+            "robotframework",
+            "robot-framework",
+            "rf",
+        }
+        if normalized in robot_aliases:
             highlighted = self._highlight_robot_framework(code, config)
+            css_lang = "robot"
         else:
             highlighted = self._highlight_with_pygments(code, normalized, config)
+            css_lang = language
 
         highlighted = highlighted.rstrip()
 
         return (
-            f'<div class="code-block"><pre class="language-{language}">'
+            f'<div class="code-block"><pre class="language-{css_lang}">'
             f"{highlighted}"
             "</pre></div>"
         )
 
     def _protect_identifier_tokens(self, text: str) -> str:
-        """Wrap underscore-based identifier tokens in backticks to prevent accidental emphasis."""
+        """Wrap underscore-based identifier tokens in backticks to prevent accidental emphasis.
+
+        Existing ``code`` / `code` spans are left untouched so Robot docs like
+        ``USER_CREDS`` and ``workflow/login_workflow.robot`` stay intact.
+        """
         if not text:
             return ""
 
-        segments = text.split("`")
+        placeholders: List[str] = []
+
+        def stash(match: re.Match) -> str:
+            placeholders.append(match.group(0))
+            return f"\x00CODE{len(placeholders) - 1}\x00"
+
+        # Preserve existing code spans (double backticks first).
+        protected = re.sub(r"``[^`]+``", stash, text)
+        protected = re.sub(r"`[^`]+`", stash, protected)
+        # Keep URLs / markdown links / images intact so underscores in paths
+        # (e.g. rf_favicon.png) are not wrapped as identifiers.
+        protected = re.sub(r"!\[[^\]]*\]\([^)]+\)", stash, protected)
+        protected = re.sub(r"\[[^\]]*\]\([^)]+\)", stash, protected)
+        protected = re.sub(r"https?://[^\s<>\]]+", stash, protected)
+
+        segments = protected.split("`")
         for idx in range(0, len(segments), 2):
             segments[idx] = self._identifier_pattern.sub(
                 lambda m: f"`{m.group(0)}`",
                 segments[idx],
             )
 
-        reconstructed = []
+        reconstructed: List[str] = []
         for idx, segment in enumerate(segments):
             reconstructed.append(segment)
             if idx < len(segments) - 1:
                 reconstructed.append("`")
+        protected = "".join(reconstructed)
 
-        return "".join(reconstructed)
+        for index, original in enumerate(placeholders):
+            protected = protected.replace(f"\x00CODE{index}\x00", original)
+
+        return protected
 
     def _parse_custom_syntax(self, content: str, config: dict = None) -> str:
         """Parse our custom documentation syntax and convert to HTML."""
@@ -1369,25 +2335,45 @@ class RobotFrameworkDocParser:
         return "\n".join(html_lines)
 
     def _parse_inline_formatting(self, text: str) -> str:
-        """Parse inline formatting like bold, italic, links, etc."""
+        """Parse inline formatting like bold, italic, links, etc.
+
+        Code spans are protected before emphasis rules run so identifiers such as
+        ``USER_CREDS`` / ``${e_type}`` are not turned into italics.
+        Underscore emphasis only applies at word boundaries (not mid-identifier).
+        """
         if not text:
             return ""
 
         text = self._escape_html(text)
 
-        text = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", text)
-        text = re.sub(r"__(.*?)__", r"<strong>\1</strong>", text)
+        placeholders: List[str] = []
 
-        text = re.sub(r"\*(.*?)\*", r"<em>\1</em>", text)
-        text = re.sub(r"_(.*?)_", r"<em>\1</em>", text)
+        def stash_code(inner: str) -> str:
+            placeholders.append(f"<code>{inner}</code>")
+            return f"\x00PH{len(placeholders) - 1}\x00"
 
-        text = re.sub(r"\+\+(.*?)\+\+", r"<u>\1</u>", text)
+        # Robot Framework docs use ``code``; handle before single-backtick markdown.
+        text = re.sub(r"``([^`]+)``", lambda m: stash_code(m.group(1)), text)
+        text = re.sub(r"`([^`]+)`", lambda m: stash_code(m.group(1)), text)
 
-        text = re.sub(r"~~(.*?)~~", r"<del>\1</del>", text)
+        text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
+        text = re.sub(r"__(.+?)__", r"<strong>\1</strong>", text)
 
-        text = re.sub(r"`([^`]+)`", r"<code>\1</code>", text)
+        text = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"<em>\1</em>", text)
+        # Mid-identifier underscores (USER_CREDS, ${e_type}) must not become italics.
+        text = re.sub(
+            r"(?<![A-Za-z0-9_])_(?!_)([^_\n]+?)(?<!_)_(?![A-Za-z0-9_])",
+            r"<em>\1</em>",
+            text,
+        )
+
+        text = re.sub(r"\+\+(.+?)\+\+", r"<u>\1</u>", text)
+        text = re.sub(r"~~(.+?)~~", r"<del>\1</del>", text)
 
         text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", r'<a href="\2">\1</a>', text)
+
+        for index, replacement in enumerate(placeholders):
+            text = text.replace(f"\x00PH{index}\x00", replacement)
 
         return text
 
@@ -1433,10 +2419,12 @@ class RobotFrameworkDocParser:
         except ClassNotFound:
             lexer = TextLexer()
 
+        # Dark styles stay readable on docgen's dark/light themes; "default"
+        # emits pure-green tokens that vanish on graphite/midnight backgrounds.
         formatter = HtmlFormatter(
             nowrap=True,
             noclasses=True,
-            style="default",
+            style="monokai",
         )
 
         code = code.rstrip()
@@ -1446,9 +2434,6 @@ class RobotFrameworkDocParser:
         highlighted = highlighted.replace('<div class="highlight"><pre>', "").replace(
             "</pre></div>", ""
         )
-
-        highlighted = highlighted.replace("#00F", "#ffe400")
-        highlighted = highlighted.replace("#00f", "#ffe400")
 
         highlighted = highlighted.rstrip()
 
@@ -1473,13 +2458,17 @@ class RobotFrameworkDocParser:
 
     def _get_robot_framework_keywords(self, config: dict = None) -> list:
         """Get all Robot Framework keywords from built-in libraries (cached)."""
+        pending = list(self._pending_library_keywords or [])
+        library_keyword_names: List[str] = []
+        if self.library_info and self.library_info.keywords:
+            library_keyword_names = [kw.name for kw in self.library_info.keywords]
+        known_library_names = library_keyword_names + pending
+
         if self._cached_keywords is not None:
-            if self.library_info and self.library_info.keywords:
-                library_keyword_names = [kw.name for kw in self.library_info.keywords]
-                if any(kw not in self._cached_keywords for kw in library_keyword_names):
-                    self._cached_keywords = None
-                else:
-                    return self._cached_keywords
+            if known_library_names and any(
+                kw not in self._cached_keywords for kw in known_library_names
+            ):
+                self._cached_keywords = None
             else:
                 return self._cached_keywords
 
@@ -1501,14 +2490,7 @@ class RobotFrameworkDocParser:
                         print(f"Warning: Could not load {lib}: {e}")
                     continue
 
-            if self.library_info and self.library_info.keywords:
-                library_keyword_names = [kw.name for kw in self.library_info.keywords]
-                all_keywords.extend(library_keyword_names)
-
-            if config and "custom_keywords" in config:
-                custom_keywords = config["custom_keywords"]
-                if isinstance(custom_keywords, list):
-                    all_keywords.extend(custom_keywords)
+            all_keywords.extend(known_library_names)
 
             all_keywords = sorted(set(all_keywords))
             self._cached_keywords = all_keywords
@@ -1521,6 +2503,131 @@ class RobotFrameworkDocParser:
             self._cached_keywords = []
             return []
 
+    # Local settings that take a keyword call as their value.
+    _LOCAL_SETTINGS_WITH_KEYWORD = frozenset(
+        {
+            "[Setup]",
+            "[Teardown]",
+            "[Template]",
+            "[Test Setup]",
+            "[Test Teardown]",
+            "[Suite Setup]",
+            "[Suite Teardown]",
+            "[Task Setup]",
+            "[Task Teardown]",
+        }
+    )
+
+    def _split_first_robot_cell(self, content: str) -> Tuple[Optional[str], str]:
+        """Split RF cell separator (2+ spaces or tab). Returns (first_cell, rest)."""
+        if not content:
+            return None, ""
+        match = re.match(r"^(.*?)(\s{2,}|\t)(.*)$", content, flags=re.DOTALL)
+        if match:
+            return match.group(1), match.group(2) + match.group(3)
+        return content, ""
+
+    @staticmethod
+    def _rf_span(css_class: str, text: str) -> str:
+        """Wrap text in a themeable Robot Framework syntax span."""
+        return f'<span class="{css_class}">{text}</span>'
+
+    def _keyword_span(self, keyword: str, rest: str, config: dict = None) -> str:
+        """Render a keyword call name + remainder with the usual colors."""
+        css_class = (
+            "rf-control"
+            if keyword in self.RESERVED_CONTROL_KEYWORDS
+            else "rf-keyword"
+        )
+        keyword_html = self._rf_span(css_class, keyword)
+        if rest:
+            rest = self._highlight_variables_only(rest, config)
+            return f"{keyword_html}{rest}"
+        return keyword_html
+
+    def _match_known_keyword(
+        self, content: str, config: dict = None
+    ) -> Tuple[Optional[str], str]:
+        """Match a known library/BuiltIn keyword at the start of content."""
+        robot_keywords = list(self._get_robot_framework_keywords(config))
+        robot_keywords.extend(self.RESERVED_CONTROL_KEYWORDS)
+        for keyword in sorted(robot_keywords, key=len, reverse=True):
+            if content.startswith(keyword):
+                next_char_pos = len(keyword)
+                if next_char_pos >= len(content) or content[next_char_pos] == " ":
+                    return keyword, content[next_char_pos:]
+        return None, content
+
+    def _highlight_call_position(
+        self, content: str, config: dict = None
+    ) -> str:
+        """
+        Highlight a keyword in call position.
+
+        Prefer a known-keyword match (handles single-spaced multi-word BuiltIns),
+        otherwise treat the first RF cell as a keyword — so example/dummy names
+        still get teal without a config list.
+        """
+        if not content:
+            return ""
+
+        if content.startswith("..."):
+            # Continuation row: highlight any call in the following cells.
+            dots, rest = self._split_first_robot_cell(content)
+            if rest.lstrip() and not rest.lstrip().startswith("#"):
+                leading = rest[: len(rest) - len(rest.lstrip())]
+                return (
+                    f"{dots}{leading}"
+                    f"{self._highlight_call_position(rest.lstrip(), config)}"
+                )
+            return self._highlight_variables_only(content, config)
+
+        if content.startswith("["):
+            setting_cell, rest = self._split_first_robot_cell(content)
+            if setting_cell is None:
+                return self._highlight_variables_only(content, config)
+            setting_html = self._rf_span("rf-setting", setting_cell)
+            if not rest:
+                return setting_html
+            if setting_cell in self._LOCAL_SETTINGS_WITH_KEYWORD:
+                # Preserve separator whitespace, then highlight the keyword call.
+                leading = rest[: len(rest) - len(rest.lstrip())]
+                return (
+                    f"{setting_html}{leading}"
+                    f"{self._highlight_call_position(rest.lstrip(), config)}"
+                )
+            return f"{setting_html}{self._highlight_variables_only(rest, config)}"
+
+        keyword, rest = self._match_known_keyword(content, config)
+        if keyword:
+            return self._keyword_span(keyword, rest, config)
+
+        # Structural fallback: first cell is the call name (Libdoc-style).
+        cell, rest = self._split_first_robot_cell(content)
+        if not cell or cell.startswith("#"):
+            return self._highlight_variables_only(content, config)
+        return self._keyword_span(cell, rest, config)
+
+    def _highlight_assignment_line(
+        self, content: str, config: dict = None
+    ) -> str:
+        """Highlight `${var}=    Keyword    args` style assignment calls."""
+        match = re.match(
+            r"^((?:\$\{[^}]+\}|@\{[^}]+\}|&\{[^}]+\}))(\s*=\s*)(.*)$",
+            content,
+        )
+        if not match:
+            return self._highlight_variables_only(content, config)
+        var, equals, rhs = match.group(1), match.group(2), match.group(3)
+        var_html = self._rf_span("rf-variable", var)
+        if not rhs.strip():
+            return f"{var_html}{equals}"
+        leading = rhs[: len(rhs) - len(rhs.lstrip())]
+        return (
+            f"{var_html}{equals}{leading}"
+            f"{self._highlight_call_position(rhs.lstrip(), config)}"
+        )
+
     def _highlight_robot_line(self, line: str, config: dict = None) -> str:
         """Highlight a single Robot Framework line with clean, non-overlapping highlighting."""
         if not line:
@@ -1529,10 +2636,10 @@ class RobotFrameworkDocParser:
         line = self._escape_html(line)
 
         if line.strip().startswith("#"):
-            return f'<span style="color: #6a9955; font-style: italic;">{line}</span>'
+            return self._rf_span("rf-comment", line)
 
         if line.strip().startswith("***"):
-            return f'<span style="color: #569cd6; font-weight: bold;">{line}</span>'
+            return self._rf_span("rf-section", line)
 
         settings = sorted(
             self.ROBOT_FRAMEWORK_SETTINGS_KEYWORDS, key=len, reverse=True
@@ -1558,10 +2665,13 @@ class RobotFrameworkDocParser:
                         else:
                             break
                     value_part = after_setting[len(leading_spaces):]
-                    return f'{indent}<span style="color: #c586c0; font-weight: bold;">{setting}</span>{leading_spaces}{value_part}'
+                    return (
+                        f"{indent}{self._rf_span('rf-setting', setting)}"
+                        f"{leading_spaces}{value_part}"
+                    )
                 elif setting_end_pos == len(stripped_line):
                     indent = line[: len(line) - len(line.lstrip())]
-                    return f'{indent}<span style="color: #c586c0; font-weight: bold;">{setting}</span>'
+                    return f"{indent}{self._rf_span('rf-setting', setting)}"
                 continue
 
         if (
@@ -1575,7 +2685,7 @@ class RobotFrameworkDocParser:
             # Robot lines as well. Previously these lines were returned raw which
             # could leave internal marker tokens like __VAR_MARKER_0__ in output.
             processed = self._highlight_variables_only(line, config)
-            return f'<span style="color: #dcdcaa; font-weight: bold;">{processed}</span>'
+            return self._rf_span("rf-name", processed)
 
         if line.startswith("    ") or line.startswith("\t"):
             indent = ""
@@ -1587,44 +2697,14 @@ class RobotFrameworkDocParser:
 
             content = line[len(indent) :]
 
-            robot_keywords = self._get_robot_framework_keywords(config)
-            robot_keywords.extend(self.RESERVED_CONTROL_KEYWORDS)
-
             if (
                 content.startswith("${")
                 or content.startswith("@{")
                 or content.startswith("&{")
             ):
-                highlighted_content = self._highlight_variables_only(content, config)
-                return f"{indent}{highlighted_content}"
+                return f"{indent}{self._highlight_assignment_line(content, config)}"
 
-            keyword_found = None
-            rest_content = content
-
-            sorted_keywords = sorted(robot_keywords, key=len, reverse=True)
-
-            for keyword in sorted_keywords:
-                if content.startswith(keyword):
-                    next_char_pos = len(keyword)
-                    if next_char_pos >= len(content) or content[next_char_pos] == " ":
-                        keyword_found = keyword
-                        rest_content = content[next_char_pos:]
-                        break
-
-            if keyword_found:
-                if keyword_found in self.RESERVED_CONTROL_KEYWORDS:
-                    keyword_color = "#ce9178"
-                else:
-                    keyword_color = "#4ec9b0"
-
-                if rest_content:
-                    rest_content = self._highlight_variables_only(rest_content, config)
-                    return f'{indent}<span style="color: {keyword_color}; font-weight: bold;">{keyword_found}</span> {rest_content}'
-                else:
-                    return f'{indent}<span style="color: {keyword_color}; font-weight: bold;">{keyword_found}</span>'
-            else:
-                highlighted_content = self._highlight_variables_only(content, config)
-                return f"{indent}{highlighted_content}"
+            return f"{indent}{self._highlight_call_position(content, config)}"
 
         line = self._highlight_variables_only(line, config)
         return line
@@ -1640,7 +2720,7 @@ class RobotFrameworkDocParser:
             nonlocal var_counter
             var = match.group(0)
             marker = f"::VAR_MARKER_{var_counter}::"
-            var_markers[marker] = f'<span style="color: #9cdcfe;">{var}</span>'
+            var_markers[marker] = self._rf_span("rf-variable", var)
             var_counter += 1
             return marker
 
@@ -1665,9 +2745,7 @@ class RobotFrameworkDocParser:
                         nonlocal keyword_counter
                         kw = match.group(0)
                         marker = f"::KW_MARKER_{keyword_counter}::"
-                        keyword_markers[marker] = (
-                            f'<span style="color: #4ec9b0; font-weight: bold;">{kw}</span>'
-                        )
+                        keyword_markers[marker] = self._rf_span("rf-keyword", kw)
                         keyword_counter += 1
                         return marker
 
@@ -1686,9 +2764,7 @@ class RobotFrameworkDocParser:
                 arg_value = keyword_markers[arg_value]
 
             marker = f"::ARG_MARKER_{arg_counter}::"
-            arg_markers[marker] = (
-                f'<span style="color: #dcdcaa;">{arg_name}</span>={arg_value}'
-            )
+            arg_markers[marker] = f"{self._rf_span('rf-arg', arg_name)}={arg_value}"
             arg_counter += 1
             return marker
 
@@ -1704,7 +2780,7 @@ class RobotFrameworkDocParser:
 
         def highlight_comment(match):
             comment = match.group(0)
-            return f'<span style="color: #6a9955; font-style: italic;">{comment}</span>'
+            return self._rf_span("rf-comment", comment)
 
         parts = re.split(r"(<[^>]+>)", text)
         result_parts = []

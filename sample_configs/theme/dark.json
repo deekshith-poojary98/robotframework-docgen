@@ -1,0 +1,10 @@
+{
+  "bg": "#0f172a",
+  "bg_alt": "#020617",
+  "card": "#020617",
+  "border": "#1e293b",
+  "text": "#e5e7eb",
+  "muted": "#9ca3af",
+  "accent": "#38bdf8",
+  "accent_soft": "rgba(56, 189, 248, 0.15)"
+}

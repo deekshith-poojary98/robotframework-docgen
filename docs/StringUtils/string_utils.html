@@ -17,18 +17,123 @@
       --border: #1e293b;
       --text: #e5e7eb;
       --muted: #9ca3af;
+      --badge-required: #fca5a5;
+      --badge-required-text: var(--badge-required);
+      --badge-required-bg: color-mix(in srgb, var(--badge-required) 12%, transparent);
+      --badge-default: #4ade80;
+      --badge-default-text: var(--badge-default);
+      --badge-default-bg: color-mix(in srgb, var(--badge-default) 15%, transparent);
+      --badge-tag-text: var(--muted);
+      --badge-tag-bg: color-mix(in srgb, var(--card) 88%, var(--text) 12%);
+      --badge-primary-text: var(--accent);
+      --badge-primary-bg: var(--accent-soft);
+      --arg-type: var(--muted);
+      --hero-badge-bg: color-mix(in srgb, var(--bg) 90%, var(--card) 10%);
+      --hero-badge-text: var(--muted);
+      --hero-badge-kind-bg: rgba(167, 139, 250, 0.12);
+      --hero-badge-kind-text: #c4b5fd;
+      --btn-primary-bg: var(--accent);
+      --btn-primary-text: var(--on-accent);
+      --btn-ghost-bg: color-mix(in srgb, var(--bg) 75%, transparent);
+      --btn-ghost-text: var(--muted);
+      --code-bg: var(--bg-alt);
+      --code-inline-bg: color-mix(in srgb, var(--accent) 8%, transparent);
+      /* Robot Framework syntax highlighting (VS Code Dark+ defaults) */
+      --rf-keyword: #4ec9b0;
+      --rf-control: #ce9178;
+      --rf-setting: #c586c0;
+      --rf-variable: #9cdcfe;
+      --rf-comment: #6a9955;
+      --rf-section: #569cd6;
+      --rf-name: #dcdcaa;
+      --rf-arg: #dcdcaa;
+      --rf-string: #ce9178;
+      --rf-number: #b5cea8;
       --mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --sidebar-width: 260px;
+    }
+  </style>
+    <style id="docgen-theme">
+    :root {
+      --accent: #8ab4f8;
+      --accent-soft: rgba(138, 180, 248, 0.16);
+      --bg: #121417;
+      --bg-alt: #0b0d0f;
+      --border: #2c3138;
+      --btn-ghost-bg: transparent;
+      --btn-ghost-text: #9aa0a6;
+      --btn-primary-bg: #8ab4f8;
+      --btn-primary-text: #0b1120;
+      --card: #1a1d21;
+      --hero-badge-bg: #1a1d21;
+      --hero-badge-kind-bg: rgba(138, 180, 248, 0.15);
+      --hero-badge-kind-text: #aecbfa;
+      --hero-badge-text: #e8eaed;
+      --muted: #9aa0a6;
+      --on-accent: #f8fafc;
+      --rf-arg: #fde047;
+      --rf-comment: #4ade80;
+      --rf-control: #fb923c;
+      --rf-keyword: #14b8a6;
+      --rf-name: #facc15;
+      --rf-number: #86efac;
+      --rf-section: #60a5fa;
+      --rf-setting: #c084fc;
+      --rf-string: #fdba74;
+      --rf-variable: #38bdf8;
+      --text: #e8eaed;
+    }
+  </style>
+  <style>
+    /* Surfaces derived from theme tokens so light/brand themes actually apply. */
+    :root {
+      --surface: var(--bg);
+      --surface-2: color-mix(in srgb, var(--bg) 82%, var(--bg-alt) 18%);
+      --panel: var(--card);
+      --panel-2: color-mix(in srgb, var(--card) 88%, var(--text) 12%);
+      --header-bg: color-mix(in srgb, var(--bg) 92%, transparent);
+      --shadow: color-mix(in srgb, var(--bg-alt) 45%, transparent);
+      --on-accent: #0b1120;
     }
 
     * {
       box-sizing: border-box;
     }
+
+    /* Thin scrollbars (Firefox + WebKit/Blink) */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent;
+    }
+
+    *::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background: color-mix(in srgb, var(--accent) 30%, transparent);
+      border-radius: 3px;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+      background: color-mix(in srgb, var(--accent) 50%, transparent);
+    }
     
     body {
       margin: 0;
       font-family: var(--sans);
-      background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+      background: radial-gradient(
+        circle at top,
+        var(--border) 0,
+        var(--bg-alt) 45%,
+        var(--bg-alt) 100%
+      );
       color: var(--text);
       line-height: 1.6;
     }
@@ -51,7 +156,11 @@
       top: 0;
       z-index: 30;
       backdrop-filter: blur(16px);
-      background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.8));
+      background: linear-gradient(
+        to right,
+        color-mix(in srgb, var(--bg) 95%, transparent),
+        color-mix(in srgb, var(--bg) 80%, transparent)
+      );
       border-bottom: 1px solid var(--border);
       padding: 0.9rem 2rem;
       display: flex;
@@ -74,9 +183,54 @@
     header h1 {
       font-size: 1.05rem;
       margin: 0;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #f4f6ff;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 0;
+      background: var(--accent);
+      color: var(--on-accent);
+      padding: 0.5rem 0.75rem;
+      z-index: 100;
+      border-radius: 0 0 6px 0;
+      font-weight: 600;
+    }
+
+    .skip-link:focus {
+      left: 0;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .badge-kind {
+      border-color: color-mix(in srgb, var(--hero-badge-kind-text) 45%, transparent);
+      color: var(--hero-badge-kind-text);
+      background: var(--hero-badge-kind-bg);
+    }
+
+    .no-docs {
+      color: var(--muted);
+      font-style: italic;
+      margin: 0;
+    }
+
+    #intro,
+    #keywords,
+    .keyword-container {
+      scroll-margin-top: 5.5rem;
     }
 
     header .tagline {
@@ -127,14 +281,28 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 260px minmax(0, 1fr);
+      grid-template-columns: var(--sidebar-width) 3px minmax(0, 1fr);
       min-height: 100vh;
     }
 
+    .layout.is-resizing {
+      cursor: col-resize;
+      user-select: none;
+    }
+
+    .layout.is-resizing * {
+      cursor: col-resize !important;
+      user-select: none !important;
+    }
+
     aside {
-      border-right: 1px solid var(--border);
+      border-right: none;
       padding: calc(1.25rem + 10px) 1.5rem 1.5rem;
-      background: linear-gradient(to bottom, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+      background: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--bg) 96%, transparent),
+        color-mix(in srgb, var(--bg) 78%, var(--bg-alt) 22%)
+      );
       position: sticky;
       top: 0;
       height: 100vh;
@@ -142,6 +310,43 @@
       overflow-y: auto;
       font-size: 0.9rem;
       transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar-resizer {
+      position: sticky;
+      top: 0;
+      align-self: stretch;
+      height: 100vh;
+      width: 3px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      cursor: col-resize;
+      z-index: 5;
+      touch-action: none;
+      background: transparent;
+      border-right: 1px solid var(--border);
+    }
+
+    .sidebar-resizer::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 1px;
+      width: 1px;
+      background: transparent;
+      transition: background 0.15s ease;
+    }
+
+    .sidebar-resizer:hover::after,
+    .sidebar-resizer:focus-visible::after,
+    .layout.is-resizing .sidebar-resizer::after {
+      background: var(--accent);
+    }
+
+    .sidebar-resizer:focus-visible {
+      outline: none;
     }
 
     .sidebar-overlay {
@@ -195,6 +400,11 @@
       color: var(--text);
     }
 
+    .toc-section > ul > li > a.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
     .keyword-list {
       list-style: none;
       padding: 0;
@@ -220,7 +430,7 @@
       border-radius: 0.55rem;
       border: 1px solid transparent;
       line-height: 1.4;
-      background: rgba(15,23,42,0.5);
+      background: color-mix(in srgb, var(--bg) 70%, var(--card) 30%);
       transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
     }
     
@@ -243,12 +453,12 @@
     }
     
     .keyword-list a:focus-visible {
-      outline: 2px solid rgba(56,189,248,0.6);
+      outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
       outline-offset: 2px;
     }
     
     .keyword-list a.active {
-      border-color: rgba(56,189,248,0.7);
+      border-color: color-mix(in srgb, var(--accent) 70%, var(--border));
       color: var(--accent);
     }
     
@@ -266,13 +476,13 @@
       padding: 0.5rem 0.6rem;
       border-radius: 6px;
       border: 1px solid var(--border);
-      background: rgba(2,6,23,0.8);
+      background: color-mix(in srgb, var(--card) 88%, var(--bg) 12%);
       color: var(--text);
       font-size: 0.85rem;
     }
 
     .search-box input:focus {
-      outline: 2px solid rgba(56,189,248,0.4);
+      outline: 2px solid color-mix(in srgb, var(--accent) 40%, transparent);
     }
 
     .no-results {
@@ -316,27 +526,68 @@
       padding: 0.2rem 0.55rem;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(15,23,42,0.9);
-      color: var(--muted);
-      border-color: rgba(56,189,248,0.4);
+      background: var(--hero-badge-bg);
+      color: var(--hero-badge-text);
+      border-color: color-mix(in srgb, var(--accent) 40%, var(--border) 60%);
     }
 
     .badge.primary {
-      border-color: var(--accent-soft);
-      color: var(--accent);
+      border-color: color-mix(in srgb, var(--badge-primary-text) 40%, var(--border) 60%);
+      color: var(--badge-primary-text);
+      background: var(--badge-primary-bg);
+    }
+
+    .badge.badge-required {
+      color: var(--badge-required-text);
+      background: var(--badge-required-bg);
+      border-color: color-mix(in srgb, var(--badge-required-text) 35%, transparent);
     }
 
     .badge.badge-default {
       font-size: 0.75rem;
       padding: 0.2rem 0.6rem;
       margin-left: 0.4rem;
-      background: rgba(34,197,94,0.15);
-      border-color: rgba(34,197,94,0.3);
-      color: #4ade80;
+      color: var(--badge-default-text);
+      background: var(--badge-default-bg);
+      border-color: color-mix(in srgb, var(--badge-default-text) 30%, transparent);
       font-weight: 500;
       display: inline-block;
       line-height: 1.4;
       border-radius: 999px;
+    }
+
+    .badge.badge-tag {
+      border-radius: 0.35rem;
+      border-color: color-mix(in srgb, var(--border) 70%, var(--badge-tag-text) 30%);
+      color: var(--badge-tag-text);
+      background: var(--badge-tag-bg);
+    }
+
+    .kw-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+      margin: 0.35rem 0 0.15rem;
+    }
+
+    .kw-tags {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .kw-source {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(148, 163, 184, 0.55);
+    }
+
+    .kw-source:hover {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom-color: var(--accent);
     }
 
     .hero-actions {
@@ -356,31 +607,70 @@
       border: 1px solid transparent;
       text-decoration: none;
       white-space: nowrap;
+      transform: translateY(0);
+      box-shadow: 0 0 0 transparent;
+      transition:
+        transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 0.28s ease,
+        border-color 0.28s ease,
+        color 0.28s ease,
+        filter 0.28s ease;
+      will-change: transform;
     }
 
     .btn-primary {
-      background: radial-gradient(circle at top left, #38bdf8, #0ea5e9 45%, #0369a1 100%);
-      border-color: rgba(56,189,248,0.4);
-      color: #0b1120;
-      box-shadow: 0 10px 30px rgba(56,189,248,0.4);
+      background: radial-gradient(
+        circle at top left,
+        var(--btn-primary-bg),
+        color-mix(in srgb, var(--btn-primary-bg) 75%, black) 45%,
+        color-mix(in srgb, var(--btn-primary-bg) 45%, black) 100%
+      );
+      border-color: color-mix(in srgb, var(--btn-primary-bg) 45%, var(--border));
+      color: var(--btn-primary-text);
+      box-shadow: 0 8px 22px color-mix(in srgb, var(--btn-primary-bg) 32%, transparent);
     }
 
     .btn-ghost {
-      background: rgba(15,23,42,0.75);
+      background: var(--btn-ghost-bg);
       border-color: var(--border);
-      color: var(--muted);
+      color: var(--btn-ghost-text);
+      box-shadow: 0 1px 0 color-mix(in srgb, var(--border) 55%, transparent);
     }
 
     .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 35px rgba(56,189,248,0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px color-mix(in srgb, var(--accent) 28%, transparent);
       text-decoration: none;
     }
 
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 18%, transparent);
+      transition-duration: 0.12s;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      box-shadow: 0 12px 28px color-mix(in srgb, var(--btn-primary-bg) 42%, transparent);
+    }
+
     .btn-ghost:hover {
-      background: rgba(15,23,42,0.9);
+      background: color-mix(in srgb, var(--bg) 88%, var(--card) 12%);
       color: var(--text);
-      border-color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn {
+        transition: none;
+        will-change: auto;
+      }
+
+      .btn:hover,
+      .btn:active {
+        transform: none;
+      }
     }
 
     .hero-meta {
@@ -409,9 +699,13 @@
 
     .hero-card {
       border-radius: 1.2rem;
-      background: radial-gradient(circle at top, rgba(56,189,248,0.2), rgba(15,23,42,1));
+      background: radial-gradient(
+        circle at top,
+        var(--accent-soft),
+        var(--bg) 70%
+      );
       border: 1px solid var(--border);
-      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      box-shadow: 0 18px 40px var(--shadow);
       padding: 1rem 1rem 1.2rem;
       font-size: 0.75rem;
     }
@@ -437,11 +731,11 @@
       padding: 0.1rem 0.4rem;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(15,23,42,0.85);
+      background: color-mix(in srgb, var(--bg) 85%, var(--card) 15%);
     }
 
     pre {
-      background: rgba(2,6,23,0.95);
+      background: var(--code-bg);
       border-radius: 0.75rem;
       padding: 0.9rem 1rem;
       overflow-x: auto;
@@ -452,12 +746,12 @@
     }
 
     .keyword-container {
-      background: rgba(15,23,42,0.9);
+      background: color-mix(in srgb, var(--bg) 92%, var(--card) 8%);
       border-radius: 1rem;
       border: 1px solid var(--border);
       padding: 1rem 1.1rem;
       font-size: 0.92rem;
-      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      box-shadow: 0 18px 40px var(--shadow);
       margin-bottom: 1.5rem;
     }
 
@@ -476,16 +770,27 @@
 
     .args,
     .return-type,
-    .kw-docs {
+    .kw-docs,
+    .kw-example {
       border: 1px solid var(--border);
       border-radius: 0.75rem;
       padding: 0.85rem;
-      background: rgba(2,6,23,0.75);
+      background: color-mix(in srgb, var(--card) 92%, var(--bg) 8%);
     }
 
+    .keyword-content > .kw-docs,
+    .keyword-content > .kw-example {
+      margin-top: 0.85rem;
+    }
+
+    .args h3,
+    .return-type h3,
+    .kw-docs h3,
+    .kw-example h3,
     .args h4,
     .return-type h4,
-    .kw-docs h4 {
+    .kw-docs h4,
+    .kw-example h4 {
       margin: 0 0 0.4rem;
       font-size: 0.78rem;
       letter-spacing: 0.08em;
@@ -493,76 +798,153 @@
       color: var(--muted);
     }
 
+    /* Nested code fence sits inside the Example card (no double frame). */
+    .kw-example .code-block {
+      margin: 0.35rem 0 0;
+      border: none;
+      border-radius: 0.5rem;
+      background: var(--code-bg);
+    }
+
     .arguments-list-container {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 0.55rem;
+      overflow: hidden;
+      background: color-mix(in srgb, var(--card) 78%, var(--bg) 22%);
     }
 
     .argument-item {
-      background: rgba(2,6,23,0.6);
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      padding: 0.75rem;
-      transition: all 0.2s ease;
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      min-width: 0;
+      transition: background 0.15s ease;
+    }
+
+    .argument-item:last-child {
+      border-bottom: none;
     }
 
     .argument-item:hover {
-      background: rgba(2,6,23,0.8);
-      border-color: rgba(56,189,248,0.3);
+      background: color-mix(in srgb, var(--card) 55%, var(--bg) 45%);
+    }
+
+    .argument-item.has-enum {
+      padding-bottom: 0.7rem;
     }
 
     .argument-header {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: space-between;
+      gap: 0.65rem 1rem;
       flex-wrap: wrap;
+    }
+
+    .argument-signature {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .argument-flags {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      margin-left: auto;
     }
 
     .arg-name {
       font-family: var(--mono);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 600;
-      background: rgba(15,76,204,0.15);
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-      border: 1px solid rgba(15,76,204,0.3);
       color: var(--accent);
+      background: none;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      word-break: break-word;
     }
 
     .arg-separator {
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 400;
     }
 
     .arg-type {
       font-family: var(--mono);
       font-size: 0.75rem;
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 0.2rem 0.6rem;
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(15,23,42,0.5);
-      display: inline-block;
-      line-height: 1.4;
-    }
-
-    .return-type .arg-type {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.6rem;
-      line-height: 1.4;
-    }
-
-    .enum-values {
-      list-style: none;
-      margin: 0.75rem 0 0.5rem 0;
+      border: none;
       padding: 0;
-      width: 100%;
+      border-radius: 0;
+      color: var(--arg-type);
+      background: transparent;
+      display: inline;
+      line-height: 1.35;
+    }
+
+    .argument-item .badge {
+      font-size: 0.68rem;
+      padding: 0.12rem 0.42rem;
+      flex-shrink: 0;
+    }
+
+    .returns-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 0.55rem;
+      overflow: hidden;
+      background: color-mix(in srgb, var(--card) 78%, var(--bg) 22%);
+    }
+
+    .return-item {
+      padding: 0.55rem 0.75rem;
+      min-width: 0;
+      transition: background 0.15s ease;
+    }
+
+    .return-item:hover {
+      background: color-mix(in srgb, var(--card) 55%, var(--bg) 45%);
+    }
+
+    .arg-type.arg-type-muted {
+      font-style: italic;
+      opacity: 0.85;
+    }
+
+    .argument-doc,
+    .return-doc {
+      margin-top: 0.28rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .argument-doc p,
+    .return-doc p {
+      margin: 0;
+    }
+
+    a.kw-ref {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    a.kw-ref:hover {
+      color: color-mix(in srgb, var(--accent) 75%, white);
     }
 
     .enum-container {
-      background: rgba(2,6,23,0.6);
+      background: color-mix(in srgb, var(--card) 70%, var(--bg) 30%);
       border: 1px solid var(--border);
       border-radius: 0.5rem;
       padding: 0.75rem;
@@ -591,9 +973,9 @@
       color: var(--muted);
       font-family: var(--mono);
       padding: 0.15rem 0.4rem;
-      background: rgba(56,189,248,0.1);
+      background: var(--accent-soft);
       border-radius: 4px;
-      border: 1px solid rgba(56,189,248,0.2);
+      border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
     }
 
     .enum-members-grid {
@@ -607,8 +989,8 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.5rem 0.65rem;
-      background: rgba(15,23,42,0.8);
-      border: 1px solid rgba(56,189,248,0.15);
+      background: color-mix(in srgb, var(--bg) 80%, var(--card) 20%);
+      border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
       border-radius: 6px;
       transition: all 0.2s ease;
       font-family: var(--mono);
@@ -616,8 +998,8 @@
     }
 
     .enum-member:hover {
-      background: rgba(15,23,42,0.95);
-      border-color: rgba(56,189,248,0.3);
+      background: color-mix(in srgb, var(--bg) 70%, var(--card) 30%);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
       transform: translateY(-1px);
     }
 
@@ -645,10 +1027,10 @@
     }
 
     .enum-member-value code {
-      background: rgba(56,189,248,0.1);
+      background: var(--code-inline-bg);
       padding: 0.15rem 0.35rem;
       border-radius: 4px;
-      border: 1px solid rgba(56,189,248,0.2);
+      border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
       color: var(--text);
       font-weight: 400;
     }
@@ -667,7 +1049,7 @@
     .kwdoc code {
       font-family: var(--mono);
       font-size: 0.78rem;
-      background: rgba(56,189,248,0.08);
+      background: var(--code-inline-bg);
       padding: 0.2rem 0.35rem;
       border-radius: 4px;
     }
@@ -681,13 +1063,13 @@
       border: 2px solid var(--border);
       border-radius: 0.5rem;
       overflow: hidden;
-      background: rgba(2,6,23,0.75);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      background: color-mix(in srgb, var(--card) 88%, var(--bg) 12%);
+      box-shadow: 0 2px 8px var(--shadow);
     }
 
     .kwdoc table thead,
     .kwdoc .doc-table thead {
-      background: rgba(56,189,248,0.1);
+      background: var(--accent-soft);
     }
 
     .kwdoc table th,
@@ -727,7 +1109,7 @@
 
     .kwdoc table tbody tr:hover,
     .kwdoc .doc-table tbody tr:hover {
-      background: rgba(56,189,248,0.05);
+      background: var(--accent-soft);
     }
 
     .kwdoc img,
@@ -742,7 +1124,7 @@
     }
 
     .code-block {
-      background: rgba(15, 23, 42, 0.6);
+      background: var(--code-bg);
       border: 1px solid var(--border);
       border-radius: 8px;
       margin: 1rem 0;
@@ -763,68 +1145,136 @@
       background: transparent;
     }
 
+    .rf-keyword,
+    .robot-keywords {
+      color: var(--rf-keyword);
+      font-weight: bold;
+    }
+    .rf-control {
+      color: var(--rf-control);
+      font-weight: bold;
+    }
+    .rf-setting,
+    .robot-settings {
+      color: var(--rf-setting);
+      font-weight: bold;
+    }
+    .rf-variable,
+    .robot-variables {
+      color: var(--rf-variable);
+    }
+    .rf-comment,
+    .robot-comments {
+      color: var(--rf-comment);
+      font-style: italic;
+    }
+    .rf-section {
+      color: var(--rf-section);
+      font-weight: bold;
+    }
+    .rf-name,
+    .robot-test-cases {
+      color: var(--rf-name);
+      font-weight: bold;
+    }
+    .rf-arg {
+      color: var(--rf-arg);
+    }
+    .rf-string,
+    .robot-strings {
+      color: var(--rf-string);
+    }
+    .rf-number,
+    .robot-numbers {
+      color: var(--rf-number);
+    }
+
+    .help-strip {
+      margin: 1.25rem 0 0.25rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      background: color-mix(in srgb, var(--card) 88%, var(--accent-soft) 12%);
+    }
+
+    .help-strip-body {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .help-strip-copy {
+      min-width: min(100%, 18rem);
+      flex: 1 1 16rem;
+    }
+
+    .help-strip-copy h2 {
+      margin: 0 0 0.2rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .help-strip-copy p {
+      margin: 0;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: var(--muted);
+      max-width: 40rem;
+    }
+
+    .help-strip-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .help-strip-actions .btn {
+      padding: 0.45rem 0.85rem;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
     footer {
       border-top: 1px solid var(--border);
       padding: 1.2rem 2.4rem 1.6rem;
       font-size: 0.8rem;
       color: var(--muted);
       text-align: center;
-      background: radial-gradient(circle at bottom, rgba(56,189,248,0.15), rgba(15,23,42,1));
-    }
-
-    @media (max-width: 768px) {
-      .menu-toggle {
-        display: block;
-      }
-
-      header nav {
-        display: none;
-      }
-
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      aside {
-        position: fixed !important;
-        top: 70px;
-        left: 0;
-        width: 280px;
-        max-width: 85vw;
-        height: calc(100vh - 70px);
-        z-index: 26;
-        transform: translateX(-100%) !important;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
-        border-right: 1px solid var(--border);
-      }
-
-      aside.active {
-        transform: translateX(0) !important;
-      }
-
-      .sidebar-overlay {
-        display: block;
-      }
-
-      main {
-        width: 100%;
-      }
+      background: radial-gradient(
+        circle at bottom,
+        var(--accent-soft),
+        var(--bg-alt) 70%
+      );
     }
 
     @media (max-width: 1024px) {
       .menu-toggle {
-        display: block;
+        display: flex;
       }
 
-      header nav {
+      /* Keep Back to Dashboard visible; hide in-page Overview/Keywords links */
+      header nav a {
         display: none;
+      }
+
+      header nav a.nav-back {
+        display: inline-flex;
       }
 
       .layout {
         grid-template-columns: minmax(0, 1fr);
       }
 
+      .sidebar-resizer {
+        display: none;
+      }
+
       aside {
         position: fixed !important;
         top: 70px;
@@ -833,25 +1283,36 @@
         max-width: 85vw;
         height: calc(100vh - 70px);
         z-index: 26;
-        transform: translateX(-100%) !important;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
+        transform: translate3d(-100%, 0, 0);
+        transition: transform 0.3s ease-in-out;
+        box-shadow: 2px 0 10px var(--shadow);
+        background: linear-gradient(
+          to bottom,
+          var(--bg),
+          color-mix(in srgb, var(--bg) 94%, var(--bg-alt) 6%)
+        ) !important;
         border-right: 1px solid var(--border);
+        overflow-y: auto;
+        /* Override desktop sticky so the drawer can slide in */
+        bottom: auto;
       }
 
       aside.active {
-        transform: translateX(0) !important;
+        transform: translate3d(0, 0, 0) !important;
       }
 
       .sidebar-overlay {
+        display: none;
+      }
+
+      .sidebar-overlay.active {
         display: block;
+        opacity: 1;
+        pointer-events: auto;
       }
 
       main {
         width: 100%;
-      }
-
-      main {
         padding: 1.25rem 1.4rem 2.5rem;
       }
     }
@@ -859,10 +1320,6 @@
     @media (max-width: 640px) {
       header {
         padding: 0.7rem 1rem;
-      }
-
-      header nav {
-        display: none;
       }
 
       .hero {
@@ -876,6 +1333,7 @@
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header>
     <div class="brand">
       <div class="logo">
@@ -886,11 +1344,12 @@
         <div class="tagline">Robot Framework library documentation</div>
       </div>
     </div>
-    <nav><a href="../index.html">← Back to Dashboard</a>
+    <nav><a class="nav-back" href="../index.html">← Back to Dashboard</a>
       <a href="#intro">Overview</a>
+      
       <a href="#keywords">Keywords</a>
     </nav>
-    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -907,47 +1366,60 @@
         <h2>Getting Started</h2>
         <ul>
           <li><a href="#intro">Introduction</a></li>
+          
         </ul>
       </div>
 
       <div class="toc-section">
         <h2>Keywords</h2>
         <div class="search-box">
-          <input type="text" id="keyword-search" placeholder="Search keywords…">
+          <label class="visually-hidden" for="keyword-search">Search keywords, docs, and tags</label>
+          <input type="text" id="keyword-search" placeholder="Search keywords, docs, tags…" aria-label="Search keywords, docs, and tags">
         </div>
         <ul class="keyword-list" id="keyword-list">
-          <li><a href="#capitalize-words">Capitalize Words</a></li>
-        <li><a href="#remove-whitespace">Remove Whitespace</a></li>
-        <li><a href="#extract-numbers">Extract Numbers</a></li>
-        <li><a href="#extract-emails">Extract Emails</a></li>
-        <li><a href="#validate-url">Validate Url</a></li>
-        <li><a href="#mask-sensitive-data">Mask Sensitive Data</a></li>
-        <li><a href="#hash-string">Hash String</a></li>
-        <li><a href="#encode-base64">Encode Base64</a></li>
-        <li><a href="#decode-base64">Decode Base64</a></li>
-        <li><a href="#replace-pattern">Replace Pattern</a></li>
-        <li><a href="#split-string">Split String</a></li>
-        <li><a href="#join-strings">Join Strings</a></li>
-        <li><a href="#format-template">Format Template</a></li>
-        <li><a href="#count-occurrences">Count Occurrences</a></li>
-        <li><a href="#truncate-string">Truncate String</a></li>
-        <li><a href="#pad-string">Pad String</a></li>
-        <li><a href="#reverse-string">Reverse String</a></li>
-        <li><a href="#remove-duplicates">Remove Duplicates</a></li>
-        <li><a href="#validate-phone-number">Validate Phone Number</a></li>
-        <li><a href="#extract-json-from-text">Extract Json From Text</a></li>
-        <li><a href="#generate-random-string">Generate Random String</a></li>
+          <li data-search="capitalize words capitalize the first letter of each word in a string. arguments: text: input string to capitalize returns: string with each word capitalized example: *** settings *** library stringutils *** test cases *** capitalize text example ${result} capitalize words hello world should be equal ${result} hello world"><a href="#capitalize-words">Capitalize Words</a></li>
+        <li data-search="remove whitespace remove whitespace from a string. arguments: text: input string mode: removal mode - &quot;all&quot; (remove all), &quot;leading&quot; (remove leading), &quot;trailing&quot; (remove trailing), &quot;both&quot; (remove both ends) returns: string with whitespace removed example: *** settings *** library stringutils *** test cases *** remove whitespace example ${result} remove whitespace &quot; hello world &quot; mode=both should be equal ${result} hello world"><a href="#remove-whitespace">Remove Whitespace</a></li>
+        <li data-search="extract numbers extract all numbers from a string. arguments: text: input string containing numbers returns: list of extracted integers example: *** settings *** library stringutils *** test cases *** extract numbers example ${numbers} extract numbers price: $99.99, quantity: 5 should contain ${numbers} ${99} should contain ${numbers} ${5}"><a href="#extract-numbers">Extract Numbers</a></li>
+        <li data-search="extract emails extract all email addresses from a string. arguments: text: input string containing email addresses returns: list of extracted email addresses example: *** settings *** library stringutils *** test cases *** extract emails example ${emails} extract emails contact: john@example.com or jane@test.org should contain ${emails} john@example.com should contain ${emails} jane@test.org"><a href="#extract-emails">Extract Emails</a></li>
+        <li data-search="validate url validate if a string is a valid url. arguments: url: url string to validate returns: true if valid url, false otherwise example: *** settings *** library stringutils *** test cases *** validate url example ${valid} validate url https://example.com should be true ${valid}"><a href="#validate-url">Validate Url</a></li>
+        <li data-search="mask sensitive data mask sensitive data, showing only first few characters. arguments: text: text to mask visible_chars: number of characters to keep visible (default: 4) returns: masked string example: *** settings *** library stringutils *** test cases *** mask sensitive data example ${masked} mask sensitive data secret12345 visible_chars=3 should start with ${masked} sec should contain ${masked} *"><a href="#mask-sensitive-data">Mask Sensitive Data</a></li>
+        <li data-search="hash string generate hash of a string. arguments: text: text to hash algorithm: hash algorithm - &quot;md5&quot;, &quot;sha1&quot;, &quot;sha256&quot; (default) returns: hexadecimal hash string example: *** settings *** library stringutils *** test cases *** hash string example ${hash} hash string password123 algorithm=sha256 should not be empty ${hash} length should be ${hash} ${64}"><a href="#hash-string">Hash String</a></li>
+        <li data-search="encode base64 encode string to base64. arguments: text: text to encode returns: base64 encoded string example: *** settings *** library stringutils *** test cases *** encode base64 example ${encoded} encode base64 hello world should not be empty ${encoded}"><a href="#encode-base64">Encode Base64</a></li>
+        <li data-search="decode base64 decode base64 string. arguments: encoded_text: base64 encoded string returns: decoded string example: *** settings *** library stringutils *** test cases *** decode base64 example ${decoded} decode base64 sgvsbg8gv29ybgq= should be equal ${decoded} hello world"><a href="#decode-base64">Decode Base64</a></li>
+        <li data-search="replace pattern replace text matching a regex pattern. arguments: text: input text pattern: regular expression pattern replacement: replacement string case_sensitive: whether pattern matching is case sensitive (default: true) returns: text with replacements applied example: *** settings *** library stringutils *** test cases *** replace pattern example ${result} replace pattern hello 123 world \d+ number should be equal ${result} hello number world"><a href="#replace-pattern">Replace Pattern</a></li>
+        <li data-search="split string split string into a list. arguments: text: text to split separator: separator string (default: whitespace) max_split: maximum number of splits (default: -1 for unlimited) returns: list of strings example: *** settings *** library stringutils *** test cases *** split string example ${parts} split string apple,banana,cherry separator=, should contain ${parts} apple should contain ${parts} banana should contain ${parts} cherry"><a href="#split-string">Split String</a></li>
+        <li data-search="join strings join list of strings with a separator. arguments: strings: list of strings to join separator: separator string (default: space) returns: joined string example: *** settings *** library stringutils *** test cases *** join strings example @{items} create list apple banana cherry ${result} join strings ${items} separator=, should be equal ${result} apple,banana,cherry"><a href="#join-strings">Join Strings</a></li>
+        <li data-search="format template format a string template with variables. arguments: template: template string with {variable} placeholders **kwargs: variable name-value pairs returns: formatted string example: *** settings *** library stringutils *** test cases *** format template example ${result} format template hello {name}, you are {age} years old ... name=john age=30 should be equal ${result} hello john, you are 30 years old"><a href="#format-template">Format Template</a></li>
+        <li data-search="count occurrences count occurrences of a substring in text. arguments: text: text to search in substring: substring to count case_sensitive: whether search is case sensitive (default: true) returns: number of occurrences example: *** settings *** library stringutils *** test cases *** count occurrences example ${count} count occurrences hello hello world hello should be equal as integers ${count} ${2}"><a href="#count-occurrences">Count Occurrences</a></li>
+        <li data-search="truncate string truncate string to maximum length. arguments: text: text to truncate max_length: maximum length suffix: suffix to append if truncated (default: &quot;...&quot;) returns: truncated string example: *** settings *** library stringutils *** test cases *** truncate string example ${result} truncate string this is a very long text 10 should be equal ${result} this is a..."><a href="#truncate-string">Truncate String</a></li>
+        <li data-search="pad string pad string to specified width. arguments: text: text to pad width: target width padding: padding character (default: space) align: alignment - &quot;left&quot;, &quot;right&quot;, or &quot;center&quot; (default: left) returns: padded string example: *** settings *** library stringutils *** test cases *** pad string example ${result} pad string hello 10 align=right should be equal ${result} ${space * 5}hello"><a href="#pad-string">Pad String</a></li>
+        <li data-search="reverse string reverse a string. arguments: text: text to reverse returns: reversed string example: *** settings *** library stringutils *** test cases *** reverse string example ${result} reverse string hello should be equal ${result} olleh"><a href="#reverse-string">Reverse String</a></li>
+        <li data-search="remove duplicates remove duplicate words/parts from a string. arguments: text: text to process separator: separator to split by (default: space) returns: string with duplicates removed example: *** settings *** library stringutils *** test cases *** remove duplicates example ${result} remove duplicates apple banana apple cherry should be equal ${result} apple banana cherry"><a href="#remove-duplicates">Remove Duplicates</a></li>
+        <li data-search="validate phone number validate phone number format. arguments: phone: phone number string country: country code for validation (default: us) returns: true if valid format, false otherwise example: *** settings *** library stringutils *** test cases *** validate phone number example ${valid} validate phone number +1-555-123-4567 should be true ${valid}"><a href="#validate-phone-number">Validate Phone Number</a></li>
+        <li data-search="extract json from text extract and parse json object from text. arguments: text: text containing json returns: parsed json dictionary or none if not found example: *** settings *** library stringutils *** test cases *** extract json from text example ${json} extract json from text data: {&quot;name&quot;: &quot;john&quot;, &quot;age&quot;: 30} should be equal ${json}[name] john should be equal as integers ${json}[age] ${30}"><a href="#extract-json-from-text">Extract Json From Text</a></li>
+        <li data-search="generate random string generate a random string. arguments: length: length of string (default: 10) include_uppercase: include uppercase letters (default: true) include_lowercase: include lowercase letters (default: true) include_digits: include digits (default: true) include_special: include special characters (default: false) returns: random string example: *** settings *** library stringutils *** test cases *** generate random string example ${random} generate random string length=16 include_special=true length should be ${random} ${16} should match regexp ${random} .+"><a href="#generate-random-string">Generate Random String</a></li>
         </ul>
       </div>
     </aside>
+    <div
+      class="sidebar-resizer"
+      id="sidebar-resizer"
+      role="separator"
+      aria-orientation="vertical"
+      aria-label="Resize sidebar"
+      aria-valuemin="200"
+      aria-valuemax="520"
+      aria-valuenow="260"
+      tabindex="0"
+    ></div>
 
-    <main>
+    <main id="main-content">
       <section id="intro" class="hero">
         <div>
           <h2>StringUtils Documentation</h2>
           
           <div class="hero-badges">
-            <!-- <span class="badge primary">Robot Framework Library</span> -->
+            <span class="badge badge-kind">Library</span>
             <span class="badge">Version 2.1.0</span>
             <span class="badge">Scope GLOBAL</span>
             <span class="badge">21 Keywords</span>
@@ -960,18 +1432,18 @@
             <div class="hero-card-title">Sample Usage</div>
             <div class="hero-card-lang">Robot</div>
           </div>
-          <pre class="language-robot"><code><span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+          <pre class="language-robot"><code><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Example</span>
-    [Documentation]    Demonstrates using StringUtils
-<span style="color: #6a9955; font-style: italic;">    # add your keyword calls here</span></code></pre>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Example</span>
+    <span class="rf-setting">[Documentation]</span>    Demonstrates using StringUtils
+    <span class="rf-keyword">Capitalize Words</span>    <span class="rf-variable">${text}</span></code></pre>
         </div>
       </section>
 
       <section class="keyword-container intro-section"><div class="keyword-name"><h2>Introduction</h2></div><div class="kw-overview"><div class="kw-docs"><div class="intro-content"><p>String utilities library for Robot Framework.</p>
-<p>    This library provides comprehensive string operations including:</p>
+<p>This library provides comprehensive string operations including:</p>
 <ul>
 <li>String manipulation and transformation</li>
 <li>Pattern matching and validation</li>
@@ -980,32 +1452,50 @@
 <li>Data extraction and parsing</li>
 </ul></div></div></div></section>
 
+      
+
       <section id="keywords">
         <div class="keyword-container" id="capitalize-words">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#capitalize-words">Capitalize Words</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L35" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L35</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Capitalize the first letter of each word in a string.</p>
 <p><strong>Arguments:</strong></p>
@@ -1014,16 +1504,14 @@
 </ul>
 <p><strong>Returns:</strong> String with each word capitalized</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Capitalize Text Example</span>
-    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Capitalize Words</span>    hello world
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    Hello World
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Capitalize Text Example</span>
+    <span class="rf-variable">${result}</span>    <span class="rf-keyword">Capitalize Words</span>    hello world
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${result}</span>    Hello World</pre></div>
       </div>
     </div>
   </div>
@@ -1031,56 +1519,74 @@
         <div class="keyword-container" id="remove-whitespace">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#remove-whitespace">Remove Whitespace</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L59" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L59</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">mode</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
-               <span class="badge badge-default">default: "all"</span>
+              <span class="argument-signature">
+                <span class="arg-name">mode</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: &quot;all&quot;</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Remove whitespace from a string.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><code>text</code>: Input string</li>
-<li><code>mode</code>: Removal mode - &quot;all&quot; (remove all), &quot;leading&quot; (remove leading),</li>
+<li><code>mode</code>: Removal mode - "all" (remove all), "leading" (remove leading),
+"trailing" (remove trailing), "both" (remove both ends)</li>
 </ul>
-<p>          &quot;trailing&quot; (remove trailing), &quot;both&quot; (remove both ends)</p>
 <p><strong>Returns:</strong> String with whitespace removed</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Remove Whitespace Example</span>
-    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Remove Whitespace</span>    &quot;  hello world  &quot;    <span style="color: #dcdcaa;">mode</span>=both
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    hello world
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Remove Whitespace</span> Example</span>
+    <span class="rf-variable">${result}</span>    <span class="rf-keyword">Remove Whitespace</span>    &quot;  hello world  &quot;    <span class="rf-arg">mode</span>=both
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${result}</span>    hello world</pre></div>
       </div>
     </div>
   </div>
@@ -1088,28 +1594,44 @@
         <div class="keyword-container" id="extract-numbers">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#extract-numbers">Extract Numbers</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L93" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L93</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">List[int]</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">List[int]</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Extract all numbers from a string.</p>
 <p><strong>Arguments:</strong></p>
@@ -1118,17 +1640,15 @@
 </ul>
 <p><strong>Returns:</strong> List of extracted integers</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Extract Numbers Example</span>
-    <span style="color: #9cdcfe;">${numbers}</span>    <span style="color: #4ec9b0; font-weight: bold;">Extract Numbers</span>    Price: $99.99, Quantity: 5
-    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${numbers}</span>    <span style="color: #9cdcfe;">${99}</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${numbers}</span>    <span style="color: #9cdcfe;">${5}</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Extract Numbers</span> Example</span>
+    <span class="rf-variable">${numbers}</span>    <span class="rf-keyword">Extract Numbers</span>    Price: $99.99, Quantity: 5
+    <span class="rf-keyword">Should Contain</span>    <span class="rf-variable">${numbers}</span>    <span class="rf-variable">${99}</span>
+    <span class="rf-keyword">Should Contain</span>    <span class="rf-variable">${numbers}</span>    <span class="rf-variable">${5}</span></pre></div>
       </div>
     </div>
   </div>
@@ -1136,28 +1656,44 @@
         <div class="keyword-container" id="extract-emails">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#extract-emails">Extract Emails</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L118" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L118</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">List[str]</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">List[str]</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Extract all email addresses from a string.</p>
 <p><strong>Arguments:</strong></p>
@@ -1166,17 +1702,15 @@
 </ul>
 <p><strong>Returns:</strong> List of extracted email addresses</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Extract Emails Example</span>
-    <span style="color: #9cdcfe;">${emails}</span>    <span style="color: #4ec9b0; font-weight: bold;">Extract Emails</span>    Contact: john@example.com or jane@test.org
-    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${emails}</span>    john@example.com
-    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${emails}</span>    jane@test.org
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Extract Emails</span> Example</span>
+    <span class="rf-variable">${emails}</span>    <span class="rf-keyword">Extract Emails</span>    Contact: john@example.com or jane@test.org
+    <span class="rf-keyword">Should Contain</span>    <span class="rf-variable">${emails}</span>    john@example.com
+    <span class="rf-keyword">Should Contain</span>    <span class="rf-variable">${emails}</span>    jane@test.org</pre></div>
       </div>
     </div>
   </div>
@@ -1184,28 +1718,44 @@
         <div class="keyword-container" id="validate-url">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#validate-url">Validate Url</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L144" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L144</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">url</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">url</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">bool</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">bool</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Validate if a string is a valid URL.</p>
 <p><strong>Arguments:</strong></p>
@@ -1214,16 +1764,14 @@
 </ul>
 <p><strong>Returns:</strong> True if valid URL, False otherwise</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Validate URL Example</span>
-    <span style="color: #9cdcfe;">${valid}</span>    <span style="color: #4ec9b0; font-weight: bold;">Validate Url</span>    https://example.com
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be True</span>     <span style="color: #9cdcfe;">${valid}</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Validate URL Example</span>
+    <span class="rf-variable">${valid}</span>    <span class="rf-keyword">Validate Url</span>    https://example.com
+    <span class="rf-keyword">Should Be True</span>    <span class="rf-variable">${valid}</span></pre></div>
       </div>
     </div>
   </div>
@@ -1231,36 +1779,56 @@
         <div class="keyword-container" id="mask-sensitive-data">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#mask-sensitive-data">Mask Sensitive Data</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L169" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L169</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">visible_chars</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">int</span>
-               <span class="badge badge-default">default: 4</span>
+              <span class="argument-signature">
+                <span class="arg-name">visible_chars</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">int</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: 4</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Mask sensitive data, showing only first few characters.</p>
 <p><strong>Arguments:</strong></p>
@@ -1270,17 +1838,15 @@
 </ul>
 <p><strong>Returns:</strong> Masked string</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Mask Sensitive Data Example</span>
-    <span style="color: #9cdcfe;">${masked}</span>    <span style="color: #4ec9b0; font-weight: bold;">Mask Sensitive Data</span>    secret12345    <span style="color: #dcdcaa;">visible_chars</span>=3
-    <span style="color: #4ec9b0; font-weight: bold;">Should Start With</span>     <span style="color: #9cdcfe;">${masked}</span>    sec
-    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${masked}</span>    *
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Mask Sensitive Data</span> Example</span>
+    <span class="rf-variable">${masked}</span>    <span class="rf-keyword">Mask Sensitive Data</span>    secret12345    <span class="rf-arg">visible_chars</span>=3
+    <span class="rf-keyword">Should Start With</span>    <span class="rf-variable">${masked}</span>    sec
+    <span class="rf-keyword">Should Contain</span>    <span class="rf-variable">${masked}</span>    *</pre></div>
       </div>
     </div>
   </div>
@@ -1288,56 +1854,74 @@
         <div class="keyword-container" id="hash-string">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#hash-string">Hash String</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L197" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L197</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">algorithm</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
-               <span class="badge badge-default">default: "sha256"</span>
+              <span class="argument-signature">
+                <span class="arg-name">algorithm</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: &quot;sha256&quot;</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Generate hash of a string.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><code>text</code>: Text to hash</li>
-<li><code>algorithm</code>: Hash algorithm - &quot;md5&quot;, &quot;sha1&quot;, &quot;sha256&quot; (default)</li>
+<li><code>algorithm</code>: Hash algorithm - "md5", "sha1", "sha256" (default)</li>
 </ul>
 <p><strong>Returns:</strong> Hexadecimal hash string</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Hash String Example</span>
-    <span style="color: #9cdcfe;">${hash}</span>    <span style="color: #4ec9b0; font-weight: bold;">Hash String</span>    password123    <span style="color: #dcdcaa;">algorithm</span>=sha256
-    <span style="color: #4ec9b0; font-weight: bold;">Should Not Be Empty</span>     <span style="color: #9cdcfe;">${hash}</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Length Should Be</span>     <span style="color: #9cdcfe;">${hash}</span>    <span style="color: #9cdcfe;">${64}</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Hash String</span> Example</span>
+    <span class="rf-variable">${hash}</span>    <span class="rf-keyword">Hash String</span>    password123    <span class="rf-arg">algorithm</span>=sha256
+    <span class="rf-keyword">Should Not Be Empty</span>    <span class="rf-variable">${hash}</span>
+    <span class="rf-keyword">Length Should Be</span>    <span class="rf-variable">${hash}</span>    <span class="rf-variable">${64}</span></pre></div>
       </div>
     </div>
   </div>
@@ -1345,28 +1929,44 @@
         <div class="keyword-container" id="encode-base64">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#encode-base64">Encode Base64</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L225" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L225</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Encode string to Base64.</p>
 <p><strong>Arguments:</strong></p>
@@ -1375,16 +1975,14 @@
 </ul>
 <p><strong>Returns:</strong> Base64 encoded string</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Encode Base64 Example</span>
-    <span style="color: #9cdcfe;">${encoded}</span>    <span style="color: #4ec9b0; font-weight: bold;">Encode Base64</span>    Hello World
-    <span style="color: #4ec9b0; font-weight: bold;">Should Not Be Empty</span>     <span style="color: #9cdcfe;">${encoded}</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Encode Base64</span> Example</span>
+    <span class="rf-variable">${encoded}</span>    <span class="rf-keyword">Encode Base64</span>    Hello World
+    <span class="rf-keyword">Should Not Be Empty</span>    <span class="rf-variable">${encoded}</span></pre></div>
       </div>
     </div>
   </div>
@@ -1392,28 +1990,44 @@
         <div class="keyword-container" id="decode-base64">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#decode-base64">Decode Base64</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L249" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L249</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">encoded_text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">encoded_text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Decode Base64 string.</p>
 <p><strong>Arguments:</strong></p>
@@ -1422,16 +2036,14 @@
 </ul>
 <p><strong>Returns:</strong> Decoded string</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Decode Base64 Example</span>
-    <span style="color: #9cdcfe;">${decoded}</span>    <span style="color: #4ec9b0; font-weight: bold;">Decode Base64</span>    SGVsbG8gV29ybGQ=
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${decoded}</span>    Hello World
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Decode Base64</span> Example</span>
+    <span class="rf-variable">${decoded}</span>    <span class="rf-keyword">Decode Base64</span>    SGVsbG8gV29ybGQ=
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${decoded}</span>    Hello World</pre></div>
       </div>
     </div>
   </div>
@@ -1439,50 +2051,80 @@
         <div class="keyword-container" id="replace-pattern">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#replace-pattern">Replace Pattern</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L273" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L273</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">pattern</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">pattern</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">replacement</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">replacement</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">case_sensitive</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">bool</span>
-               <span class="badge badge-default">default: True</span>
+              <span class="argument-signature">
+                <span class="arg-name">case_sensitive</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">bool</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: True</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Replace text matching a regex pattern.</p>
 <p><strong>Arguments:</strong></p>
@@ -1494,16 +2136,14 @@
 </ul>
 <p><strong>Returns:</strong> Text with replacements applied</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Replace Pattern Example</span>
-    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Replace Pattern</span>    Hello 123 World    \d+    NUMBER
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    Hello NUMBER World
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Replace Pattern</span> Example</span>
+    <span class="rf-variable">${result}</span>    <span class="rf-keyword">Replace Pattern</span>    Hello 123 World    \d+    NUMBER
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${result}</span>    Hello NUMBER World</pre></div>
       </div>
     </div>
   </div>
@@ -1511,44 +2151,68 @@
         <div class="keyword-container" id="split-string">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#split-string">Split String</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L302" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L302</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">separator</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
-               <span class="badge badge-default">default: None</span>
+              <span class="argument-signature">
+                <span class="arg-name">separator</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: None</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">max_split</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">int</span>
-               <span class="badge badge-default">default: ...</span>
+              <span class="argument-signature">
+                <span class="arg-name">max_split</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">int</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: ...</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">List[str]</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">List[str]</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Split string into a list.</p>
 <p><strong>Arguments:</strong></p>
@@ -1559,18 +2223,16 @@
 </ul>
 <p><strong>Returns:</strong> List of strings</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Split String Example</span>
-    <span style="color: #9cdcfe;">${parts}</span>    <span style="color: #4ec9b0; font-weight: bold;">Split String</span>    apple,banana,cherry    <span style="color: #dcdcaa;">separator</span>=,
-    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${parts}</span>    apple
-    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${parts}</span>    banana
-    <span style="color: #4ec9b0; font-weight: bold;">Should Contain</span>     <span style="color: #9cdcfe;">${parts}</span>    cherry
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Split String</span> Example</span>
+    <span class="rf-variable">${parts}</span>    <span class="rf-keyword">Split String</span>    apple,banana,cherry    <span class="rf-arg">separator</span>=,
+    <span class="rf-keyword">Should Contain</span>    <span class="rf-variable">${parts}</span>    apple
+    <span class="rf-keyword">Should Contain</span>    <span class="rf-variable">${parts}</span>    banana
+    <span class="rf-keyword">Should Contain</span>    <span class="rf-variable">${parts}</span>    cherry</pre></div>
       </div>
     </div>
   </div>
@@ -1578,36 +2240,56 @@
         <div class="keyword-container" id="join-strings">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#join-strings">Join Strings</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L332" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L332</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">strings</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">List[str]</span>
+              <span class="argument-signature">
+                <span class="arg-name">strings</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">List[str]</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">separator</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
-               <span class="badge badge-default">default: " "</span>
+              <span class="argument-signature">
+                <span class="arg-name">separator</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: &quot; &quot;</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Join list of strings with a separator.</p>
 <p><strong>Arguments:</strong></p>
@@ -1617,17 +2299,15 @@
 </ul>
 <p><strong>Returns:</strong> Joined string</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Join Strings Example</span>
-    <span style="color: #9cdcfe;">@{items}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create List</span>    apple    banana    cherry
-    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Join Strings</span>    <span style="color: #9cdcfe;">${items}</span>    <span style="color: #dcdcaa;">separator</span>=,
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    apple,banana,cherry
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Join Strings</span> Example</span>
+    <span class="rf-variable">@{items}</span>    <span class="rf-keyword">Create List</span>    apple    banana    cherry
+    <span class="rf-variable">${result}</span>    <span class="rf-keyword">Join Strings</span>    <span class="rf-variable">${items}</span>    <span class="rf-arg">separator</span>=,
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${result}</span>    apple,banana,cherry</pre></div>
       </div>
     </div>
   </div>
@@ -1635,48 +2315,62 @@
         <div class="keyword-container" id="format-template">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#format-template">Format Template</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L358" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L358</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">template</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">template</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Format a string template with variables.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><code>template</code>: Template string with {variable} placeholders</li>
-<li><code><em></em>kwargs</code>: Variable name-value pairs</li>
+<li><code>**kwargs</code>: Variable name-value pairs</li>
 </ul>
 <p><strong>Returns:</strong> Formatted string</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Format Template Example</span>
-    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Format Template</span>    Hello {name}, you are {age} years old
-    ...    <span style="color: #dcdcaa;">name</span>=John    <span style="color: #dcdcaa;">age</span>=30
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    Hello John, you are 30 years old
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Format Template</span> Example</span>
+    <span class="rf-variable">${result}</span>    <span class="rf-keyword">Format Template</span>    Hello {name}, you are {age} years old
+    ...    <span class="rf-keyword">name=John</span>    <span class="rf-arg">age</span>=30
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${result}</span>    Hello John, you are 30 years old</pre></div>
       </div>
     </div>
   </div>
@@ -1684,43 +2378,68 @@
         <div class="keyword-container" id="count-occurrences">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#count-occurrences">Count Occurrences</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L384" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L384</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">substring</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">substring</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">case_sensitive</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">bool</span>
-               <span class="badge badge-default">default: True</span>
+              <span class="argument-signature">
+                <span class="arg-name">case_sensitive</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">bool</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: True</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">int</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">int</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Count occurrences of a substring in text.</p>
 <p><strong>Arguments:</strong></p>
@@ -1731,16 +2450,14 @@
 </ul>
 <p><strong>Returns:</strong> Number of occurrences</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Count Occurrences Example</span>
-    <span style="color: #9cdcfe;">${count}</span>    <span style="color: #4ec9b0; font-weight: bold;">Count Occurrences</span>    hello hello world    hello
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal As Integers</span>     <span style="color: #9cdcfe;">${count}</span>    <span style="color: #9cdcfe;">${2}</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Count Occurrences</span> Example</span>
+    <span class="rf-variable">${count}</span>    <span class="rf-keyword">Count Occurrences</span>    hello hello world    hello
+    <span class="rf-keyword">Should Be Equal As Integers</span>    <span class="rf-variable">${count}</span>    <span class="rf-variable">${2}</span></pre></div>
       </div>
     </div>
   </div>
@@ -1748,63 +2465,86 @@
         <div class="keyword-container" id="truncate-string">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#truncate-string">Truncate String</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L413" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L413</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">max_length</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">int</span>
+              <span class="argument-signature">
+                <span class="arg-name">max_length</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">int</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">suffix</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
-               <span class="badge badge-default">default: "..."</span>
+              <span class="argument-signature">
+                <span class="arg-name">suffix</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: &quot;...&quot;</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Truncate string to maximum length.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><code>text</code>: Text to truncate</li>
 <li><code>max_length</code>: Maximum length</li>
-<li><code>suffix</code>: Suffix to append if truncated (default: &quot;...&quot;)</li>
+<li><code>suffix</code>: Suffix to append if truncated (default: "...")</li>
 </ul>
 <p><strong>Returns:</strong> Truncated string</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Truncate String Example</span>
-    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Truncate String</span>    This is a very long text    10
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    This is a...
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Truncate String</span> Example</span>
+    <span class="rf-variable">${result}</span>    <span class="rf-keyword">Truncate String</span>    This is a very long text    10
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${result}</span>    This is a...</pre></div>
       </div>
     </div>
   </div>
@@ -1812,51 +2552,80 @@
         <div class="keyword-container" id="pad-string">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#pad-string">Pad String</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L441" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L441</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">width</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">int</span>
+              <span class="argument-signature">
+                <span class="arg-name">width</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">int</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">padding</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
-               <span class="badge badge-default">default: " "</span>
+              <span class="argument-signature">
+                <span class="arg-name">padding</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: &quot; &quot;</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">align</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
-               <span class="badge badge-default">default: "left"</span>
+              <span class="argument-signature">
+                <span class="arg-name">align</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: &quot;left&quot;</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Pad string to specified width.</p>
 <p><strong>Arguments:</strong></p>
@@ -1864,20 +2633,18 @@
 <li><code>text</code>: Text to pad</li>
 <li><code>width</code>: Target width</li>
 <li><code>padding</code>: Padding character (default: space)</li>
-<li><code>align</code>: Alignment - &quot;left&quot;, &quot;right&quot;, or &quot;center&quot; (default: left)</li>
+<li><code>align</code>: Alignment - "left", "right", or "center" (default: left)</li>
 </ul>
 <p><strong>Returns:</strong> Padded string</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Pad String Example</span>
-    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Pad String</span>    hello    10    <span style="color: #dcdcaa;">align</span>=right
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    <span style="color: #9cdcfe;">${SPACE * 5}</span>hello
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Pad String</span> Example</span>
+    <span class="rf-variable">${result}</span>    <span class="rf-keyword">Pad String</span>    hello    10    <span class="rf-arg">align</span>=right
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${result}</span>    <span class="rf-variable">${SPACE * 5}</span>hello</pre></div>
       </div>
     </div>
   </div>
@@ -1885,28 +2652,44 @@
         <div class="keyword-container" id="reverse-string">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#reverse-string">Reverse String</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L475" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L475</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Reverse a string.</p>
 <p><strong>Arguments:</strong></p>
@@ -1915,16 +2698,14 @@
 </ul>
 <p><strong>Returns:</strong> Reversed string</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Reverse String Example</span>
-    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Reverse String</span>    hello
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    olleh
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Reverse String</span> Example</span>
+    <span class="rf-variable">${result}</span>    <span class="rf-keyword">Reverse String</span>    hello
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${result}</span>    olleh</pre></div>
       </div>
     </div>
   </div>
@@ -1932,36 +2713,56 @@
         <div class="keyword-container" id="remove-duplicates">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#remove-duplicates">Remove Duplicates</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L499" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L499</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">separator</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
-               <span class="badge badge-default">default: " "</span>
+              <span class="argument-signature">
+                <span class="arg-name">separator</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: &quot; &quot;</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Remove duplicate words/parts from a string.</p>
 <p><strong>Arguments:</strong></p>
@@ -1971,16 +2772,14 @@
 </ul>
 <p><strong>Returns:</strong> String with duplicates removed</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Remove Duplicates Example</span>
-    <span style="color: #9cdcfe;">${result}</span>    <span style="color: #4ec9b0; font-weight: bold;">Remove Duplicates</span>    apple banana apple cherry
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${result}</span>    apple banana cherry
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Remove Duplicates</span> Example</span>
+    <span class="rf-variable">${result}</span>    <span class="rf-keyword">Remove Duplicates</span>    apple banana apple cherry
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${result}</span>    apple banana cherry</pre></div>
       </div>
     </div>
   </div>
@@ -1988,36 +2787,56 @@
         <div class="keyword-container" id="validate-phone-number">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#validate-phone-number">Validate Phone Number</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L531" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L531</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">phone</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">phone</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">country</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
-               <span class="badge badge-default">default: "US"</span>
+              <span class="argument-signature">
+                <span class="arg-name">country</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: &quot;US&quot;</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">bool</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">bool</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Validate phone number format.</p>
 <p><strong>Arguments:</strong></p>
@@ -2027,16 +2846,14 @@
 </ul>
 <p><strong>Returns:</strong> True if valid format, False otherwise</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Validate Phone Number Example</span>
-    <span style="color: #9cdcfe;">${valid}</span>    <span style="color: #4ec9b0; font-weight: bold;">Validate Phone Number</span>    +1-555-123-4567
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be True</span>     <span style="color: #9cdcfe;">${valid}</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Validate Phone Number</span> Example</span>
+    <span class="rf-variable">${valid}</span>    <span class="rf-keyword">Validate Phone Number</span>    +1-555-123-4567
+    <span class="rf-keyword">Should Be True</span>    <span class="rf-variable">${valid}</span></pre></div>
       </div>
     </div>
   </div>
@@ -2044,28 +2861,44 @@
         <div class="keyword-container" id="extract-json-from-text">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#extract-json-from-text">Extract Json From Text</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L560" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L560</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">text</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">text</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">Optional[Dict[str, Any]]</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">Optional[Dict[str, Any]]</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Extract and parse JSON object from text.</p>
 <p><strong>Arguments:</strong></p>
@@ -2074,17 +2907,15 @@
 </ul>
 <p><strong>Returns:</strong> Parsed JSON dictionary or None if not found</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Extract JSON From Text Example</span>
-    <span style="color: #9cdcfe;">${json}</span>    <span style="color: #4ec9b0; font-weight: bold;">Extract Json From Text</span>    Data: {&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30}
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${json}</span>[name]    John
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal As Integers</span>     <span style="color: #9cdcfe;">${json}</span>[age]    <span style="color: #9cdcfe;">${30}</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Extract JSON From Text Example</span>
+    <span class="rf-variable">${json}</span>    <span class="rf-keyword">Extract Json From Text</span>    Data: {&quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30}
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${json}</span>[name]    John
+    <span class="rf-keyword">Should Be Equal As Integers</span>    <span class="rf-variable">${json}</span>[age]    <span class="rf-variable">${30}</span></pre></div>
       </div>
     </div>
   </div>
@@ -2092,61 +2923,92 @@
         <div class="keyword-container" id="generate-random-string">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#generate-random-string">Generate Random String</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/string_utils.py#L593" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L593</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">length</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">int</span>
-               <span class="badge badge-default">default: 10</span>
+              <span class="argument-signature">
+                <span class="arg-name">length</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">int</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: 10</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">include_uppercase</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">bool</span>
-               <span class="badge badge-default">default: True</span>
+              <span class="argument-signature">
+                <span class="arg-name">include_uppercase</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">bool</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: True</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">include_lowercase</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">bool</span>
-               <span class="badge badge-default">default: True</span>
+              <span class="argument-signature">
+                <span class="arg-name">include_lowercase</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">bool</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: True</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">include_digits</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">bool</span>
-               <span class="badge badge-default">default: True</span>
+              <span class="argument-signature">
+                <span class="arg-name">include_digits</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">bool</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: True</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">include_special</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">bool</span>
-               <span class="badge badge-default">default: False</span>
+              <span class="argument-signature">
+                <span class="arg-name">include_special</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">bool</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: False</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">str</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Generate a random string.</p>
 <p><strong>Arguments:</strong></p>
@@ -2159,42 +3021,26 @@
 </ul>
 <p><strong>Returns:</strong> Random string</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    StringUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    StringUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Generate Random String Example</span>
-    <span style="color: #9cdcfe;">${random}</span>    <span style="color: #4ec9b0; font-weight: bold;">Generate Random String</span>    <span style="color: #dcdcaa;">length</span>=16    <span style="color: #dcdcaa;">include_special</span>=True
-    <span style="color: #4ec9b0; font-weight: bold;">Length Should Be</span>     <span style="color: #9cdcfe;">${random}</span>    <span style="color: #9cdcfe;">${16}</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Should Match Regexp</span>     <span style="color: #9cdcfe;">${random}</span>    .+
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Generate Random String</span> Example</span>
+    <span class="rf-variable">${random}</span>    <span class="rf-keyword">Generate Random String</span>    <span class="rf-arg">length</span>=16    <span class="rf-arg">include_special</span>=True
+    <span class="rf-keyword">Length Should Be</span>    <span class="rf-variable">${random}</span>    <span class="rf-variable">${16}</span>
+    <span class="rf-keyword">Should Match Regexp</span>    <span class="rf-variable">${random}</span>    .+</pre></div>
       </div>
     </div>
   </div>
 </div>
       </section>
 
-      <section class="keyword-container">
-        <div class="keyword-name">
-          <h2>Need Help?</h2>
-        </div>
-        <div class="kw-overview">
-          <div class="kw-docs">
-            <p>
-              Found an issue or have a feature request for this library? Let the maintainers know by opening a new
-              GitHub issue. Please include environment details and relevant log output to help us reproduce the problem.
-            </p>
-            <p style="margin-top: 1rem;"><a class="btn btn-primary" href="https://github.com/username/repo/issues/new" target="_blank" rel="noopener noreferrer">Open an Issue on GitHub</a></p>
-          </div>
-        </div>
-      </section>
+      <section class="help-strip" id="need-help" aria-label="Need help"><div class="help-strip-body"><div class="help-strip-copy"><h2>Need help?</h2><p>Questions or bugs in this library? Open an issue or email support — include environment details when you can.</p></div><div class="help-strip-actions"><a class="btn btn-primary" href="https://github.com/username/repo/issues/new" target="_blank" rel="noopener noreferrer">Open an Issue</a><a class="btn btn-ghost" href="mailto:support@example.com">Contact Support</a></div></div></section>
     </main>
   </div>
-
   <footer>
-    Generated by <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · StringUtils Documentation · Last updated: 2026-01-24 19:31:46
+    Generated by <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · StringUtils Documentation · Last updated: 2026-10-13 14:21:27
   </footer>
 
   <script>
@@ -2203,15 +3049,107 @@
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.querySelector('aside');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const layout = document.querySelector('.layout');
+    const sidebarResizer = document.getElementById('sidebar-resizer');
+    const SIDEBAR_WIDTH_KEY = 'docgen-sidebar-width';
+    const SIDEBAR_MIN = 200;
+    const SIDEBAR_MAX = 520;
+    const SIDEBAR_DEFAULT = 260;
+
+    function clampSidebarWidth(width) {
+      return Math.min(SIDEBAR_MAX, Math.max(SIDEBAR_MIN, Math.round(width)));
+    }
+
+    function applySidebarWidth(width) {
+      const px = clampSidebarWidth(width);
+      document.documentElement.style.setProperty('--sidebar-width', px + 'px');
+      if (sidebarResizer) {
+        sidebarResizer.setAttribute('aria-valuenow', String(px));
+      }
+      return px;
+    }
+
+    function loadSidebarWidth() {
+      try {
+        const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY);
+        if (saved) {
+          const parsed = parseInt(saved, 10);
+          if (!Number.isNaN(parsed)) {
+            applySidebarWidth(parsed);
+            return;
+          }
+        }
+      } catch (_) { /* ignore */ }
+      applySidebarWidth(SIDEBAR_DEFAULT);
+    }
+
+    function persistSidebarWidth(width) {
+      try {
+        localStorage.setItem(SIDEBAR_WIDTH_KEY, String(clampSidebarWidth(width)));
+      } catch (_) { /* ignore */ }
+    }
+
+    if (sidebar && sidebarResizer && layout) {
+      loadSidebarWidth();
+
+      sidebarResizer.addEventListener('pointerdown', (event) => {
+        if (window.innerWidth <= 1024) return;
+        event.preventDefault();
+        const startX = event.clientX;
+        const startWidth = sidebar.getBoundingClientRect().width;
+        layout.classList.add('is-resizing');
+        sidebarResizer.setPointerCapture(event.pointerId);
+
+        const onMove = (moveEvent) => {
+          applySidebarWidth(startWidth + (moveEvent.clientX - startX));
+        };
+
+        const onUp = (upEvent) => {
+          layout.classList.remove('is-resizing');
+          persistSidebarWidth(
+            parseInt(
+              getComputedStyle(document.documentElement)
+                .getPropertyValue('--sidebar-width'),
+              10
+            ) || SIDEBAR_DEFAULT
+          );
+          sidebarResizer.releasePointerCapture(upEvent.pointerId);
+          sidebarResizer.removeEventListener('pointermove', onMove);
+          sidebarResizer.removeEventListener('pointerup', onUp);
+          sidebarResizer.removeEventListener('pointercancel', onUp);
+        };
+
+        sidebarResizer.addEventListener('pointermove', onMove);
+        sidebarResizer.addEventListener('pointerup', onUp);
+        sidebarResizer.addEventListener('pointercancel', onUp);
+      });
+
+      sidebarResizer.addEventListener('keydown', (event) => {
+        if (window.innerWidth <= 1024) return;
+        let delta = 0;
+        if (event.key === 'ArrowLeft') delta = -16;
+        if (event.key === 'ArrowRight') delta = 16;
+        if (!delta) return;
+        event.preventDefault();
+        const current = parseInt(
+          getComputedStyle(document.documentElement)
+            .getPropertyValue('--sidebar-width'),
+          10
+        ) || SIDEBAR_DEFAULT;
+        persistSidebarWidth(applySidebarWidth(current + delta));
+      });
+    }
 
     function searchKeywords() {
       const term = (searchInput.value || '').toLowerCase().trim();
-      const entries = keywordList.querySelectorAll('li');
+      const entries = keywordList.querySelectorAll('li:not(.no-results)');
       let matches = 0;
 
       entries.forEach((entry) => {
-        const text = entry.textContent.toLowerCase();
-        const hit = text.includes(term);
+        const haystack = (
+          entry.getAttribute('data-search') || entry.textContent || ''
+        ).toLowerCase();
+        const hit = !term || haystack.includes(term);
         entry.classList.toggle('hidden', !hit);
         if (hit) matches++;
       });
@@ -2230,59 +3168,21 @@
     }
 
     function toggleSidebar() {
-      if (window.innerWidth <= 1024) {
-        const isActive = sidebar.classList.contains('active');
-        const headerHeight = document.querySelector('header').offsetHeight;
-        
-        if (!isActive) {
-          // Open sidebar - set up styles first
-          sidebar.style.display = 'block';
-          sidebar.style.visibility = 'visible';
-          sidebar.style.opacity = '1';
-          sidebar.style.position = 'fixed';
-          sidebar.style.top = headerHeight + 'px';
-          sidebar.style.left = '0';
-          sidebar.style.width = '280px';
-          sidebar.style.maxWidth = '85vw';
-          sidebar.style.height = `calc(100vh - ${headerHeight}px)`;
-          sidebar.style.zIndex = '26';
-          sidebar.style.transition = 'transform 0.3s ease-in-out';
-          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
-          
-          // Ensure sidebar starts off-screen
-          sidebar.style.transform = 'translateX(-100%)';
-          sidebar.style.webkitTransform = 'translateX(-100%)';
-          
-          // Use requestAnimationFrame to ensure transition is applied before changing transform
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              sidebar.style.transform = 'translateX(0)';
-              sidebar.style.webkitTransform = 'translateX(0)';
-              sidebar.classList.add('active');
-              sidebarOverlay.classList.add('active');
-            });
-          });
-        } else {
-          // Close sidebar
-          sidebar.style.transition = 'transform 0.3s ease-in-out';
-          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
-          sidebar.style.transform = 'translateX(-100%)';
-          sidebar.style.webkitTransform = 'translateX(-100%)';
-          sidebar.classList.remove('active');
-          sidebarOverlay.classList.remove('active');
-        }
+      if (window.innerWidth > 1024) return;
+      const opening = !sidebar.classList.contains('active');
+      sidebar.classList.toggle('active', opening);
+      sidebarOverlay.classList.toggle('active', opening);
+      if (menuToggle) {
+        menuToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
       }
     }
 
     function closeSidebar() {
-      if (window.innerWidth <= 1024) {
-        sidebar.style.transition = 'transform 0.3s ease-in-out';
-        sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
-        sidebar.style.transform = 'translateX(-100%)';
-        sidebar.style.webkitTransform = 'translateX(-100%)';
-      }
       sidebar.classList.remove('active');
       sidebarOverlay.classList.remove('active');
+      if (menuToggle) {
+        menuToggle.setAttribute('aria-expanded', 'false');
+      }
     }
 
     if (searchInput && keywordList) {
@@ -2311,44 +3211,113 @@
       });
     }
 
-    if (keywordList) {
-      const keywordLinks = keywordList.querySelectorAll('a[href^="#"]');
+    if (sidebar) {
+      const navLinks = Array.from(sidebar.querySelectorAll('a[href^="#"]'));
 
-      function setActiveKeyword(hash) {
-        if (!hash) {
-          keywordLinks.forEach(link => {
-            link.classList.remove('active');
-            link.removeAttribute('aria-current');
-          });
+      // Spy targets: hero/intro, importing, and each keyword card.
+      const sectionIds = [];
+      navLinks.forEach((link) => {
+        const id = (link.hash || '').slice(1);
+        if (id && !sectionIds.includes(id) && document.getElementById(id)) {
+          sectionIds.push(id);
+        }
+      });
+      const sections = sectionIds
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+
+      let activeHash = '';
+      let clickLockUntil = 0;
+
+      function ensureSidebarLinkVisible(link) {
+        if (!link || !sidebar) return;
+        const pad = 10;
+        const sidebarRect = sidebar.getBoundingClientRect();
+        const linkRect = link.getBoundingClientRect();
+        // Already fully visible in the aside viewport — leave scroll alone.
+        if (
+          linkRect.top >= sidebarRect.top + pad &&
+          linkRect.bottom <= sidebarRect.bottom - pad
+        ) {
           return;
         }
+        // Nudge only the aside scrollport (avoid scrollIntoView side effects).
+        if (linkRect.top < sidebarRect.top + pad) {
+          sidebar.scrollTop += linkRect.top - sidebarRect.top - pad;
+        } else if (linkRect.bottom > sidebarRect.bottom - pad) {
+          sidebar.scrollTop += linkRect.bottom - sidebarRect.bottom + pad;
+        }
+      }
 
-        keywordLinks.forEach(link => {
-          if (link.hash === hash) {
-            link.classList.add('active');
+      function setActiveNav(hash) {
+        if (hash === activeHash) return;
+        activeHash = hash || '';
+
+        let activeLink = null;
+        navLinks.forEach((link) => {
+          const isActive = Boolean(hash) && link.hash === hash;
+          link.classList.toggle('active', isActive);
+          if (isActive) {
             link.setAttribute('aria-current', 'true');
+            activeLink = link;
           } else {
-            link.classList.remove('active');
             link.removeAttribute('aria-current');
           }
         });
+
+        ensureSidebarLinkVisible(activeLink);
       }
 
       function updateActiveFromHash() {
-        const hash = window.location.hash;
-        setActiveKeyword(hash);
+        setActiveNav(window.location.hash);
+      }
+
+      function headerOffset() {
+        const header = document.querySelector('header');
+        return (header ? header.getBoundingClientRect().height : 70) + 16;
+      }
+
+      function updateActiveFromScroll() {
+        if (Date.now() < clickLockUntil) return;
+        if (!sections.length) return;
+
+        const offset = headerOffset();
+        let current = sections[0];
+        for (const section of sections) {
+          if (section.getBoundingClientRect().top <= offset) {
+            current = section;
+          } else {
+            break;
+          }
+        }
+        setActiveNav('#' + current.id);
+      }
+
+      let scrollRaf = 0;
+      function onScrollOrResize() {
+        if (scrollRaf) return;
+        scrollRaf = window.requestAnimationFrame(() => {
+          scrollRaf = 0;
+          updateActiveFromScroll();
+        });
       }
 
       window.addEventListener('hashchange', updateActiveFromHash);
+      window.addEventListener('scroll', onScrollOrResize, { passive: true });
+      window.addEventListener('resize', onScrollOrResize);
 
-      keywordLinks.forEach(link => {
+      navLinks.forEach((link) => {
         link.addEventListener('click', () => {
-          setActiveKeyword(link.hash);
+          clickLockUntil = Date.now() + 600;
+          setActiveNav(link.hash);
         });
       });
 
-      // Initialize active state on load
-      updateActiveFromHash();
+      if (window.location.hash) {
+        updateActiveFromHash();
+      } else {
+        updateActiveFromScroll();
+      }
     }
   </script>
 </body>
