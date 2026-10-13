@@ -1,0 +1,2967 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="Generator" content="Robot Framework Documentation Parser">
+  <link rel="icon" href="https://docs.robotframework.org/img/rf_favicon.png">
+  <title>TimeTravel Documentation</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-alt: #020617;
+      --card: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56,189,248,0.15);
+      --border: #1e293b;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --badge-required: #fca5a5;
+      --badge-required-text: var(--badge-required);
+      --badge-required-bg: color-mix(in srgb, var(--badge-required) 12%, transparent);
+      --badge-default: #4ade80;
+      --badge-default-text: var(--badge-default);
+      --badge-default-bg: color-mix(in srgb, var(--badge-default) 15%, transparent);
+      --badge-tag-text: var(--muted);
+      --badge-tag-bg: color-mix(in srgb, var(--card) 88%, var(--text) 12%);
+      --badge-primary-text: var(--accent);
+      --badge-primary-bg: var(--accent-soft);
+      --arg-type: var(--muted);
+      --arg-type-bg: color-mix(in srgb, var(--card) 70%, var(--bg-alt) 30%);
+      --arg-type-border: color-mix(in srgb, var(--border) 75%, var(--muted) 25%);
+      --hero-badge-bg: color-mix(in srgb, var(--bg) 90%, var(--card) 10%);
+      --hero-badge-text: var(--muted);
+      --hero-badge-kind-bg: rgba(167, 139, 250, 0.12);
+      --hero-badge-kind-text: #c4b5fd;
+      --btn-primary-bg: var(--accent);
+      --btn-primary-text: var(--on-accent);
+      --btn-ghost-bg: color-mix(in srgb, var(--bg) 75%, transparent);
+      --btn-ghost-text: var(--muted);
+      --code-bg: var(--bg-alt);
+      --code-inline-bg: color-mix(in srgb, var(--accent) 8%, transparent);
+      /* Robot Framework syntax highlighting (VS Code Dark+ defaults) */
+      --rf-keyword: #4ec9b0;
+      --rf-control: #ce9178;
+      --rf-setting: #c586c0;
+      --rf-variable: #9cdcfe;
+      --rf-comment: #6a9955;
+      --rf-section: #569cd6;
+      --rf-name: #dcdcaa;
+      --rf-arg: #dcdcaa;
+      --rf-string: #ce9178;
+      --rf-number: #b5cea8;
+      --mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --sidebar-width: 260px;
+    }
+  </style>
+    <style id="docgen-theme">
+    :root {
+      --accent: #0ea5e9;
+      --accent-soft: rgba(14, 165, 233, 0.14);
+      --arg-type: #1479a8;
+      --arg-type-bg: #fafdff;
+      --arg-type-border: #a5d8ff;
+      --badge-default: #16a34a;
+      --badge-default-bg: rgba(22, 163, 74, 0.12);
+      --badge-default-text: #15803d;
+      --badge-primary-bg: rgba(14, 165, 233, 0.12);
+      --badge-primary-text: #0ea5e9;
+      --badge-required: #dc2626;
+      --badge-required-bg: rgba(220, 38, 38, 0.12);
+      --badge-required-text: #b91c1c;
+      --badge-tag-bg: #f0f3f5;
+      --badge-tag-text: #1479a8;
+      --bg: #eef8ff;
+      --bg-alt: #f8fbff;
+      --border: #a5d8ff;
+      --btn-ghost-bg: transparent;
+      --btn-ghost-text: #1479a8;
+      --btn-primary-bg: #0ea5e9;
+      --btn-primary-text: #f8fafc;
+      --card: #ffffff;
+      --code-bg: #e3f3ff;
+      --code-inline-bg: rgba(14, 165, 233, 0.1);
+      --hero-badge-bg: #f7fcff;
+      --hero-badge-kind-bg: rgba(14, 165, 233, 0.12);
+      --hero-badge-kind-text: #0ea5e9;
+      --hero-badge-text: #0b3b5a;
+      --muted: #1479a8;
+      --on-accent: #f8fafc;
+      --rf-arg: #a16207;
+      --rf-comment: #15803d;
+      --rf-control: #c2410c;
+      --rf-keyword: #0f766e;
+      --rf-name: #a16207;
+      --rf-number: #15803d;
+      --rf-section: #2563eb;
+      --rf-setting: #7c3aed;
+      --rf-string: #b45309;
+      --rf-variable: #0284c7;
+      --text: #0b3b5a;
+    }
+  </style>
+  <style>
+    /* Surfaces derived from theme tokens so light/brand themes actually apply. */
+    :root {
+      --surface: var(--bg);
+      --surface-2: color-mix(in srgb, var(--bg) 82%, var(--bg-alt) 18%);
+      --panel: var(--card);
+      --panel-2: color-mix(in srgb, var(--card) 88%, var(--text) 12%);
+      --header-bg: color-mix(in srgb, var(--bg) 92%, transparent);
+      --shadow: color-mix(in srgb, var(--bg-alt) 45%, transparent);
+      --on-accent: #0b1120;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: radial-gradient(
+        circle at top,
+        var(--border) 0,
+        var(--bg-alt) 45%,
+        var(--bg-alt) 100%
+      );
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(
+        to right,
+        color-mix(in srgb, var(--bg) 95%, transparent),
+        color-mix(in srgb, var(--bg) 80%, transparent)
+      );
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo img {
+      width: 36px;
+      height: 36px;
+      display: block;
+    }
+
+    header h1 {
+      font-size: 1.05rem;
+      margin: 0;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 0;
+      background: var(--accent);
+      color: var(--on-accent);
+      padding: 0.5rem 0.75rem;
+      z-index: 100;
+      border-radius: 0 0 6px 0;
+      font-weight: 600;
+    }
+
+    .skip-link:focus {
+      left: 0;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .badge-kind {
+      border-color: color-mix(in srgb, var(--hero-badge-kind-text) 45%, transparent);
+      color: var(--hero-badge-kind-text);
+      background: var(--hero-badge-kind-bg);
+    }
+
+    .no-docs {
+      color: var(--muted);
+      font-style: italic;
+      margin: 0;
+    }
+
+    #intro,
+    #keywords,
+    .keyword-container {
+      scroll-margin-top: 5.5rem;
+    }
+
+    header .tagline {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    header nav {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    header nav a {
+      color: var(--muted);
+      padding-bottom: 0.1rem;
+      border-bottom: 1px solid transparent;
+    }
+
+    header nav a:hover {
+      color: var(--text);
+      border-color: var(--accent-soft);
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      padding: 0.5rem;
+      margin-left: auto;
+      position: relative;
+      z-index: 31;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-toggle:hover {
+      color: var(--accent);
+    }
+
+    .menu-toggle svg {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: var(--sidebar-width) 6px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .layout.is-resizing {
+      cursor: col-resize;
+      user-select: none;
+    }
+
+    .layout.is-resizing * {
+      cursor: col-resize !important;
+      user-select: none !important;
+    }
+
+    aside {
+      border-right: none;
+      padding: calc(1.25rem + 10px) 1.5rem 1.5rem;
+      background: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--bg) 96%, transparent),
+        color-mix(in srgb, var(--bg) 78%, var(--bg-alt) 22%)
+      );
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      max-height: 100vh;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar-resizer {
+      position: sticky;
+      top: 0;
+      align-self: stretch;
+      height: 100vh;
+      width: 6px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      cursor: col-resize;
+      z-index: 5;
+      touch-action: none;
+      background: transparent;
+      border-right: 1px solid var(--border);
+    }
+
+    .sidebar-resizer::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 2px;
+      width: 2px;
+      background: transparent;
+      transition: background 0.15s ease;
+    }
+
+    .sidebar-resizer:hover::after,
+    .sidebar-resizer:focus-visible::after,
+    .layout.is-resizing .sidebar-resizer::after {
+      background: var(--accent);
+    }
+
+    .sidebar-resizer:focus-visible {
+      outline: none;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    aside h2 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .toc-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .toc-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0.25rem 0 0;
+    }
+
+    .toc-section li {
+      margin: 0.1rem 0;
+    }
+
+    .toc-section a {
+      color: var(--muted);
+      padding: 0.12rem 0;
+      display: inline-block;
+    }
+
+    .toc-section a:hover {
+      color: var(--text);
+    }
+
+    .keyword-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0 0;
+      font-size: 0.86rem;
+      overflow-y: auto;
+      counter-reset: keyword-index;
+    }
+    
+    .keyword-list li {
+      margin: 0;
+    }
+    
+    .keyword-list li.hidden {
+      display: none;
+    }
+    
+    .keyword-list a {
+      position: relative;
+      display: block;
+      color: var(--muted);
+      padding: 0.45rem 0.6rem;
+      border-radius: 0.55rem;
+      border: 1px solid transparent;
+      line-height: 1.4;
+      background: color-mix(in srgb, var(--bg) 70%, var(--card) 30%);
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+    }
+    
+    .keyword-list li + li {
+      margin-top: 0.15rem;
+    }
+    
+    .keyword-list a::before {
+      content: counter(keyword-index) ". ";
+      counter-increment: keyword-index;
+      font-size: 0.82rem;
+      color: var(--muted);
+      opacity: 0.9;
+      font-family: var(--mono);
+    }
+    
+    .keyword-list a:hover {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    .keyword-list a:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
+      outline-offset: 2px;
+    }
+    
+    .keyword-list a.active {
+      border-color: color-mix(in srgb, var(--accent) 70%, var(--border));
+      color: var(--accent);
+    }
+    
+    .keyword-list a.active::before {
+      color: var(--accent);
+    }
+
+    .search-box {
+      margin-top: 0.65rem;
+      margin-left: -5px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--card) 88%, var(--bg) 12%);
+      color: var(--text);
+      font-size: 0.85rem;
+    }
+
+    .search-box input:focus {
+      outline: 2px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    }
+
+    .no-results {
+      color: var(--muted);
+      font-style: italic;
+      padding: 0.4rem 0;
+    }
+
+    main {
+      padding: 1.75rem 2.4rem 3rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1.2fr);
+      gap: 2rem;
+      margin-bottom: 2.2rem;
+      align-items: center;
+    }
+
+    .hero h2 {
+      font-size: 2.2rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero p {
+      color: var(--muted);
+      margin-top: 0;
+      max-width: 40rem;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin: 0.8rem 0 1.25rem;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--hero-badge-bg);
+      color: var(--hero-badge-text);
+      border-color: color-mix(in srgb, var(--accent) 40%, var(--border) 60%);
+    }
+
+    .badge.primary {
+      border-color: color-mix(in srgb, var(--badge-primary-text) 40%, var(--border) 60%);
+      color: var(--badge-primary-text);
+      background: var(--badge-primary-bg);
+    }
+
+    .badge.badge-required {
+      color: var(--badge-required-text);
+      background: var(--badge-required-bg);
+      border-color: color-mix(in srgb, var(--badge-required-text) 35%, transparent);
+    }
+
+    .badge.badge-default {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      margin-left: 0.4rem;
+      color: var(--badge-default-text);
+      background: var(--badge-default-bg);
+      border-color: color-mix(in srgb, var(--badge-default-text) 30%, transparent);
+      font-weight: 500;
+      display: inline-block;
+      line-height: 1.4;
+      border-radius: 999px;
+    }
+
+    .badge.badge-tag {
+      border-radius: 0.35rem;
+      border-color: color-mix(in srgb, var(--border) 70%, var(--badge-tag-text) 30%);
+      color: var(--badge-tag-text);
+      background: var(--badge-tag-bg);
+    }
+
+    .kw-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+      margin: 0.35rem 0 0.15rem;
+    }
+
+    .kw-tags {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .kw-source {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(148, 163, 184, 0.55);
+    }
+
+    .kw-source:hover {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom-color: var(--accent);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      border: 1px solid transparent;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: radial-gradient(
+        circle at top left,
+        var(--btn-primary-bg),
+        color-mix(in srgb, var(--btn-primary-bg) 75%, black) 45%,
+        color-mix(in srgb, var(--btn-primary-bg) 45%, black) 100%
+      );
+      border-color: color-mix(in srgb, var(--btn-primary-bg) 45%, var(--border));
+      color: var(--btn-primary-text);
+      box-shadow: 0 10px 30px color-mix(in srgb, var(--btn-primary-bg) 40%, transparent);
+    }
+
+    .btn-ghost {
+      background: var(--btn-ghost-bg);
+      border-color: var(--border);
+      color: var(--btn-ghost-text);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 35px color-mix(in srgb, var(--accent) 45%, transparent);
+      text-decoration: none;
+    }
+
+    .btn-ghost:hover {
+      background: color-mix(in srgb, var(--bg) 90%, var(--card) 10%);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .hero-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hero-meta.meta-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      margin-top: 0.35rem;
+    }
+
+    .hero-meta.meta-grid span {
+      display: inline-flex;
+      gap: 0.25rem;
+      align-items: center;
+      color: var(--muted);
+    }
+
+    .hero-meta.meta-grid strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .hero-card {
+      border-radius: 1.2rem;
+      background: radial-gradient(
+        circle at top,
+        var(--accent-soft),
+        var(--bg) 70%
+      );
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px var(--shadow);
+      padding: 1rem 1rem 1.2rem;
+      font-size: 0.75rem;
+    }
+
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.45rem;
+      color: var(--muted);
+    }
+
+    .hero-card-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+    }
+
+    .hero-card-lang {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--bg) 85%, var(--card) 15%);
+    }
+
+    pre {
+      background: var(--code-bg);
+      border-radius: 0.75rem;
+      padding: 0.9rem 1rem;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .keyword-container {
+      background: color-mix(in srgb, var(--bg) 92%, var(--card) 8%);
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      padding: 1rem 1.1rem;
+      font-size: 0.92rem;
+      box-shadow: 0 18px 40px var(--shadow);
+      margin-bottom: 1.5rem;
+    }
+
+    .keyword-name h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .kw-overview {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .args,
+    .return-type,
+    .kw-docs,
+    .kw-example {
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 0.85rem;
+      background: color-mix(in srgb, var(--card) 92%, var(--bg) 8%);
+    }
+
+    .keyword-content > .kw-docs,
+    .keyword-content > .kw-example {
+      margin-top: 0.85rem;
+    }
+
+    .args h3,
+    .return-type h3,
+    .kw-docs h3,
+    .kw-example h3,
+    .args h4,
+    .return-type h4,
+    .kw-docs h4,
+    .kw-example h4 {
+      margin: 0 0 0.4rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Nested code fence sits inside the Example card (no double frame). */
+    .kw-example .code-block {
+      margin: 0.35rem 0 0;
+      border: none;
+      border-radius: 0.5rem;
+      background: var(--code-bg);
+    }
+
+    .arguments-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .argument-item {
+      background: color-mix(in srgb, var(--card) 70%, var(--bg) 30%);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      transition: all 0.2s ease;
+    }
+
+    .argument-item:hover {
+      background: color-mix(in srgb, var(--card) 55%, var(--bg) 45%);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+    }
+
+    .argument-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .arg-name {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: var(--accent-soft);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+      color: var(--accent);
+    }
+
+    .arg-separator {
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 400;
+    }
+
+    .arg-type {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      border: 1px solid var(--arg-type-border);
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      color: var(--arg-type);
+      background: var(--arg-type-bg);
+      display: inline-block;
+      line-height: 1.4;
+    }
+
+    .return-type .arg-type {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      line-height: 1.4;
+    }
+
+    .argument-doc,
+    .return-doc {
+      margin-top: 0.55rem;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .argument-doc p,
+    .return-doc p {
+      margin: 0;
+    }
+
+    a.kw-ref {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    a.kw-ref:hover {
+      color: color-mix(in srgb, var(--accent) 75%, white);
+    }
+
+    .enum-values {
+      list-style: none;
+      margin: 0.75rem 0 0.5rem 0;
+      padding: 0;
+      width: 100%;
+    }
+
+    .enum-container {
+      background: color-mix(in srgb, var(--card) 70%, var(--bg) 30%);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .enum-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.65rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .enum-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .enum-count {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-family: var(--mono);
+      padding: 0.15rem 0.4rem;
+      background: var(--accent-soft);
+      border-radius: 4px;
+      border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
+    }
+
+    .enum-members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .enum-member {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.65rem;
+      background: color-mix(in srgb, var(--bg) 80%, var(--card) 20%);
+      border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+    }
+
+    .enum-member:hover {
+      background: color-mix(in srgb, var(--bg) 70%, var(--card) 30%);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+      transform: translateY(-1px);
+    }
+
+    .enum-member-name {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .enum-member-name code {
+      background: transparent;
+      padding: 0;
+      border: none;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .enum-member-separator {
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .enum-member-value {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    .enum-member-value code {
+      background: var(--code-inline-bg);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    @media (max-width: 768px) {
+      .enum-members-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .kwdoc {
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+
+    .kwdoc code {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      background: var(--code-inline-bg);
+      padding: 0.2rem 0.35rem;
+      border-radius: 4px;
+    }
+
+    .kwdoc table,
+    .kwdoc .doc-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1rem 0;
+      border: 2px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: color-mix(in srgb, var(--card) 88%, var(--bg) 12%);
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .kwdoc table thead,
+    .kwdoc .doc-table thead {
+      background: var(--accent-soft);
+    }
+
+    .kwdoc table th,
+    .kwdoc .doc-table th {
+      padding: 0.65rem 0.85rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .kwdoc table th:last-child,
+    .kwdoc .doc-table th:last-child {
+      border-right: none;
+    }
+
+    .kwdoc table td,
+    .kwdoc .doc-table td {
+      padding: 0.6rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+
+    .kwdoc table td:last-child,
+    .kwdoc .doc-table td:last-child {
+      border-right: none;
+    }
+
+    .kwdoc table tbody tr:last-child td,
+    .kwdoc .doc-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .kwdoc table tbody tr:hover,
+    .kwdoc .doc-table tbody tr:hover {
+      background: var(--accent-soft);
+    }
+
+    .kwdoc img,
+    .kwdoc .doc img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      margin: 1rem 0;
+      display: block;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+
+    .code-block pre {
+      margin: 0;
+      padding: 1rem;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+      white-space: pre;
+      overflow-x: auto;
+      border-radius: 0;
+      border: none;
+      background: transparent;
+    }
+
+    .rf-keyword,
+    .robot-keywords {
+      color: var(--rf-keyword);
+      font-weight: bold;
+    }
+    .rf-control {
+      color: var(--rf-control);
+      font-weight: bold;
+    }
+    .rf-setting,
+    .robot-settings {
+      color: var(--rf-setting);
+      font-weight: bold;
+    }
+    .rf-variable,
+    .robot-variables {
+      color: var(--rf-variable);
+    }
+    .rf-comment,
+    .robot-comments {
+      color: var(--rf-comment);
+      font-style: italic;
+    }
+    .rf-section {
+      color: var(--rf-section);
+      font-weight: bold;
+    }
+    .rf-name,
+    .robot-test-cases {
+      color: var(--rf-name);
+      font-weight: bold;
+    }
+    .rf-arg {
+      color: var(--rf-arg);
+    }
+    .rf-string,
+    .robot-strings {
+      color: var(--rf-string);
+    }
+    .rf-number,
+    .robot-numbers {
+      color: var(--rf-number);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.2rem 2.4rem 1.6rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      background: radial-gradient(
+        circle at bottom,
+        var(--accent-soft),
+        var(--bg-alt) 70%
+      );
+    }
+
+    @media (max-width: 1024px) {
+      .menu-toggle {
+        display: flex;
+      }
+
+      /* Keep Back to Dashboard visible; hide in-page Overview/Keywords links */
+      header nav a {
+        display: none;
+      }
+
+      header nav a.nav-back {
+        display: inline-flex;
+      }
+
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .sidebar-resizer {
+        display: none;
+      }
+
+      aside {
+        position: fixed !important;
+        top: 70px;
+        left: 0;
+        width: 280px;
+        max-width: 85vw;
+        height: calc(100vh - 70px);
+        z-index: 26;
+        transform: translate3d(-100%, 0, 0);
+        transition: transform 0.3s ease-in-out;
+        box-shadow: 2px 0 10px var(--shadow);
+        background: linear-gradient(
+          to bottom,
+          var(--bg),
+          color-mix(in srgb, var(--bg) 94%, var(--bg-alt) 6%)
+        ) !important;
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        /* Override desktop sticky so the drawer can slide in */
+        bottom: auto;
+      }
+
+      aside.active {
+        transform: translate3d(0, 0, 0) !important;
+      }
+
+      .sidebar-overlay {
+        display: none;
+      }
+
+      .sidebar-overlay.active {
+        display: block;
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      main {
+        width: 100%;
+        padding: 1.25rem 1.4rem 2.5rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 0.7rem 1rem;
+      }
+
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero h2 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header>
+    <div class="brand">
+      <div class="logo">
+        <img src="https://docs.robotframework.org/img/robot-framework.svg" alt="Robot Framework Logo">
+      </div>
+      <div>
+        <h1>TimeTravel</h1>
+        <div class="tagline">Robot Framework library documentation</div>
+      </div>
+    </div>
+    <nav>
+      <a href="#intro">Overview</a>
+      <a href="#importing">Importing</a>
+      <a href="#keywords">Keywords</a>
+    </nav>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="layout">
+    <aside>
+      <div class="toc-section">
+        <h2>Getting Started</h2>
+        <ul>
+          <li><a href="#intro">Introduction</a></li>
+          <li><a href="#importing">Importing</a></li>
+        </ul>
+      </div>
+
+      <div class="toc-section">
+        <h2>Keywords</h2>
+        <div class="search-box">
+          <label class="visually-hidden" for="keyword-search">Search keywords, docs, and tags</label>
+          <input type="text" id="keyword-search" placeholder="Search keywords, docs, tags…" aria-label="Search keywords, docs, and tags">
+        </div>
+        <ul class="keyword-list" id="keyword-list">
+          <li data-search="advance time move the simulated clock forward by duration. requires an active simulated clock. duration must be non-negative. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 advance time 5 minutes advance time 1 day 6 hours the simulated datetime as an iso-8601 string. non-negative duration such as 5 minutes."><a href="#advance-time">Advance Time</a></li>
+        <li data-search="advance to next weekday advance to the next weekday, never staying on today. weekday accepts names like monday or abbreviations like mon. when keep_time is true (default), the current time-of-day is kept. when false, the destination is midnight in the interpretation timezone. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 advance to next weekday monday advance to next weekday friday keep_time=${false} the simulated datetime as an iso-8601 string. target weekday name or abbreviation. keep the current time-of-day when true."><a href="#advance-to-next-weekday">Advance To Next Weekday</a></li>
+        <li data-search="convert datetime to timezone convert an iso-8601 datetime into timezone and return iso-8601. aware inputs keep their absolute instant. naive inputs are interpreted using the library&#x27;s configured interpretation timezone first. examples: *** settings *** library timetravel *** test cases *** example ${ny}= convert datetime to timezone 2026-01-01t00:00:00+00:00 america/new_york converted iso-8601 datetime string. iso-8601 datetime string. target iana timezone name."><a href="#convert-datetime-to-timezone">Convert Datetime To Timezone</a></li>
+        <li data-search="fail if time travel is active fail when a simulated clock is still active. handy in suite teardown to catch cleanup leaks when auto-reset is disabled. examples: *** settings *** library timetravel auto_reset=${false} suite teardown fail if time travel is active *** test cases *** example [teardown] reset time freeze time 2026-01-01t10:00:00+00:00"><a href="#fail-if-time-travel-is-active">Fail If Time Travel Is Active</a></li>
+        <li data-search="format simulated time format the current simulated time with strftime format. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 ${text}= format simulated time ${text}= format simulated time %a %y-%m-%d formatted simulated time. strftime format string."><a href="#format-simulated-time">Format Simulated Time</a></li>
+        <li data-search="freeze at real time freeze perceived time at the current real wall-clock instant. uses time-machine escape hatch when already travelling so the destination is true wall time, not the simulated clock. examples: *** settings *** library timetravel *** test cases *** example freeze at real time the simulated datetime as an iso-8601 string."><a href="#freeze-at-real-time">Freeze At Real Time</a></li>
+        <li data-search="freeze at timestamp freeze perceived time at a unix timestamp (seconds). examples: *** settings *** library timetravel *** test cases *** example freeze at timestamp 1767261600 the simulated datetime as an iso-8601 string. unix timestamp in seconds."><a href="#freeze-at-timestamp">Freeze At Timestamp</a></li>
+        <li data-search="freeze time freeze perceived time at at. at is an iso-8601 datetime or date. naive values are interpreted in the timezone configured by [set timezone] (default utc). if a simulated clock is already active, it is replaced. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 freeze time 2026-01-01t10:00:00 the simulated datetime as an iso-8601 string. destination datetime or date."><a href="#freeze-time">Freeze Time</a></li>
+        <li data-search="get clock mode return the clock mode: idle, frozen, or ticking. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 ${mode}= get clock mode current clock mode."><a href="#get-clock-mode">Get Clock Mode</a></li>
+        <li data-search="get current simulated time return the perceived current datetime as an iso-8601 string. the value is expressed in the configured interpretation timezone. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 ${now}= get current simulated time iso-8601 datetime string."><a href="#get-current-simulated-time">Get Current Simulated Time</a></li>
+        <li data-search="get current simulated time in timezone return the current simulated instant expressed in timezone. does not change the configured interpretation timezone. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t00:00:00+00:00 ${local}= get current simulated time in timezone asia/kolkata simulated datetime in the requested timezone. iana timezone name used for presentation."><a href="#get-current-simulated-time-in-timezone">Get Current Simulated Time In Timezone</a></li>
+        <li data-search="get current simulated timestamp return the perceived current unix timestamp in seconds. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 ${ts}= get current simulated timestamp unix timestamp in seconds."><a href="#get-current-simulated-timestamp">Get Current Simulated Timestamp</a></li>
+        <li data-search="get current simulated timestamp ns return the perceived current unix timestamp in nanoseconds. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 ${ns}= get current simulated timestamp ns unix timestamp in nanoseconds."><a href="#get-current-simulated-timestamp-ns">Get Current Simulated Timestamp Ns</a></li>
+        <li data-search="get current timezone return the configured interpretation timezone. examples: *** settings *** library timetravel *** test cases *** example set timezone asia/kolkata ${tz}= get current timezone current interpretation timezone name."><a href="#get-current-timezone">Get Current Timezone</a></li>
+        <li data-search="get real time return the real wall-clock datetime, even while time-travelling. uses time-machine escape hatch when a traveller is active. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 ${real}= get real time real wall-clock datetime as iso-8601."><a href="#get-real-time">Get Real Time</a></li>
+        <li data-search="get real timestamp return the real wall-clock unix timestamp in seconds. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 ${real_ts}= get real timestamp real wall-clock unix timestamp."><a href="#get-real-timestamp">Get Real Timestamp</a></li>
+        <li data-search="get simulated weekday return the english weekday name for the current simulated time. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 ${day}= get simulated weekday weekday name such as thursday."><a href="#get-simulated-weekday">Get Simulated Weekday</a></li>
+        <li data-search="pause time freeze the clock at the current simulated instant. requires an active simulated clock. equivalent to switching the time-machine traveller to tick=false at the current destination. examples: *** settings *** library timetravel *** test cases *** example start ticking time 2026-01-01t10:00:00+00:00 pause time the simulated datetime as an iso-8601 string."><a href="#pause-time">Pause Time</a></li>
+        <li data-search="reset time restore real-time behavior and release active clock control. also restores the interpretation timezone to utc. safe to call multiple times. does not restore an independent clock if other code in the same process is also manipulating time. examples: *** settings *** library timetravel *** test cases *** example [teardown] reset time freeze time 2026-01-01t10:00:00+00:00 advance time 5 minutes"><a href="#reset-time">Reset Time</a></li>
+        <li data-search="resume ticking time resume natural ticking from the current simulated instant. requires an active simulated clock. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 resume ticking time the simulated datetime as an iso-8601 string."><a href="#resume-ticking-time">Resume Ticking Time</a></li>
+        <li data-search="rewind time move the simulated clock backward by duration. requires an active simulated clock. duration must be non-negative; the clock moves backward by that amount. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 rewind time 2 hours the simulated datetime as an iso-8601 string. non-negative duration such as 2 hours."><a href="#rewind-time">Rewind Time</a></li>
+        <li data-search="set timezone configure the timezone used to interpret naive datetime inputs. accepts iana identifiers such as utc, asia/kolkata, or america/new_york. this does not by itself claim to change the operating-system timezone. when freezing or traveling to a timezone-aware instant with a named zone, the time-machine backend may temporarily set process tz while the clock is active. examples: *** settings *** library timetravel *** test cases *** example set timezone asia/kolkata set timezone america/new_york the configured timezone name. iana timezone name."><a href="#set-timezone">Set Timezone</a></li>
+        <li data-search="shift time move the simulated clock by a signed duration. use a leading - to move backward, for example -2 hours. requires an active simulated clock. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 shift time -30 minutes shift time 2 hours the simulated datetime as an iso-8601 string. signed duration such as -30 minutes or 2 hours."><a href="#shift-time">Shift Time</a></li>
+        <li data-search="simulated time should be fail unless the current simulated instant equals expected. comparison is performed on absolute utc instants. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 simulated time should be 2026-01-01t10:00:00+00:00 expected iso-8601 datetime."><a href="#simulated-time-should-be">Simulated Time Should Be</a></li>
+        <li data-search="simulated time should be after fail unless the current simulated instant is strictly after expected. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 advance time 5 minutes simulated time should be after 2026-01-01t10:00:00+00:00 iso-8601 datetime that must be earlier than now."><a href="#simulated-time-should-be-after">Simulated Time Should Be After</a></li>
+        <li data-search="simulated time should be before fail unless the current simulated instant is strictly before expected. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 simulated time should be before 2026-01-01t11:00:00+00:00 iso-8601 datetime that must be later than now."><a href="#simulated-time-should-be-before">Simulated Time Should Be Before</a></li>
+        <li data-search="simulated timestamp should equal fail unless the simulated unix timestamp equals expected within tolerance. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 ${ts}= get current simulated timestamp simulated timestamp should equal ${ts} simulated timestamp should equal ${ts} tolerance=1 seconds expected unix timestamp. allowed absolute difference, for example 1 seconds."><a href="#simulated-timestamp-should-equal">Simulated Timestamp Should Equal</a></li>
+        <li data-search="start ticking time start simulated time at at and let it progress with real wall time. if a simulated clock is already active, it is replaced. examples: *** settings *** library timetravel *** test cases *** example start ticking time 2026-01-01t10:00:00+00:00 the simulated datetime as an iso-8601 string. destination datetime or date."><a href="#start-ticking-time">Start Ticking Time</a></li>
+        <li data-search="time travel is active return true when a simulated clock is currently active. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 ${active}= time travel is active whether time travel is active."><a href="#time-travel-is-active">Time Travel Is Active</a></li>
+        <li data-search="time until should be fail unless the duration from now until target matches expected_duration. useful for asserting remaining ttl / cooldown windows. examples: *** settings *** library timetravel *** test cases *** example freeze time 2026-01-01t10:00:00+00:00 time until should be 2026-01-01t10:05:00+00:00 5 minutes time until should be 2026-01-01t10:05:00+00:00 5 minutes tolerance=0 seconds future (or past) iso-8601 datetime. expected duration until target. allowed difference from expected_duration."><a href="#time-until-should-be">Time Until Should Be</a></li>
+        <li data-search="travel to time move the simulated clock to at. if no clock is active, starts a frozen clock at at. if a clock is already active, replaces the simulated instant and keeps the current frozen/ticking mode. examples: *** settings *** library timetravel *** test cases *** example travel to time 2026-06-01t12:00:00+00:00 the simulated datetime as an iso-8601 string. destination datetime or date."><a href="#travel-to-time">Travel To Time</a></li>
+        <li data-search="travel to timestamp move the simulated clock to a unix timestamp (seconds). examples: *** settings *** library timetravel *** test cases *** example travel to timestamp 1767225600 the simulated datetime as an iso-8601 string. unix timestamp in seconds."><a href="#travel-to-timestamp">Travel To Timestamp</a></li>
+        </ul>
+      </div>
+    </aside>
+    <div
+      class="sidebar-resizer"
+      id="sidebar-resizer"
+      role="separator"
+      aria-orientation="vertical"
+      aria-label="Resize sidebar"
+      aria-valuemin="200"
+      aria-valuemax="520"
+      aria-valuenow="260"
+      tabindex="0"
+    ></div>
+
+    <main id="main-content">
+      <section id="intro" class="hero">
+        <div>
+          <h2>TimeTravel Documentation</h2>
+          
+          <div class="hero-badges">
+            <span class="badge badge-kind">Library</span>
+            <span class="badge">Version 0.1.0</span>
+            <span class="badge">Scope GLOBAL</span>
+            <span class="badge">32 Keywords</span>
+          </div>
+          <div class="hero-actions"><a class="btn btn-primary" href="https://github.com/deekshith-poojary98/robotframework-timetravel" target="_blank" rel="noopener noreferrer"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2Zm6.93 9H16.2a17.459 17.459 0 0 0-1.18-4.495A7.953 7.953 0 0 1 18.93 11Zm-7.93 8a15.417 15.417 0 0 1-1.458-4h2.916A15.417 15.417 0 0 1 11 19Zm-1.458-6a13.7 13.7 0 0 1 0-2h2.916a13.7 13.7 0 0 1 0 2Zm-3.25-2a13.116 13.116 0 0 1 .4-2h2.365a13.472 13.472 0 0 0 0 4H6.692a13.116 13.116 0 0 1-.4-2Zm4.708-6a15.417 15.417 0 0 1 1.458 4h-2.916A15.417 15.417 0 0 1 11 5Zm-2.02.505A17.459 17.459 0 0 0 7.8 11H5.07A7.953 7.953 0 0 1 8.98 5.505ZM5.07 13H7.8a17.459 17.459 0 0 0 1.18 4.495A7.953 7.953 0 0 1 5.07 13Zm9.95 4.495c.42-1.282.728-2.64.892-3.995h2.188a7.953 7.953 0 0 1-3.08 3.995Z"></path></svg><span>Library Website</span></a><a class="btn btn-ghost" href="https://github.com/deekshith-poojary98/robotframework-timetravel" target="_blank" rel="noopener noreferrer"><svg height="18" aria-hidden="true" viewBox="0 0 24 24" width="18" data-view-component="true" class="octicon octicon-mark-github v-align-middle"><path fill="currentColor" d="M12 1C5.923 1 1 5.923 1 12c0 4.867 3.149 8.979 7.521 10.436.55.096.756-.233.756-.522 0-.262-.013-1.128-.013-2.049-2.764.509-3.479-.674-3.699-1.292-.124-.317-.66-1.293-1.127-1.554-.385-.207-.936-.715-.014-.729.866-.014 1.485.797 1.691 1.128.99 1.663 2.571 1.196 3.204.907.096-.715.385-1.196.701-1.471-2.448-.275-5.005-1.224-5.005-5.432 0-1.196.426-2.186 1.128-2.956-.111-.275-.496-1.402.11-2.915 0 0 .921-.288 3.024 1.128a10.193 10.193 0 0 1 2.75-.371c.936 0 1.871.123 2.75.371 2.104-1.43 3.025-1.128 3.025-1.128.605 1.513.221 2.64.111 2.915.701.77 1.127 1.747 1.127 2.956 0 4.222-2.571 5.157-5.019 5.432.399.344.743 1.004.743 2.035 0 1.471-.014 2.654-.014 3.025 0 .289.206.632.756.522C19.851 20.979 23 16.854 23 12c0-6.077-4.922-11-11-11Z"></path></svg><span>View on GitHub</span></a></div>
+          <div class="hero-meta meta-grid"><span><strong>Author:</strong> Deekshith Poojary</span><span><strong>Maintainer:</strong> Deekshith Poojary</span><span><strong>License:</strong> Apache-2.0</span><span><strong>Robot Framework:</strong> >=7.5</span><span><strong>Python:</strong> >=3.11</span></div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-header">
+            <div class="hero-card-title">Sample Usage</div>
+            <div class="hero-card-lang">Robot</div>
+          </div>
+          <pre class="language-robot"><code><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    TimeTravel
+
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">OTP Expires After Five Minutes</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Reset Time</span>
+    <span class="rf-keyword">Freeze Time</span>       2026-01-01T10:00:00+00:00
+    <span class="rf-keyword">Advance Time</span>      5 minutes
+    <span class="rf-keyword">Simulated Time Should Be</span>    2026-01-01T10:05:00+00:00</code></pre>
+        </div>
+      </section>
+
+      <section class="keyword-container intro-section"><div class="keyword-name"><h2>Introduction</h2></div><div class="kw-overview"><div class="kw-docs"><div class="intro-content"><p>Robot Framework library for deterministic time control.</p>
+<p><code>TimeTravel</code> uses <a href="https://github.com/adamchainz/time-machine">time-machine</a> to manipulate Python-level time APIs in the current process and exposes readable keywords for freezing, traveling, advancing, rewinding, and timezone-aware datetime interpretation.</p>
+<p>This library does <strong>not</strong> change remote services, databases, browsers, or other processes.</p>
+<p>By default the library auto-resets simulated time at the end of every test so frozen clocks do not leak between tests. Pass <code>auto_reset=${False}</code> to disable that behavior and manage cleanup yourself with <a class="kw-ref" href="#reset-time" title="&quot;Reset Time&quot; keyword">Reset Time</a>.</p>
+<p>Examples:</p>
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    TimeTravel
+
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">OTP Expires After Five Minutes</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Reset Time</span>
+    <span class="rf-keyword">Freeze Time</span>       2026-01-01T10:00:00+00:00
+    <span class="rf-keyword">Advance Time</span>      5 minutes
+    <span class="rf-keyword">Simulated Time Should Be</span>    2026-01-01T10:05:00+00:00</pre></div></div></div></div></section>
+
+      <section id="importing" class="keyword-container importing-section">
+  <div class="keyword-name">
+    <h2>Importing</h2>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">auto_reset</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">bool</span>
+               <span class="badge badge-default">default: True</span>
+            </div>
+            <div class="argument-doc"><p>When <code>True</code> (default), reset simulated time after each test.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc"><p>Initialize the TimeTravel library.</p></div>
+    </div>
+  </div>
+</section>
+
+      <section id="keywords">
+        <div class="keyword-container" id="advance-time">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#advance-time">Advance Time</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L163" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L163</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">duration</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Non-negative duration such as <code>5 minutes</code>.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>The simulated datetime as an ISO-8601 string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Move the simulated clock forward by <code>duration</code>.</p>
+<p>Requires an active simulated clock. Duration must be non-negative.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">JWT Expires After One Hour</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Reset Time</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T09:00:00+00:00
+    <span class="rf-variable">${exp}</span>=    <span class="rf-keyword">Issue JWT</span>
+    <span class="rf-keyword">Advance Time</span>    1 hour
+    <span class="rf-keyword">Verify JWT Is Expired</span>    <span class="rf-variable">${exp}</span>
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="advance-to-next-weekday">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#advance-to-next-weekday">Advance To Next Weekday</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L333" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L333</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">weekday</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Target weekday name or abbreviation.</p></div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">keep_time</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">bool</span>
+               <span class="badge badge-default">default: True</span>
+            </div>
+            <div class="argument-doc"><p>Keep the current time-of-day when <code>True</code>.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>The simulated datetime as an ISO-8601 string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Advance to the next <code>weekday</code>, never staying on today.</p>
+<p><code>weekday</code> accepts names like <code>Monday</code> or abbreviations like <code>Mon</code>. When <code>keep_time</code> is true (default), the current time-of-day is kept. When false, the destination is midnight in the interpretation timezone.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Weekday And Timezone Helpers</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-variable">${day}</span>=    <span class="rf-keyword">Get Simulated Weekday</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${day}</span>    Thursday
+    <span class="rf-keyword">Advance To Next Weekday</span>    Monday
+    <span class="rf-variable">${day}</span>=    <span class="rf-keyword">Get Simulated Weekday</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${day}</span>    Monday
+    <span class="rf-variable">${kolkata}</span>=    <span class="rf-keyword">Get Current Simulated Time In Timezone</span>    Asia/Kolkata
+    <span class="rf-keyword">Should Start With</span>    <span class="rf-variable">${kolkata}</span>    2026-01-05T15:30:00
+    <span class="rf-variable">${ny}</span>=    <span class="rf-keyword">Convert Datetime To Timezone</span>    2026-01-05T10:00:00+00:00    America/New_York
+    <span class="rf-keyword">Should Contain</span>    <span class="rf-variable">${ny}</span>    2026-01-05T05:00:00
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="convert-datetime-to-timezone">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#convert-datetime-to-timezone">Convert Datetime To Timezone</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/timezone_control.py#L79" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L79</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">value</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>ISO-8601 datetime string.</p></div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">timezone</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Target IANA timezone name.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>Converted ISO-8601 datetime string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Convert an ISO-8601 datetime into <code>timezone</code> and return ISO-8601.</p>
+<p>Aware inputs keep their absolute instant. Naive inputs are interpreted using the library's configured interpretation timezone first.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Weekday And Timezone Helpers</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-variable">${day}</span>=    <span class="rf-keyword">Get Simulated Weekday</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${day}</span>    Thursday
+    <span class="rf-keyword">Advance To Next Weekday</span>    Monday
+    <span class="rf-variable">${day}</span>=    <span class="rf-keyword">Get Simulated Weekday</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${day}</span>    Monday
+    <span class="rf-variable">${kolkata}</span>=    <span class="rf-keyword">Get Current Simulated Time In Timezone</span>    Asia/Kolkata
+    <span class="rf-keyword">Should Start With</span>    <span class="rf-variable">${kolkata}</span>    2026-01-05T15:30:00
+    <span class="rf-variable">${ny}</span>=    <span class="rf-keyword">Convert Datetime To Timezone</span>    2026-01-05T10:00:00+00:00    America/New_York
+    <span class="rf-keyword">Should Contain</span>    <span class="rf-variable">${ny}</span>    2026-01-05T05:00:00
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="fail-if-time-travel-is-active">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#fail-if-time-travel-is-active">Fail If Time Travel Is Active</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/assertions.py#L197" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L197</a></div>
+  </div>
+  <div class="keyword-content">
+    <div style="margin-bottom: 1rem;"></div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Fail when a simulated clock is still active.</p>
+<p>Handy in suite teardown to catch cleanup leaks when auto-reset is disabled.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Repeated Reset Is Safe</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-keyword">Reset Time</span>
+    <span class="rf-keyword">Reset Time</span>
+    <span class="rf-keyword">Fail If Time Travel Is Active</span>
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="format-simulated-time">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#format-simulated-time">Format Simulated Time</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/timezone_control.py#L134" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L134</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">format</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-default">default: %Y-%m-%d %H:%M:%S %Z</span>
+            </div>
+            <div class="argument-doc"><p><code>strftime</code> format string.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>Formatted simulated time.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Format the current simulated time with <code>strftime</code> <code>format</code>.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    TimeTravel
+
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Example</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-variable">${text}</span>=       <span class="rf-keyword">Format Simulated Time</span>
+    <span class="rf-variable">${text}</span>=       <span class="rf-keyword">Format Simulated Time</span>    %A %Y-%m-%d
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="freeze-at-real-time">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#freeze-at-real-time">Freeze At Real Time</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L83" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L83</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>The simulated datetime as an ISO-8601 string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Freeze perceived time at the current real wall-clock instant.</p>
+<p>Uses <code>time-machine</code> escape hatch when already travelling so the destination is true wall time, not the simulated clock.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    TimeTravel
+
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Example</span>
+    <span class="rf-keyword">Freeze At Real Time</span>
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="freeze-at-timestamp">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#freeze-at-timestamp">Freeze At Timestamp</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L58" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L58</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">timestamp</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Unix timestamp in seconds.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>The simulated datetime as an ISO-8601 string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Freeze perceived time at a Unix <code>timestamp</code> (seconds).</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Timestamp Destinations And Pause Resume</span>
+    <span class="rf-variable">${ts}</span>=    <span class="rf-keyword">Convert Date</span>    2026-01-01 10:00:00    epoch    <span class="rf-arg">exclude_millis</span>=True
+    <span class="rf-keyword">Freeze At Timestamp</span>    <span class="rf-variable">${ts}</span>
+    <span class="rf-variable">${mode}</span>=    <span class="rf-keyword">Get Clock Mode</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${mode}</span>    frozen
+    <span class="rf-keyword">Resume Ticking Time</span>
+    <span class="rf-variable">${mode}</span>=    <span class="rf-keyword">Get Clock Mode</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${mode}</span>    ticking
+    <span class="rf-keyword">Pause Time</span>
+    <span class="rf-variable">${mode}</span>=    <span class="rf-keyword">Get Clock Mode</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${mode}</span>    frozen
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="freeze-time">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#freeze-time">Freeze Time</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L26" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L26</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">at</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Destination datetime or date.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>The simulated datetime as an ISO-8601 string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Freeze perceived time at <code>at</code>.</p>
+<p><code>at</code> is an ISO-8601 datetime or date. Naive values are interpreted in the timezone configured by <a class="kw-ref" href="#set-timezone" title="&quot;Set Timezone&quot; keyword">Set Timezone</a> (default <code>UTC</code>).</p>
+<p>If a simulated clock is already active, it is replaced.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">JWT Expires After One Hour</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Reset Time</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T09:00:00+00:00
+    <span class="rf-variable">${exp}</span>=    <span class="rf-keyword">Issue JWT</span>
+    <span class="rf-keyword">Advance Time</span>    1 hour
+    <span class="rf-keyword">Verify JWT Is Expired</span>    <span class="rf-variable">${exp}</span>
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-clock-mode">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-clock-mode">Get Clock Mode</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L431" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L431</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>Current clock mode.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Return the clock mode: <code>idle</code>, <code>frozen</code>, or <code>ticking</code>.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Timestamp Destinations And Pause Resume</span>
+    <span class="rf-variable">${ts}</span>=    <span class="rf-keyword">Convert Date</span>    2026-01-01 10:00:00    epoch    <span class="rf-arg">exclude_millis</span>=True
+    <span class="rf-keyword">Freeze At Timestamp</span>    <span class="rf-variable">${ts}</span>
+    <span class="rf-variable">${mode}</span>=    <span class="rf-keyword">Get Clock Mode</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${mode}</span>    frozen
+    <span class="rf-keyword">Resume Ticking Time</span>
+    <span class="rf-variable">${mode}</span>=    <span class="rf-keyword">Get Clock Mode</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${mode}</span>    ticking
+    <span class="rf-keyword">Pause Time</span>
+    <span class="rf-variable">${mode}</span>=    <span class="rf-keyword">Get Clock Mode</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${mode}</span>    frozen
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-current-simulated-time">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-current-simulated-time">Get Current Simulated Time</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L366" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L366</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>ISO-8601 datetime string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Return the perceived current datetime as an ISO-8601 string.</p>
+<p>The value is expressed in the configured interpretation timezone.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Naive Instant In Kolkata</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Reset Time</span>
+    <span class="rf-keyword">Set Timezone</span>    Asia/Kolkata
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T05:30:00
+    <span class="rf-variable">${now}</span>=    <span class="rf-keyword">Get Current Simulated Time</span>
+    <span class="rf-keyword">Should Start With</span>    <span class="rf-variable">${now}</span>    2026-01-01T05:30:00+05:30
+    <span class="rf-variable">${tz}</span>=    <span class="rf-keyword">Get Current Timezone</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${tz}</span>    Asia/Kolkata
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-current-simulated-time-in-timezone">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-current-simulated-time-in-timezone">Get Current Simulated Time In Timezone</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/timezone_control.py#L108" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L108</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">timezone</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>IANA timezone name used for presentation.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>Simulated datetime in the requested timezone.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Return the current simulated instant expressed in <code>timezone</code>.</p>
+<p>Does not change the configured interpretation timezone.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Weekday And Timezone Helpers</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-variable">${day}</span>=    <span class="rf-keyword">Get Simulated Weekday</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${day}</span>    Thursday
+    <span class="rf-keyword">Advance To Next Weekday</span>    Monday
+    <span class="rf-variable">${day}</span>=    <span class="rf-keyword">Get Simulated Weekday</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${day}</span>    Monday
+    <span class="rf-variable">${kolkata}</span>=    <span class="rf-keyword">Get Current Simulated Time In Timezone</span>    Asia/Kolkata
+    <span class="rf-keyword">Should Start With</span>    <span class="rf-variable">${kolkata}</span>    2026-01-05T15:30:00
+    <span class="rf-variable">${ny}</span>=    <span class="rf-keyword">Convert Datetime To Timezone</span>    2026-01-05T10:00:00+00:00    America/New_York
+    <span class="rf-keyword">Should Contain</span>    <span class="rf-variable">${ny}</span>    2026-01-05T05:00:00
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-current-simulated-timestamp">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-current-simulated-timestamp">Get Current Simulated Timestamp</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L389" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L389</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">float</span>
+        <div class="return-doc"><p>Unix timestamp in seconds.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Return the perceived current Unix timestamp in seconds.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">License Window</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Reset Time</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-15T00:00:00+00:00
+    <span class="rf-variable">${not_before}</span>=    <span class="rf-keyword">Get Current Simulated Timestamp</span>
+    <span class="rf-variable">${not_after}</span>=    <span class="rf-keyword">Evaluate</span>    <span class="rf-variable">${not_before}</span> + 14 * 86400
+    <span class="rf-keyword">License Valid At</span>    <span class="rf-variable">${not_before}</span>    <span class="rf-variable">${not_after}</span>
+    <span class="rf-keyword">Advance Time</span>    14 days
+    <span class="rf-variable">${now}</span>=    <span class="rf-keyword">Get Current Simulated Timestamp</span>
+    <span class="rf-keyword">Should Be True</span>    <span class="rf-variable">${now}</span> &gt;= <span class="rf-variable">${not_after}</span>
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-current-simulated-timestamp-ns">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-current-simulated-timestamp-ns">Get Current Simulated Timestamp Ns</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L410" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L410</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">int</span>
+        <div class="return-doc"><p>Unix timestamp in nanoseconds.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Return the perceived current Unix timestamp in nanoseconds.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    TimeTravel
+
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Example</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-variable">${ns}</span>=         <span class="rf-keyword">Get Current Simulated Timestamp Ns</span>
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-current-timezone">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-current-timezone">Get Current Timezone</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/timezone_control.py#L58" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L58</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>Current interpretation timezone name.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Return the configured interpretation timezone.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Naive Instant In Kolkata</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Reset Time</span>
+    <span class="rf-keyword">Set Timezone</span>    Asia/Kolkata
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T05:30:00
+    <span class="rf-variable">${now}</span>=    <span class="rf-keyword">Get Current Simulated Time</span>
+    <span class="rf-keyword">Should Start With</span>    <span class="rf-variable">${now}</span>    2026-01-01T05:30:00+05:30
+    <span class="rf-variable">${tz}</span>=    <span class="rf-keyword">Get Current Timezone</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${tz}</span>    Asia/Kolkata
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-real-time">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-real-time">Get Real Time</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L473" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L473</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>Real wall-clock datetime as ISO-8601.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Return the real wall-clock datetime, even while time-travelling.</p>
+<p>Uses <code>time-machine</code> escape hatch when a traveller is active.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Real Time Escape Hatch</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-variable">${real}</span>=    <span class="rf-keyword">Get Real Time</span>
+    <span class="rf-keyword">Should Not Start With</span>    <span class="rf-variable">${real}</span>    2026-01-01T10:00:00
+    <span class="rf-variable">${active}</span>=    <span class="rf-keyword">Time Travel Is Active</span>
+    <span class="rf-keyword">Should Be True</span>    <span class="rf-variable">${active}</span>
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-real-timestamp">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-real-timestamp">Get Real Timestamp</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L496" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L496</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">float</span>
+        <div class="return-doc"><p>Real wall-clock Unix timestamp.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Return the real wall-clock Unix timestamp in seconds.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    TimeTravel
+
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Example</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-variable">${real_ts}</span>=    <span class="rf-keyword">Get Real Timestamp</span>
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="get-simulated-weekday">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#get-simulated-weekday">Get Simulated Weekday</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/timezone_control.py#L159" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L159</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>Weekday name such as <code>Thursday</code>.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Return the English weekday name for the current simulated time.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Weekday And Timezone Helpers</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-variable">${day}</span>=    <span class="rf-keyword">Get Simulated Weekday</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${day}</span>    Thursday
+    <span class="rf-keyword">Advance To Next Weekday</span>    Monday
+    <span class="rf-variable">${day}</span>=    <span class="rf-keyword">Get Simulated Weekday</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${day}</span>    Monday
+    <span class="rf-variable">${kolkata}</span>=    <span class="rf-keyword">Get Current Simulated Time In Timezone</span>    Asia/Kolkata
+    <span class="rf-keyword">Should Start With</span>    <span class="rf-variable">${kolkata}</span>    2026-01-05T15:30:00
+    <span class="rf-variable">${ny}</span>=    <span class="rf-keyword">Convert Datetime To Timezone</span>    2026-01-05T10:00:00+00:00    America/New_York
+    <span class="rf-keyword">Should Contain</span>    <span class="rf-variable">${ny}</span>    2026-01-05T05:00:00
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="pause-time">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#pause-time">Pause Time</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L282" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L282</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>The simulated datetime as an ISO-8601 string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Freeze the clock at the current simulated instant.</p>
+<p>Requires an active simulated clock. Equivalent to switching the <code>time-machine</code> traveller to <code>tick=False</code> at the current destination.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Timestamp Destinations And Pause Resume</span>
+    <span class="rf-variable">${ts}</span>=    <span class="rf-keyword">Convert Date</span>    2026-01-01 10:00:00    epoch    <span class="rf-arg">exclude_millis</span>=True
+    <span class="rf-keyword">Freeze At Timestamp</span>    <span class="rf-variable">${ts}</span>
+    <span class="rf-variable">${mode}</span>=    <span class="rf-keyword">Get Clock Mode</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${mode}</span>    frozen
+    <span class="rf-keyword">Resume Ticking Time</span>
+    <span class="rf-variable">${mode}</span>=    <span class="rf-keyword">Get Clock Mode</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${mode}</span>    ticking
+    <span class="rf-keyword">Pause Time</span>
+    <span class="rf-variable">${mode}</span>=    <span class="rf-keyword">Get Clock Mode</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${mode}</span>    frozen
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="reset-time">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#reset-time">Reset Time</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L517" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L517</a></div>
+  </div>
+  <div class="keyword-content">
+    <div style="margin-bottom: 1rem;"></div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Restore real-time behavior and release active clock control.</p>
+<p>Also restores the interpretation timezone to <code>UTC</code>.</p>
+<p>Safe to call multiple times. Does not restore an independent clock if other code in the same process is also manipulating time.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Repeated Reset Is Safe</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-keyword">Reset Time</span>
+    <span class="rf-keyword">Reset Time</span>
+    <span class="rf-keyword">Fail If Time Travel Is Active</span>
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="resume-ticking-time">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#resume-ticking-time">Resume Ticking Time</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L308" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L308</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>The simulated datetime as an ISO-8601 string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Resume natural ticking from the current simulated instant.</p>
+<p>Requires an active simulated clock.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Timestamp Destinations And Pause Resume</span>
+    <span class="rf-variable">${ts}</span>=    <span class="rf-keyword">Convert Date</span>    2026-01-01 10:00:00    epoch    <span class="rf-arg">exclude_millis</span>=True
+    <span class="rf-keyword">Freeze At Timestamp</span>    <span class="rf-variable">${ts}</span>
+    <span class="rf-variable">${mode}</span>=    <span class="rf-keyword">Get Clock Mode</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${mode}</span>    frozen
+    <span class="rf-keyword">Resume Ticking Time</span>
+    <span class="rf-variable">${mode}</span>=    <span class="rf-keyword">Get Clock Mode</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${mode}</span>    ticking
+    <span class="rf-keyword">Pause Time</span>
+    <span class="rf-variable">${mode}</span>=    <span class="rf-keyword">Get Clock Mode</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${mode}</span>    frozen
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="rewind-time">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#rewind-time">Rewind Time</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L193" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L193</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">duration</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Non-negative duration such as <code>2 hours</code>.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>The simulated datetime as an ISO-8601 string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Move the simulated clock backward by <code>duration</code>.</p>
+<p>Requires an active simulated clock. Duration must be non-negative; the clock moves backward by that amount.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Backward Time Travel</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-keyword">Rewind Time</span>    2 hours
+    <span class="rf-keyword">Simulated Time Should Be</span>    2026-01-01T08:00:00+00:00
+    <span class="rf-keyword">Shift Time</span>    -30 minutes
+    <span class="rf-keyword">Simulated Time Should Be</span>    2026-01-01T07:30:00+00:00
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="set-timezone">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#set-timezone">Set Timezone</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/timezone_control.py#L24" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L24</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">timezone</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>IANA timezone name.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>The configured timezone name.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Configure the timezone used to interpret naive datetime inputs.</p>
+<p>Accepts IANA identifiers such as <code>UTC</code>, <code>Asia/Kolkata</code>, or <code>America/New_York</code>.</p>
+<p>This does not by itself claim to change the operating-system timezone. When freezing or traveling to a timezone-aware instant with a named zone, the <code>time-machine</code> backend may temporarily set process <code>TZ</code> while the clock is active.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Naive Instant In Kolkata</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Reset Time</span>
+    <span class="rf-keyword">Set Timezone</span>    Asia/Kolkata
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T05:30:00
+    <span class="rf-variable">${now}</span>=    <span class="rf-keyword">Get Current Simulated Time</span>
+    <span class="rf-keyword">Should Start With</span>    <span class="rf-variable">${now}</span>    2026-01-01T05:30:00+05:30
+    <span class="rf-variable">${tz}</span>=    <span class="rf-keyword">Get Current Timezone</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${tz}</span>    Asia/Kolkata
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="shift-time">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#shift-time">Shift Time</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L223" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L223</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">duration</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Signed duration such as <code>-30 minutes</code> or <code>2 hours</code>.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>The simulated datetime as an ISO-8601 string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Move the simulated clock by a signed <code>duration</code>.</p>
+<p>Use a leading <code>-</code> to move backward, for example <code>-2 hours</code>. Requires an active simulated clock.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Backward Time Travel</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-keyword">Rewind Time</span>    2 hours
+    <span class="rf-keyword">Simulated Time Should Be</span>    2026-01-01T08:00:00+00:00
+    <span class="rf-keyword">Shift Time</span>    -30 minutes
+    <span class="rf-keyword">Simulated Time Should Be</span>    2026-01-01T07:30:00+00:00
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="simulated-time-should-be">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#simulated-time-should-be">Simulated Time Should Be</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/assertions.py#L26" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L26</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">expected</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Expected ISO-8601 datetime.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Fail unless the current simulated instant equals <code>expected</code>.</p>
+<p>Comparison is performed on absolute UTC instants.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Freeze And Advance</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-keyword">Simulated Time Should Be</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-keyword">Advance Time</span>    5 minutes
+    <span class="rf-keyword">Simulated Time Should Be</span>    2026-01-01T10:05:00+00:00
+    <span class="rf-keyword">Time Until Should Be</span>    2026-01-01T10:10:00+00:00    5 minutes
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="simulated-time-should-be-after">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#simulated-time-should-be-after">Simulated Time Should Be After</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/assertions.py#L58" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L58</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">expected</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>ISO-8601 datetime that must be earlier than now.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Fail unless the current simulated instant is strictly after <code>expected</code>.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    TimeTravel
+
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Example</span>
+    <span class="rf-keyword">Freeze Time</span>                       2026-01-01T10:00:00+00:00
+    <span class="rf-keyword">Advance Time</span>                      5 minutes
+    <span class="rf-keyword">Simulated Time Should Be After</span>    2026-01-01T10:00:00+00:00
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="simulated-time-should-be-before">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#simulated-time-should-be-before">Simulated Time Should Be Before</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/assertions.py#L88" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L88</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">expected</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>ISO-8601 datetime that must be later than now.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Fail unless the current simulated instant is strictly before <code>expected</code>.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    TimeTravel
+
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Example</span>
+    <span class="rf-keyword">Freeze Time</span>                        2026-01-01T10:00:00+00:00
+    <span class="rf-keyword">Simulated Time Should Be Before</span>    2026-01-01T11:00:00+00:00
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="simulated-timestamp-should-equal">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#simulated-timestamp-should-equal">Simulated Timestamp Should Equal</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/assertions.py#L117" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L117</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">expected</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Expected Unix timestamp.</p></div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">tolerance</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-default">default: 0 seconds</span>
+            </div>
+            <div class="argument-doc"><p>Allowed absolute difference, for example <code>1 seconds</code>.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Fail unless the simulated Unix timestamp equals <code>expected</code> within <code>tolerance</code>.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    TimeTravel
+
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Example</span>
+    <span class="rf-keyword">Freeze Time</span>                         2026-01-01T10:00:00+00:00
+    <span class="rf-variable">${ts}</span>=                              <span class="rf-keyword">Get Current Simulated Timestamp</span>
+    <span class="rf-keyword">Simulated Timestamp Should Equal</span>    <span class="rf-variable">${ts}</span>
+    <span class="rf-keyword">Simulated Timestamp Should Equal</span>    <span class="rf-variable">${ts}</span>    <span class="rf-arg">tolerance</span>=1 seconds
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="start-ticking-time">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#start-ticking-time">Start Ticking Time</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L254" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L254</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">at</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Destination datetime or date.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>The simulated datetime as an ISO-8601 string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Start simulated time at <code>at</code> and let it progress with real wall time.</p>
+<p>If a simulated clock is already active, it is replaced.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    TimeTravel
+
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Example</span>
+    <span class="rf-keyword">Start Ticking Time</span>    2026-01-01T10:00:00+00:00
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="time-travel-is-active">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#time-travel-is-active">Time Travel Is Active</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L452" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L452</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">bool</span>
+        <div class="return-doc"><p>Whether time travel is active.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Return <code>True</code> when a simulated clock is currently active.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Real Time Escape Hatch</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-variable">${real}</span>=    <span class="rf-keyword">Get Real Time</span>
+    <span class="rf-keyword">Should Not Start With</span>    <span class="rf-variable">${real}</span>    2026-01-01T10:00:00
+    <span class="rf-variable">${active}</span>=    <span class="rf-keyword">Time Travel Is Active</span>
+    <span class="rf-keyword">Should Be True</span>    <span class="rf-variable">${active}</span>
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="time-until-should-be">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#time-until-should-be">Time Until Should Be</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/assertions.py#L154" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L154</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">target</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Future (or past) ISO-8601 datetime.</p></div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">expected_duration</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Expected duration until <code>target</code>.</p></div>
+          </div>
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">tolerance</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-default">default: 1 seconds</span>
+            </div>
+            <div class="argument-doc"><p>Allowed difference from <code>expected_duration</code>.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Fail unless the duration from now until <code>target</code> matches <code>expected_duration</code>.</p>
+<p>Useful for asserting remaining TTL / cooldown windows.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Freeze And Advance</span>
+    <span class="rf-keyword">Freeze Time</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-keyword">Simulated Time Should Be</span>    2026-01-01T10:00:00+00:00
+    <span class="rf-keyword">Advance Time</span>    5 minutes
+    <span class="rf-keyword">Simulated Time Should Be</span>    2026-01-01T10:05:00+00:00
+    <span class="rf-keyword">Time Until Should Be</span>    2026-01-01T10:10:00+00:00    5 minutes
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="travel-to-time">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#travel-to-time">Travel To Time</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L108" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L108</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">at</span>
+              <span class="arg-separator">:</span>
+              <span class="arg-type">str</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Destination datetime or date.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>The simulated datetime as an ISO-8601 string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Move the simulated clock to <code>at</code>.</p>
+<p>If no clock is active, starts a frozen clock at <code>at</code>. If a clock is already active, replaces the simulated instant and keeps the current frozen/ticking mode.</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Travel To Exact Instant</span>
+    <span class="rf-keyword">Travel To Time</span>    2026-06-01T12:30:00+00:00
+    <span class="rf-keyword">Simulated Time Should Be</span>    2026-06-01T12:30:00+00:00
+      </pre></div>
+    </div>
+  </div>
+</div>
+        <div class="keyword-container" id="travel-to-timestamp">
+  <div class="keyword-name">
+    <h2><a class="kw-name" href="#travel-to-timestamp">Travel To Timestamp</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/deekshith-poojary98/robotframework-timetravel/blob/main/src/TimeTravel/keywords/clock_control.py#L138" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L138</a></div>
+  </div>
+  <div class="keyword-content">
+    <div class="kw-overview">
+      <div class="args">
+        <h3>Arguments</h3>
+        <div class="arguments-list-container">
+          <div class="argument-item">
+            <div class="argument-header">
+              <span class="arg-name">timestamp</span>
+               <span class="badge badge-required">required</span>
+            </div>
+            <div class="argument-doc"><p>Unix timestamp in seconds.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="return-type">
+        <h3>Returns</h3>
+        <span class="arg-type">str</span>
+        <div class="return-doc"><p>The simulated datetime as an ISO-8601 string.</p></div>
+      </div>
+    </div>
+    <div class="kw-docs">
+      <h3>Documentation</h3>
+      <div class="kwdoc doc">
+        <p>Move the simulated clock to a Unix <code>timestamp</code> (seconds).</p>
+      </div>
+    </div>
+    <div class="kw-example">
+      <h3>Example</h3>
+      <div class="code-block"><pre class="language-robot">
+<span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    TimeTravel
+
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Example</span>
+    <span class="rf-keyword">Travel To Timestamp</span>    1767225600
+      </pre></div>
+    </div>
+  </div>
+</div>
+      </section>
+
+      <section class="keyword-container">
+        <div class="keyword-name">
+          <h2>Need Help?</h2>
+        </div>
+        <div class="kw-overview">
+          <div class="kw-docs">
+            <p>
+              Found an issue or have a feature request for this library? Let the maintainers know by opening a new GitHub issue. Please include environment details and relevant log output to help us reproduce the problem.
+            </p>
+            <p style="margin-top: 1rem;"><a class="btn btn-primary" href="https://github.com/deekshith-poojary98/robotframework-timetravel/issues/new" target="_blank" rel="noopener noreferrer">Open an Issue on GitHub</a></p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer>
+    Generated by <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · TimeTravel Documentation · Last updated: 2026-10-13 03:45:17
+  </footer>
+
+  <script>
+    const searchInput = document.getElementById('keyword-search');
+    const keywordList = document.getElementById('keyword-list');
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.querySelector('aside');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const layout = document.querySelector('.layout');
+    const sidebarResizer = document.getElementById('sidebar-resizer');
+    const SIDEBAR_WIDTH_KEY = 'docgen-sidebar-width';
+    const SIDEBAR_MIN = 200;
+    const SIDEBAR_MAX = 520;
+    const SIDEBAR_DEFAULT = 260;
+
+    function clampSidebarWidth(width) {
+      return Math.min(SIDEBAR_MAX, Math.max(SIDEBAR_MIN, Math.round(width)));
+    }
+
+    function applySidebarWidth(width) {
+      const px = clampSidebarWidth(width);
+      document.documentElement.style.setProperty('--sidebar-width', px + 'px');
+      if (sidebarResizer) {
+        sidebarResizer.setAttribute('aria-valuenow', String(px));
+      }
+      return px;
+    }
+
+    function loadSidebarWidth() {
+      try {
+        const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY);
+        if (saved) {
+          const parsed = parseInt(saved, 10);
+          if (!Number.isNaN(parsed)) {
+            applySidebarWidth(parsed);
+            return;
+          }
+        }
+      } catch (_) { /* ignore */ }
+      applySidebarWidth(SIDEBAR_DEFAULT);
+    }
+
+    function persistSidebarWidth(width) {
+      try {
+        localStorage.setItem(SIDEBAR_WIDTH_KEY, String(clampSidebarWidth(width)));
+      } catch (_) { /* ignore */ }
+    }
+
+    if (sidebar && sidebarResizer && layout) {
+      loadSidebarWidth();
+
+      sidebarResizer.addEventListener('pointerdown', (event) => {
+        if (window.innerWidth <= 1024) return;
+        event.preventDefault();
+        const startX = event.clientX;
+        const startWidth = sidebar.getBoundingClientRect().width;
+        layout.classList.add('is-resizing');
+        sidebarResizer.setPointerCapture(event.pointerId);
+
+        const onMove = (moveEvent) => {
+          applySidebarWidth(startWidth + (moveEvent.clientX - startX));
+        };
+
+        const onUp = (upEvent) => {
+          layout.classList.remove('is-resizing');
+          persistSidebarWidth(
+            parseInt(
+              getComputedStyle(document.documentElement)
+                .getPropertyValue('--sidebar-width'),
+              10
+            ) || SIDEBAR_DEFAULT
+          );
+          sidebarResizer.releasePointerCapture(upEvent.pointerId);
+          sidebarResizer.removeEventListener('pointermove', onMove);
+          sidebarResizer.removeEventListener('pointerup', onUp);
+          sidebarResizer.removeEventListener('pointercancel', onUp);
+        };
+
+        sidebarResizer.addEventListener('pointermove', onMove);
+        sidebarResizer.addEventListener('pointerup', onUp);
+        sidebarResizer.addEventListener('pointercancel', onUp);
+      });
+
+      sidebarResizer.addEventListener('keydown', (event) => {
+        if (window.innerWidth <= 1024) return;
+        let delta = 0;
+        if (event.key === 'ArrowLeft') delta = -16;
+        if (event.key === 'ArrowRight') delta = 16;
+        if (!delta) return;
+        event.preventDefault();
+        const current = parseInt(
+          getComputedStyle(document.documentElement)
+            .getPropertyValue('--sidebar-width'),
+          10
+        ) || SIDEBAR_DEFAULT;
+        persistSidebarWidth(applySidebarWidth(current + delta));
+      });
+    }
+
+    function searchKeywords() {
+      const term = (searchInput.value || '').toLowerCase().trim();
+      const entries = keywordList.querySelectorAll('li:not(.no-results)');
+      let matches = 0;
+
+      entries.forEach((entry) => {
+        const haystack = (
+          entry.getAttribute('data-search') || entry.textContent || ''
+        ).toLowerCase();
+        const hit = !term || haystack.includes(term);
+        entry.classList.toggle('hidden', !hit);
+        if (hit) matches++;
+      });
+
+      let noResults = keywordList.querySelector('.no-results');
+      if (!matches && term) {
+        if (!noResults) {
+          noResults = document.createElement('li');
+          noResults.className = 'no-results';
+          keywordList.appendChild(noResults);
+        }
+        noResults.textContent = 'No keywords found';
+      } else if (noResults) {
+        noResults.remove();
+      }
+    }
+
+    function toggleSidebar() {
+      if (window.innerWidth > 1024) return;
+      const opening = !sidebar.classList.contains('active');
+      sidebar.classList.toggle('active', opening);
+      sidebarOverlay.classList.toggle('active', opening);
+      if (menuToggle) {
+        menuToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+      }
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+      if (menuToggle) {
+        menuToggle.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    if (searchInput && keywordList) {
+      searchInput.addEventListener('input', searchKeywords);
+      searchInput.addEventListener('keyup', (event) => {
+        if (event.key === 'Escape') {
+          searchInput.value = '';
+          searchKeywords();
+          searchInput.blur();
+        }
+      });
+    }
+
+    if (menuToggle && sidebar && sidebarOverlay) {
+      menuToggle.addEventListener('click', toggleSidebar);
+      sidebarOverlay.addEventListener('click', closeSidebar);
+      
+      // Close sidebar when clicking on a link (mobile only)
+      const sidebarLinks = sidebar.querySelectorAll('a');
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 1024) {
+            closeSidebar();
+          }
+        });
+      });
+    }
+
+    if (keywordList) {
+      const keywordLinks = keywordList.querySelectorAll('a[href^="#"]');
+
+      function setActiveKeyword(hash) {
+        if (!hash) {
+          keywordLinks.forEach(link => {
+            link.classList.remove('active');
+            link.removeAttribute('aria-current');
+          });
+          return;
+        }
+
+        keywordLinks.forEach(link => {
+          if (link.hash === hash) {
+            link.classList.add('active');
+            link.setAttribute('aria-current', 'true');
+          } else {
+            link.classList.remove('active');
+            link.removeAttribute('aria-current');
+          }
+        });
+      }
+
+      function updateActiveFromHash() {
+        const hash = window.location.hash;
+        setActiveKeyword(hash);
+      }
+
+      window.addEventListener('hashchange', updateActiveFromHash);
+
+      keywordLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          setActiveKeyword(link.hash);
+        });
+      });
+
+      // Initialize active state on load
+      updateActiveFromHash();
+    }
+  </script>
+</body>
+</html>
+

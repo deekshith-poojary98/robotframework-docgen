@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DocGen · Theme gallery</title>
+  <meta name="description" content="Browse Robot Framework DocGen documentation themes. Click a preview to open a full sample build.">
+  <link rel="icon" href="https://docs.robotframework.org/img/rf_favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #12100e;
+      --ink-2: #1c1916;
+      --paper: #f3eee6;
+      --paper-muted: #b9aea0;
+      --line: rgba(243, 238, 230, 0.12);
+      --glow: rgba(232, 168, 84, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Sora", system-ui, sans-serif;
+      color: var(--paper);
+      background:
+        radial-gradient(ellipse 90% 55% at 8% -5%, var(--glow), transparent 55%),
+        radial-gradient(ellipse 70% 45% at 100% 0%, rgba(120, 160, 180, 0.12), transparent 50%),
+        linear-gradient(180deg, #171411 0%, var(--ink) 42%, #0d0b0a 100%);
+      padding: 0 0 4rem;
+    }
+
+    a { color: inherit; }
+
+    .shell {
+      width: min(1180px, calc(100% - 2.5rem));
+      margin: 0 auto;
+    }
+
+    /* —— Hero —— */
+    .hero {
+      padding: 3.25rem 0 2.25rem;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 2.25rem;
+      animation: rise 0.7s ease both;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 1.35rem;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 2.35rem;
+      height: 2.35rem;
+      display: grid;
+      place-items: center;
+    }
+
+    .brand-mark img {
+      width: 2.1rem;
+      height: 2.1rem;
+    }
+
+    .brand-name {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .brand-name span {
+      color: #e8a854;
+    }
+
+    h1 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(1.55rem, 3.2vw, 2.35rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin: 0 0 0.65rem;
+      max-width: 18ch;
+    }
+
+    .lede {
+      margin: 0;
+      max-width: 38rem;
+      color: var(--paper-muted);
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    /* —— Grid —— */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.1rem;
+    }
+
+    .theme-card {
+      --t-bg: #1a1d21;
+      --t-card: #242830;
+      --t-border: #3a404c;
+      --t-text: #e8eaed;
+      --t-muted: #9aa0a6;
+      --t-accent: #8ab4f8;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      border-radius: 1rem;
+      overflow: hidden;
+      text-decoration: none;
+      border: 1px solid color-mix(in srgb, var(--t-border) 80%, transparent);
+      background: var(--t-bg);
+      color: var(--t-text);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+      transform: translateY(0);
+      transition:
+        transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 180ms ease;
+      animation: rise 0.65s ease both;
+    }
+
+    .theme-card:nth-child(1) { animation-delay: 0.04s; }
+    .theme-card:nth-child(2) { animation-delay: 0.08s; }
+    .theme-card:nth-child(3) { animation-delay: 0.12s; }
+    .theme-card:nth-child(4) { animation-delay: 0.16s; }
+    .theme-card:nth-child(5) { animation-delay: 0.20s; }
+    .theme-card:nth-child(6) { animation-delay: 0.24s; }
+    .theme-card:nth-child(7) { animation-delay: 0.28s; }
+    .theme-card:nth-child(8) { animation-delay: 0.32s; }
+    .theme-card:nth-child(9) { animation-delay: 0.36s; }
+    .theme-card:nth-child(10) { animation-delay: 0.40s; }
+    .theme-card:nth-child(11) { animation-delay: 0.44s; }
+    .theme-card:nth-child(12) { animation-delay: 0.48s; }
+    .theme-card:nth-child(13) { animation-delay: 0.52s; }
+    .theme-card:nth-child(14) { animation-delay: 0.56s; }
+    .theme-card:nth-child(15) { animation-delay: 0.60s; }
+
+    .theme-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--t-accent);
+      box-shadow:
+        0 22px 48px rgba(0, 0, 0, 0.35),
+        0 0 0 1px color-mix(in srgb, var(--t-accent) 35%, transparent);
+    }
+
+    .theme-card:focus-visible {
+      outline: 2px solid var(--t-accent);
+      outline-offset: 3px;
+    }
+
+    .preview {
+      padding: 0.9rem 0.9rem 0.75rem;
+      background:
+        radial-gradient(
+          circle at top right,
+          color-mix(in srgb, var(--t-accent) 18%, transparent),
+          transparent 55%
+        ),
+        var(--t-bg);
+      border-bottom: 1px solid color-mix(in srgb, var(--t-border) 85%, transparent);
+      min-height: 9.5rem;
+    }
+
+    .preview-chrome {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .preview-dots {
+      display: flex;
+      gap: 0.28rem;
+    }
+
+    .preview-dots i {
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--t-muted) 55%, transparent);
+      display: block;
+    }
+
+    .preview-pill {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--t-accent);
+      background: color-mix(in srgb, var(--t-accent) 14%, transparent);
+      border: 1px solid color-mix(in srgb, var(--t-accent) 30%, transparent);
+      border-radius: 999px;
+      padding: 0.18rem 0.45rem;
+    }
+
+    .preview-panel {
+      background: var(--t-card);
+      border: 1px solid color-mix(in srgb, var(--t-border) 90%, transparent);
+      border-radius: 0.65rem;
+      padding: 0.7rem 0.75rem 0.8rem;
+    }
+
+    .preview-title {
+      margin: 0 0 0.2rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--t-text);
+    }
+
+    .preview-copy {
+      margin: 0 0 0.65rem;
+      font-size: 0.68rem;
+      line-height: 1.4;
+      color: var(--t-muted);
+    }
+
+    .preview-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-mini {
+      font-size: 0.62rem;
+      font-weight: 600;
+      border-radius: 999px;
+      padding: 0.28rem 0.55rem;
+      border: 1px solid transparent;
+    }
+
+    .btn-mini.primary {
+      background: var(--t-accent);
+      color: var(--t-bg);
+    }
+
+    .btn-mini.ghost {
+      background: transparent;
+      color: var(--t-muted);
+      border-color: color-mix(in srgb, var(--t-border) 100%, transparent);
+    }
+
+    .preview-code {
+      margin-top: 0.55rem;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 0.6rem;
+      line-height: 1.45;
+      color: var(--t-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .preview-code b {
+      color: var(--t-accent);
+      font-weight: 500;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      padding: 0.85rem 0.95rem 1rem;
+      background: color-mix(in srgb, var(--t-card) 70%, var(--t-bg) 30%);
+    }
+
+    .card-meta-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .card-meta strong {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .open-hint {
+      font-size: 0.68rem;
+      color: var(--t-accent);
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: opacity 160ms ease, transform 160ms ease;
+      white-space: nowrap;
+    }
+
+    .theme-card:hover .open-hint {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .swatches {
+      display: flex;
+      gap: 0.28rem;
+      margin-top: 0.15rem;
+    }
+
+    .swatches i {
+      width: 0.95rem;
+      height: 0.95rem;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--t-text) 18%, transparent);
+      display: block;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+    }
+
+    .foot {
+      margin-top: 2.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+      color: var(--paper-muted);
+      font-size: 0.8rem;
+      line-height: 1.5;
+      animation: rise 0.8s ease both;
+      animation-delay: 0.35s;
+    }
+
+    .foot code {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 0.74rem;
+      color: #e8a854;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell { width: calc(100% - 1.5rem); }
+      .hero { padding-top: 2.25rem; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="hero">
+      <a class="brand" href="https://github.com/deekshith-poojary98/robotframework-docgen" aria-label="DocGen on GitHub">
+        <span class="brand-mark" aria-hidden="true">
+          <img src="https://docs.robotframework.org/img/robot-framework-dark.svg" alt="">
+        </span>
+        <span class="brand-name">Doc<span>Gen</span></span>
+      </a>
+      <h1>Theme gallery</h1>
+      <p class="lede">
+        A few sample themes for Robot Framework DocGen — each card is painted with that theme’s tokens.
+        These are starting points only; DocGen lets you fully customize colors and tokens to build your own theme.
+      </p>
+    </header>
+
+    <main class="grid" aria-label="Available themes">
+      <a class="theme-card" href="accent-only/index.html" style="--t-bg:#f0fdf4;--t-card:#ffffff;--t-border:#bbf7d0;--t-text:#14532d;--t-muted:#166534;--t-accent:#16a34a">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">Fresh green accent on a light reading surface.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>accent-only</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#f0fdf4"></i><i style="background:#ffffff"></i><i style="background:#16a34a"></i><i style="background:#14532d"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="bright-accent-on-dark/index.html" style="--t-bg:#0b1020;--t-card:#121826;--t-border:#243044;--t-text:#e5e7eb;--t-muted:#94a3b8;--t-accent:#fef08a">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">High-contrast yellow accent on deep navy.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>bright-accent-on-dark</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#0b1020"></i><i style="background:#121826"></i><i style="background:#fef08a"></i><i style="background:#e5e7eb"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="dark-accent-on-light/index.html" style="--t-bg:#f8fafc;--t-card:#ffffff;--t-border:#e2e8f0;--t-text:#0f172a;--t-muted:#64748b;--t-accent:#0f172a">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">Ink accent on clean paper — editorial and sharp.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>dark-accent-on-light</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#f8fafc"></i><i style="background:#ffffff"></i><i style="background:#0f172a"></i><i style="background:#0f172a"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="graphite/index.html" style="--t-bg:#121417;--t-card:#1a1d21;--t-border:#2c3138;--t-text:#e8eaed;--t-muted:#9aa0a6;--t-accent:#8ab4f8">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">Chrome-inspired graphite with soft blue links.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>graphite</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#121417"></i><i style="background:#1a1d21"></i><i style="background:#8ab4f8"></i><i style="background:#e8eaed"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="hsl-neon/index.html" style="--t-bg:hsl(260,40%,8%);--t-card:hsl(260,35%,12%);--t-border:hsl(260,25%,22%);--t-text:hsl(280,80%,92%);--t-muted:hsl(270,30%,70%);--t-accent:hsl(320,90%,60%)">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">HSL neon magenta on a violet night sky.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>hsl-neon</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:hsl(260,40%,8%)"></i><i style="background:hsl(260,35%,12%)"></i><i style="background:hsl(320,90%,60%)"></i><i style="background:hsl(280,80%,92%)"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="ice-blue/index.html" style="--t-bg:#eef8ff;--t-card:#ffffff;--t-border:#a5d8ff;--t-text:#0b3b5a;--t-muted:#1479a8;--t-accent:#0ea5e9">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">Crisp ice-blue reading theme for long docs.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>ice-blue</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#eef8ff"></i><i style="background:#ffffff"></i><i style="background:#0ea5e9"></i><i style="background:#0b3b5a"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="lavender-mist/index.html" style="--t-bg:#f5f3ff;--t-card:#ffffff;--t-border:#ddd6fe;--t-text:#4c1d95;--t-muted:#6d28d9;--t-accent:#7c3aed">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">Soft lavender mist with violet accents.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>lavender-mist</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#f5f3ff"></i><i style="background:#ffffff"></i><i style="background:#7c3aed"></i><i style="background:#4c1d95"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="matcha/index.html" style="--t-bg:#f7f8f2;--t-card:#ffffff;--t-border:#d5ddc8;--t-text:#243022;--t-muted:#5f6b55;--t-accent:#4d7c0f">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">Warm matcha cream for low-fatigue reading.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>matcha</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#f7f8f2"></i><i style="background:#ffffff"></i><i style="background:#4d7c0f"></i><i style="background:#243022"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="midnight/index.html" style="--t-bg:#020617;--t-card:#0f172a;--t-border:#1e293b;--t-text:#f8fafc;--t-muted:#94a3b8;--t-accent:#a78bfa">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">Deep midnight slate with soft violet glow.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>midnight</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#020617"></i><i style="background:#0f172a"></i><i style="background:#a78bfa"></i><i style="background:#f8fafc"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="ocean/index.html" style="--t-bg:#f0f9ff;--t-card:#ffffff;--t-border:#bae6fd;--t-text:#0c4a6e;--t-muted:#0369a1;--t-accent:#0284c7">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">Cool ocean blues for calm, clear docs.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>ocean</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#f0f9ff"></i><i style="background:#ffffff"></i><i style="background:#0284c7"></i><i style="background:#0c4a6e"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="paper/index.html" style="--t-bg:#faf7f2;--t-card:#ffffff;--t-border:#e7e0d6;--t-text:#1c1917;--t-muted:#78716c;--t-accent:#b45309">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">Warm paper stock with amber accents.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>paper</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#faf7f2"></i><i style="background:#ffffff"></i><i style="background:#b45309"></i><i style="background:#1c1917"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="rgba8-hex/index.html" style="--t-bg:#1a1025;--t-card:#241833;--t-border:#3b2a4f;--t-text:#f5e8ff;--t-muted:#c4b5d4;--t-accent:#f472b6">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">8-digit hex pinks on plum — token demo.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>rgba8-hex</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#1a1025"></i><i style="background:#241833"></i><i style="background:#f472b6"></i><i style="background:#f5e8ff"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="rose/index.html" style="--t-bg:#fff1f2;--t-card:#ffffff;--t-border:#fecdd3;--t-text:#4c0519;--t-muted:#9f1239;--t-accent:#e11d48">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">Rose blush surface with vivid crimson CTAs.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>rose</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#fff1f2"></i><i style="background:#ffffff"></i><i style="background:#e11d48"></i><i style="background:#4c0519"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="sage/index.html" style="--t-bg:#f4f7f4;--t-card:#ffffff;--t-border:#d5e0d6;--t-text:#1f2a24;--t-muted:#5f6f64;--t-accent:#2f6f4e">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">Soft sage green for calm long-form reading.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>sage</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#f4f7f4"></i><i style="background:#ffffff"></i><i style="background:#2f6f4e"></i><i style="background:#1f2a24"></i>
+          </div>
+        </div>
+      </a>
+
+      <a class="theme-card" href="short-hex/index.html" style="--t-bg:#112;--t-card:#223;--t-border:#445;--t-text:#eef;--t-muted:#99a;--t-accent:#0ff">
+        <div class="preview">
+          <div class="preview-chrome">
+            <div class="preview-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="preview-pill">Library</span>
+          </div>
+          <div class="preview-panel">
+            <p class="preview-title">Keyword docs</p>
+            <p class="preview-copy">Short-hex cyber cyan on near-black.</p>
+            <div class="preview-actions">
+              <span class="btn-mini primary">Open</span>
+              <span class="btn-mini ghost">Source</span>
+            </div>
+            <div class="preview-code"><b>Library</b> · StringUtils</div>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-top">
+            <strong>short-hex</strong>
+            <span class="open-hint">Open →</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <i style="background:#112"></i><i style="background:#223"></i><i style="background:#0ff"></i><i style="background:#eef"></i>
+          </div>
+        </div>
+      </a>
+    </main>
+
+    <footer class="foot">
+      Theme sources live in <code>sample_configs/theme/</code>.
+      Apply one with <code>theme_file</code> in your DocGen config, then open a card above to see the rendered result.
+    </footer>
+  </div>
+</body>
+</html>
