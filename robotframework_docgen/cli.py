@@ -3,6 +3,8 @@
 CLI entry point for Robot Framework Documentation Generator
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import os
