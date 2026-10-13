@@ -1,0 +1,16 @@
+{
+  "name": "TimeTravel",
+  "version": "0.1.0",
+  "description": "Robot Framework library for deterministic time travel in tests — freeze, travel, advance, and rewind perceived time without long sleeps.",
+  "github_url": "https://github.com/deekshith-poojary98/robotframework-timetravel",
+  "library_url": "https://github.com/deekshith-poojary98/robotframework-timetravel",
+  "author": "Deekshith Poojary",
+  "maintainer": "Deekshith Poojary",
+  "license": "Apache-2.0",
+  "robot_framework": ">=7.5",
+  "python": ">=3.11",
+  "examples_from_tests": [
+    "/Users/deekshithpoojary/Desktop/Projects/robotframework-timetravel/examples",
+    "/Users/deekshithpoojary/Desktop/Projects/robotframework-timetravel/tests/acceptance.robot"
+  ]
+}

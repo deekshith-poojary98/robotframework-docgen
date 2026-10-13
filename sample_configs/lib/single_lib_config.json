@@ -1,0 +1,12 @@
+{
+  "version": "2.0.0",
+  "description": "Sample configuration for docgen tool",
+  "github_url": "https://github.com/deekshith-poojary98/robotframework-docgen",
+  "support_email": "sample.user@example.com",
+  "author": "Sample Author",
+  "maintainer": "Sample Maintainer",
+  "license": "MIT",
+  "robot_framework": ">=7.0",
+  "python": ">=3.11",
+  "library_url": "https://github.com/deekshith-poojary98/robotframework-docgen"
+}
