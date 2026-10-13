@@ -135,7 +135,90 @@ class TestHTMLGeneration:
         # Should not contain any unreplaced placeholders
         assert "{{LIBRARY_NAME}}" not in html
         assert "{{VERSION}}" not in html
+        assert "{{VERSION_BADGE}}" not in html
         assert "{{KEYWORD_LIST}}" not in html
+
+    def test_html_omits_unknown_version_badge(self):
+        """Unknown/empty versions should not render a Version badge."""
+        info = LibraryInfo(
+            name="NoVersionLib",
+            version="Unknown",
+            scope="GLOBAL",
+            description="<p>Hello</p>",
+            keywords=[
+                KeywordInfo(
+                    name="Do Thing",
+                    description="Does a thing",
+                    example="",
+                    parameters=[],
+                    return_type="None",
+                    line_number=1,
+                )
+            ],
+        )
+        html = DocumentationGenerator(info).generate_html()
+        assert "Version Unknown" not in html
+        assert "{{VERSION_BADGE}}" not in html
+
+    def test_intro_does_not_double_escape_html(self):
+        """Library description HTML must render, not show escaped tags."""
+        info = LibraryInfo(
+            name="DocLib",
+            version="1.0.0",
+            scope="GLOBAL",
+            description="<p>Page object for login.</p>\n<p>See <code>workflow.robot</code>.</p>",
+            keywords=[
+                KeywordInfo(
+                    name="Open",
+                    description="Opens",
+                    example="",
+                    parameters=[],
+                    return_type="None",
+                    line_number=1,
+                )
+            ],
+        )
+        html = DocumentationGenerator(info).generate_html()
+        assert "&lt;p&gt;" not in html
+        assert "<div class=\"intro-content\"><p>Page object for login.</p>" in html
+        assert "<code>workflow.robot</code>" in html
+
+    def test_resource_sample_usage_uses_resource_import(self):
+        """Resource/suite docs should show Resource, not Library, in sample usage."""
+        info = LibraryInfo(
+            name="login_page",
+            version="",
+            scope="GLOBAL",
+            description="",
+            keywords=[
+                KeywordInfo(
+                    name="Enter Email",
+                    description="Types email",
+                    example="",
+                    parameters=[("text", "Any")],
+                    return_type="None",
+                    line_number=1,
+                )
+            ],
+            source_type="RESOURCE",
+        )
+        html = DocumentationGenerator(
+            info, config={"source": "UI/pages/login_page.robot"}
+        ).generate_html()
+        assert "Resource" in html
+        assert "UI/pages/login_page.robot" in html
+        # Avoid matching the word Library in chrome text; check settings import style.
+        assert "Library    login_page" not in html.replace("&nbsp;", " ")
+
+        abs_html = DocumentationGenerator(
+            info,
+            config={
+                "source": "/Users/example/project/UI/pages/login_page.robot"
+            },
+        ).generate_html()
+        assert "Resource" in abs_html
+        assert "login_page.robot" in abs_html
+        assert "/Users/example" not in abs_html
 
 
 class TestMarkdownGeneration:

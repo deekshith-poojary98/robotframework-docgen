@@ -1,0 +1,44 @@
+{
+  "site": {
+    "name": "DynamicCore Samples",
+    "description": "Regression samples for robotlibcore DynamicCore and pure dynamic libraries",
+    "theme_file": "../theme/graphite.json"
+  },
+  "libraries": [
+    {
+      "name": "MainLibrary",
+      "source": "sample_libs/dynamic_core/main_library.py",
+      "group": "DynamicCore",
+      "description": "Package DynamicCore aggregator with relative imports",
+      "output_file": "main_library.html"
+    },
+    {
+      "name": "ArgsLibrary",
+      "source": "sample_libs/dynamic_core/args_library.py",
+      "group": "DynamicCore",
+      "description": "DynamicCore library that requires init arguments",
+      "output_file": "args_library.html"
+    },
+    {
+      "name": "PackageMain",
+      "source": "sample_libs/dyn_pkg/main.py",
+      "group": "DynamicCore",
+      "description": "Issue #7 style package module (file-path Libdoc returns 0 keywords)",
+      "output_file": "package_main.html"
+    },
+    {
+      "name": "PureDynamic",
+      "source": "sample_libs/PureDynamic.py",
+      "group": "Dynamic API",
+      "description": "Pure get_keyword_names dynamic library",
+      "output_file": "pure_dynamic.html"
+    },
+    {
+      "name": "HybridDynamic",
+      "source": "sample_libs/HybridDynamic.py",
+      "group": "DynamicCore",
+      "description": "HybridDynamic with optional init argument",
+      "output_file": "hybrid_dynamic.html"
+    }
+  ]
+}

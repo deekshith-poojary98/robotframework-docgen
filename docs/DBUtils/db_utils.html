@@ -17,18 +17,123 @@
       --border: #1e293b;
       --text: #e5e7eb;
       --muted: #9ca3af;
+      --badge-required: #fca5a5;
+      --badge-required-text: var(--badge-required);
+      --badge-required-bg: color-mix(in srgb, var(--badge-required) 12%, transparent);
+      --badge-default: #4ade80;
+      --badge-default-text: var(--badge-default);
+      --badge-default-bg: color-mix(in srgb, var(--badge-default) 15%, transparent);
+      --badge-tag-text: var(--muted);
+      --badge-tag-bg: color-mix(in srgb, var(--card) 88%, var(--text) 12%);
+      --badge-primary-text: var(--accent);
+      --badge-primary-bg: var(--accent-soft);
+      --arg-type: var(--muted);
+      --hero-badge-bg: color-mix(in srgb, var(--bg) 90%, var(--card) 10%);
+      --hero-badge-text: var(--muted);
+      --hero-badge-kind-bg: rgba(167, 139, 250, 0.12);
+      --hero-badge-kind-text: #c4b5fd;
+      --btn-primary-bg: var(--accent);
+      --btn-primary-text: var(--on-accent);
+      --btn-ghost-bg: color-mix(in srgb, var(--bg) 75%, transparent);
+      --btn-ghost-text: var(--muted);
+      --code-bg: var(--bg-alt);
+      --code-inline-bg: color-mix(in srgb, var(--accent) 8%, transparent);
+      /* Robot Framework syntax highlighting (VS Code Dark+ defaults) */
+      --rf-keyword: #4ec9b0;
+      --rf-control: #ce9178;
+      --rf-setting: #c586c0;
+      --rf-variable: #9cdcfe;
+      --rf-comment: #6a9955;
+      --rf-section: #569cd6;
+      --rf-name: #dcdcaa;
+      --rf-arg: #dcdcaa;
+      --rf-string: #ce9178;
+      --rf-number: #b5cea8;
       --mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --sidebar-width: 260px;
+    }
+  </style>
+    <style id="docgen-theme">
+    :root {
+      --accent: #8ab4f8;
+      --accent-soft: rgba(138, 180, 248, 0.16);
+      --bg: #121417;
+      --bg-alt: #0b0d0f;
+      --border: #2c3138;
+      --btn-ghost-bg: transparent;
+      --btn-ghost-text: #9aa0a6;
+      --btn-primary-bg: #8ab4f8;
+      --btn-primary-text: #0b1120;
+      --card: #1a1d21;
+      --hero-badge-bg: #1a1d21;
+      --hero-badge-kind-bg: rgba(138, 180, 248, 0.15);
+      --hero-badge-kind-text: #aecbfa;
+      --hero-badge-text: #e8eaed;
+      --muted: #9aa0a6;
+      --on-accent: #f8fafc;
+      --rf-arg: #fde047;
+      --rf-comment: #4ade80;
+      --rf-control: #fb923c;
+      --rf-keyword: #14b8a6;
+      --rf-name: #facc15;
+      --rf-number: #86efac;
+      --rf-section: #60a5fa;
+      --rf-setting: #c084fc;
+      --rf-string: #fdba74;
+      --rf-variable: #38bdf8;
+      --text: #e8eaed;
+    }
+  </style>
+  <style>
+    /* Surfaces derived from theme tokens so light/brand themes actually apply. */
+    :root {
+      --surface: var(--bg);
+      --surface-2: color-mix(in srgb, var(--bg) 82%, var(--bg-alt) 18%);
+      --panel: var(--card);
+      --panel-2: color-mix(in srgb, var(--card) 88%, var(--text) 12%);
+      --header-bg: color-mix(in srgb, var(--bg) 92%, transparent);
+      --shadow: color-mix(in srgb, var(--bg-alt) 45%, transparent);
+      --on-accent: #0b1120;
     }
 
     * {
       box-sizing: border-box;
     }
+
+    /* Thin scrollbars (Firefox + WebKit/Blink) */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent;
+    }
+
+    *::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background: color-mix(in srgb, var(--accent) 30%, transparent);
+      border-radius: 3px;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+      background: color-mix(in srgb, var(--accent) 50%, transparent);
+    }
     
     body {
       margin: 0;
       font-family: var(--sans);
-      background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+      background: radial-gradient(
+        circle at top,
+        var(--border) 0,
+        var(--bg-alt) 45%,
+        var(--bg-alt) 100%
+      );
       color: var(--text);
       line-height: 1.6;
     }
@@ -51,7 +156,11 @@
       top: 0;
       z-index: 30;
       backdrop-filter: blur(16px);
-      background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.8));
+      background: linear-gradient(
+        to right,
+        color-mix(in srgb, var(--bg) 95%, transparent),
+        color-mix(in srgb, var(--bg) 80%, transparent)
+      );
       border-bottom: 1px solid var(--border);
       padding: 0.9rem 2rem;
       display: flex;
@@ -74,9 +183,54 @@
     header h1 {
       font-size: 1.05rem;
       margin: 0;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #f4f6ff;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 0;
+      background: var(--accent);
+      color: var(--on-accent);
+      padding: 0.5rem 0.75rem;
+      z-index: 100;
+      border-radius: 0 0 6px 0;
+      font-weight: 600;
+    }
+
+    .skip-link:focus {
+      left: 0;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .badge-kind {
+      border-color: color-mix(in srgb, var(--hero-badge-kind-text) 45%, transparent);
+      color: var(--hero-badge-kind-text);
+      background: var(--hero-badge-kind-bg);
+    }
+
+    .no-docs {
+      color: var(--muted);
+      font-style: italic;
+      margin: 0;
+    }
+
+    #intro,
+    #keywords,
+    .keyword-container {
+      scroll-margin-top: 5.5rem;
     }
 
     header .tagline {
@@ -127,14 +281,28 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 260px minmax(0, 1fr);
+      grid-template-columns: var(--sidebar-width) 3px minmax(0, 1fr);
       min-height: 100vh;
     }
 
+    .layout.is-resizing {
+      cursor: col-resize;
+      user-select: none;
+    }
+
+    .layout.is-resizing * {
+      cursor: col-resize !important;
+      user-select: none !important;
+    }
+
     aside {
-      border-right: 1px solid var(--border);
+      border-right: none;
       padding: calc(1.25rem + 10px) 1.5rem 1.5rem;
-      background: linear-gradient(to bottom, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+      background: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--bg) 96%, transparent),
+        color-mix(in srgb, var(--bg) 78%, var(--bg-alt) 22%)
+      );
       position: sticky;
       top: 0;
       height: 100vh;
@@ -142,6 +310,43 @@
       overflow-y: auto;
       font-size: 0.9rem;
       transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar-resizer {
+      position: sticky;
+      top: 0;
+      align-self: stretch;
+      height: 100vh;
+      width: 3px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      cursor: col-resize;
+      z-index: 5;
+      touch-action: none;
+      background: transparent;
+      border-right: 1px solid var(--border);
+    }
+
+    .sidebar-resizer::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 1px;
+      width: 1px;
+      background: transparent;
+      transition: background 0.15s ease;
+    }
+
+    .sidebar-resizer:hover::after,
+    .sidebar-resizer:focus-visible::after,
+    .layout.is-resizing .sidebar-resizer::after {
+      background: var(--accent);
+    }
+
+    .sidebar-resizer:focus-visible {
+      outline: none;
     }
 
     .sidebar-overlay {
@@ -195,6 +400,11 @@
       color: var(--text);
     }
 
+    .toc-section > ul > li > a.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
     .keyword-list {
       list-style: none;
       padding: 0;
@@ -220,7 +430,7 @@
       border-radius: 0.55rem;
       border: 1px solid transparent;
       line-height: 1.4;
-      background: rgba(15,23,42,0.5);
+      background: color-mix(in srgb, var(--bg) 70%, var(--card) 30%);
       transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
     }
     
@@ -243,12 +453,12 @@
     }
     
     .keyword-list a:focus-visible {
-      outline: 2px solid rgba(56,189,248,0.6);
+      outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
       outline-offset: 2px;
     }
     
     .keyword-list a.active {
-      border-color: rgba(56,189,248,0.7);
+      border-color: color-mix(in srgb, var(--accent) 70%, var(--border));
       color: var(--accent);
     }
     
@@ -266,13 +476,13 @@
       padding: 0.5rem 0.6rem;
       border-radius: 6px;
       border: 1px solid var(--border);
-      background: rgba(2,6,23,0.8);
+      background: color-mix(in srgb, var(--card) 88%, var(--bg) 12%);
       color: var(--text);
       font-size: 0.85rem;
     }
 
     .search-box input:focus {
-      outline: 2px solid rgba(56,189,248,0.4);
+      outline: 2px solid color-mix(in srgb, var(--accent) 40%, transparent);
     }
 
     .no-results {
@@ -316,27 +526,68 @@
       padding: 0.2rem 0.55rem;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(15,23,42,0.9);
-      color: var(--muted);
-      border-color: rgba(56,189,248,0.4);
+      background: var(--hero-badge-bg);
+      color: var(--hero-badge-text);
+      border-color: color-mix(in srgb, var(--accent) 40%, var(--border) 60%);
     }
 
     .badge.primary {
-      border-color: var(--accent-soft);
-      color: var(--accent);
+      border-color: color-mix(in srgb, var(--badge-primary-text) 40%, var(--border) 60%);
+      color: var(--badge-primary-text);
+      background: var(--badge-primary-bg);
+    }
+
+    .badge.badge-required {
+      color: var(--badge-required-text);
+      background: var(--badge-required-bg);
+      border-color: color-mix(in srgb, var(--badge-required-text) 35%, transparent);
     }
 
     .badge.badge-default {
       font-size: 0.75rem;
       padding: 0.2rem 0.6rem;
       margin-left: 0.4rem;
-      background: rgba(34,197,94,0.15);
-      border-color: rgba(34,197,94,0.3);
-      color: #4ade80;
+      color: var(--badge-default-text);
+      background: var(--badge-default-bg);
+      border-color: color-mix(in srgb, var(--badge-default-text) 30%, transparent);
       font-weight: 500;
       display: inline-block;
       line-height: 1.4;
       border-radius: 999px;
+    }
+
+    .badge.badge-tag {
+      border-radius: 0.35rem;
+      border-color: color-mix(in srgb, var(--border) 70%, var(--badge-tag-text) 30%);
+      color: var(--badge-tag-text);
+      background: var(--badge-tag-bg);
+    }
+
+    .kw-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+      margin: 0.35rem 0 0.15rem;
+    }
+
+    .kw-tags {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .kw-source {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(148, 163, 184, 0.55);
+    }
+
+    .kw-source:hover {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom-color: var(--accent);
     }
 
     .hero-actions {
@@ -356,31 +607,70 @@
       border: 1px solid transparent;
       text-decoration: none;
       white-space: nowrap;
+      transform: translateY(0);
+      box-shadow: 0 0 0 transparent;
+      transition:
+        transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 0.28s ease,
+        border-color 0.28s ease,
+        color 0.28s ease,
+        filter 0.28s ease;
+      will-change: transform;
     }
 
     .btn-primary {
-      background: radial-gradient(circle at top left, #38bdf8, #0ea5e9 45%, #0369a1 100%);
-      border-color: rgba(56,189,248,0.4);
-      color: #0b1120;
-      box-shadow: 0 10px 30px rgba(56,189,248,0.4);
+      background: radial-gradient(
+        circle at top left,
+        var(--btn-primary-bg),
+        color-mix(in srgb, var(--btn-primary-bg) 75%, black) 45%,
+        color-mix(in srgb, var(--btn-primary-bg) 45%, black) 100%
+      );
+      border-color: color-mix(in srgb, var(--btn-primary-bg) 45%, var(--border));
+      color: var(--btn-primary-text);
+      box-shadow: 0 8px 22px color-mix(in srgb, var(--btn-primary-bg) 32%, transparent);
     }
 
     .btn-ghost {
-      background: rgba(15,23,42,0.75);
+      background: var(--btn-ghost-bg);
       border-color: var(--border);
-      color: var(--muted);
+      color: var(--btn-ghost-text);
+      box-shadow: 0 1px 0 color-mix(in srgb, var(--border) 55%, transparent);
     }
 
     .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 35px rgba(56,189,248,0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px color-mix(in srgb, var(--accent) 28%, transparent);
       text-decoration: none;
     }
 
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 18%, transparent);
+      transition-duration: 0.12s;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      box-shadow: 0 12px 28px color-mix(in srgb, var(--btn-primary-bg) 42%, transparent);
+    }
+
     .btn-ghost:hover {
-      background: rgba(15,23,42,0.9);
+      background: color-mix(in srgb, var(--bg) 88%, var(--card) 12%);
       color: var(--text);
-      border-color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn {
+        transition: none;
+        will-change: auto;
+      }
+
+      .btn:hover,
+      .btn:active {
+        transform: none;
+      }
     }
 
     .hero-meta {
@@ -409,9 +699,13 @@
 
     .hero-card {
       border-radius: 1.2rem;
-      background: radial-gradient(circle at top, rgba(56,189,248,0.2), rgba(15,23,42,1));
+      background: radial-gradient(
+        circle at top,
+        var(--accent-soft),
+        var(--bg) 70%
+      );
       border: 1px solid var(--border);
-      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      box-shadow: 0 18px 40px var(--shadow);
       padding: 1rem 1rem 1.2rem;
       font-size: 0.75rem;
     }
@@ -437,11 +731,11 @@
       padding: 0.1rem 0.4rem;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(15,23,42,0.85);
+      background: color-mix(in srgb, var(--bg) 85%, var(--card) 15%);
     }
 
     pre {
-      background: rgba(2,6,23,0.95);
+      background: var(--code-bg);
       border-radius: 0.75rem;
       padding: 0.9rem 1rem;
       overflow-x: auto;
@@ -452,12 +746,12 @@
     }
 
     .keyword-container {
-      background: rgba(15,23,42,0.9);
+      background: color-mix(in srgb, var(--bg) 92%, var(--card) 8%);
       border-radius: 1rem;
       border: 1px solid var(--border);
       padding: 1rem 1.1rem;
       font-size: 0.92rem;
-      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      box-shadow: 0 18px 40px var(--shadow);
       margin-bottom: 1.5rem;
     }
 
@@ -476,16 +770,27 @@
 
     .args,
     .return-type,
-    .kw-docs {
+    .kw-docs,
+    .kw-example {
       border: 1px solid var(--border);
       border-radius: 0.75rem;
       padding: 0.85rem;
-      background: rgba(2,6,23,0.75);
+      background: color-mix(in srgb, var(--card) 92%, var(--bg) 8%);
     }
 
+    .keyword-content > .kw-docs,
+    .keyword-content > .kw-example {
+      margin-top: 0.85rem;
+    }
+
+    .args h3,
+    .return-type h3,
+    .kw-docs h3,
+    .kw-example h3,
     .args h4,
     .return-type h4,
-    .kw-docs h4 {
+    .kw-docs h4,
+    .kw-example h4 {
       margin: 0 0 0.4rem;
       font-size: 0.78rem;
       letter-spacing: 0.08em;
@@ -493,76 +798,153 @@
       color: var(--muted);
     }
 
+    /* Nested code fence sits inside the Example card (no double frame). */
+    .kw-example .code-block {
+      margin: 0.35rem 0 0;
+      border: none;
+      border-radius: 0.5rem;
+      background: var(--code-bg);
+    }
+
     .arguments-list-container {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 0.55rem;
+      overflow: hidden;
+      background: color-mix(in srgb, var(--card) 78%, var(--bg) 22%);
     }
 
     .argument-item {
-      background: rgba(2,6,23,0.6);
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      padding: 0.75rem;
-      transition: all 0.2s ease;
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      min-width: 0;
+      transition: background 0.15s ease;
+    }
+
+    .argument-item:last-child {
+      border-bottom: none;
     }
 
     .argument-item:hover {
-      background: rgba(2,6,23,0.8);
-      border-color: rgba(56,189,248,0.3);
+      background: color-mix(in srgb, var(--card) 55%, var(--bg) 45%);
+    }
+
+    .argument-item.has-enum {
+      padding-bottom: 0.7rem;
     }
 
     .argument-header {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: space-between;
+      gap: 0.65rem 1rem;
       flex-wrap: wrap;
+    }
+
+    .argument-signature {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .argument-flags {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      margin-left: auto;
     }
 
     .arg-name {
       font-family: var(--mono);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 600;
-      background: rgba(15,76,204,0.15);
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-      border: 1px solid rgba(15,76,204,0.3);
       color: var(--accent);
+      background: none;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      word-break: break-word;
     }
 
     .arg-separator {
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 400;
     }
 
     .arg-type {
       font-family: var(--mono);
       font-size: 0.75rem;
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 0.2rem 0.6rem;
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(15,23,42,0.5);
-      display: inline-block;
-      line-height: 1.4;
-    }
-
-    .return-type .arg-type {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.6rem;
-      line-height: 1.4;
-    }
-
-    .enum-values {
-      list-style: none;
-      margin: 0.75rem 0 0.5rem 0;
+      border: none;
       padding: 0;
-      width: 100%;
+      border-radius: 0;
+      color: var(--arg-type);
+      background: transparent;
+      display: inline;
+      line-height: 1.35;
+    }
+
+    .argument-item .badge {
+      font-size: 0.68rem;
+      padding: 0.12rem 0.42rem;
+      flex-shrink: 0;
+    }
+
+    .returns-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 0.55rem;
+      overflow: hidden;
+      background: color-mix(in srgb, var(--card) 78%, var(--bg) 22%);
+    }
+
+    .return-item {
+      padding: 0.55rem 0.75rem;
+      min-width: 0;
+      transition: background 0.15s ease;
+    }
+
+    .return-item:hover {
+      background: color-mix(in srgb, var(--card) 55%, var(--bg) 45%);
+    }
+
+    .arg-type.arg-type-muted {
+      font-style: italic;
+      opacity: 0.85;
+    }
+
+    .argument-doc,
+    .return-doc {
+      margin-top: 0.28rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .argument-doc p,
+    .return-doc p {
+      margin: 0;
+    }
+
+    a.kw-ref {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    a.kw-ref:hover {
+      color: color-mix(in srgb, var(--accent) 75%, white);
     }
 
     .enum-container {
-      background: rgba(2,6,23,0.6);
+      background: color-mix(in srgb, var(--card) 70%, var(--bg) 30%);
       border: 1px solid var(--border);
       border-radius: 0.5rem;
       padding: 0.75rem;
@@ -591,9 +973,9 @@
       color: var(--muted);
       font-family: var(--mono);
       padding: 0.15rem 0.4rem;
-      background: rgba(56,189,248,0.1);
+      background: var(--accent-soft);
       border-radius: 4px;
-      border: 1px solid rgba(56,189,248,0.2);
+      border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
     }
 
     .enum-members-grid {
@@ -607,8 +989,8 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.5rem 0.65rem;
-      background: rgba(15,23,42,0.8);
-      border: 1px solid rgba(56,189,248,0.15);
+      background: color-mix(in srgb, var(--bg) 80%, var(--card) 20%);
+      border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
       border-radius: 6px;
       transition: all 0.2s ease;
       font-family: var(--mono);
@@ -616,8 +998,8 @@
     }
 
     .enum-member:hover {
-      background: rgba(15,23,42,0.95);
-      border-color: rgba(56,189,248,0.3);
+      background: color-mix(in srgb, var(--bg) 70%, var(--card) 30%);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
       transform: translateY(-1px);
     }
 
@@ -645,10 +1027,10 @@
     }
 
     .enum-member-value code {
-      background: rgba(56,189,248,0.1);
+      background: var(--code-inline-bg);
       padding: 0.15rem 0.35rem;
       border-radius: 4px;
-      border: 1px solid rgba(56,189,248,0.2);
+      border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
       color: var(--text);
       font-weight: 400;
     }
@@ -667,7 +1049,7 @@
     .kwdoc code {
       font-family: var(--mono);
       font-size: 0.78rem;
-      background: rgba(56,189,248,0.08);
+      background: var(--code-inline-bg);
       padding: 0.2rem 0.35rem;
       border-radius: 4px;
     }
@@ -681,13 +1063,13 @@
       border: 2px solid var(--border);
       border-radius: 0.5rem;
       overflow: hidden;
-      background: rgba(2,6,23,0.75);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      background: color-mix(in srgb, var(--card) 88%, var(--bg) 12%);
+      box-shadow: 0 2px 8px var(--shadow);
     }
 
     .kwdoc table thead,
     .kwdoc .doc-table thead {
-      background: rgba(56,189,248,0.1);
+      background: var(--accent-soft);
     }
 
     .kwdoc table th,
@@ -727,7 +1109,7 @@
 
     .kwdoc table tbody tr:hover,
     .kwdoc .doc-table tbody tr:hover {
-      background: rgba(56,189,248,0.05);
+      background: var(--accent-soft);
     }
 
     .kwdoc img,
@@ -742,7 +1124,7 @@
     }
 
     .code-block {
-      background: rgba(15, 23, 42, 0.6);
+      background: var(--code-bg);
       border: 1px solid var(--border);
       border-radius: 8px;
       margin: 1rem 0;
@@ -763,68 +1145,136 @@
       background: transparent;
     }
 
+    .rf-keyword,
+    .robot-keywords {
+      color: var(--rf-keyword);
+      font-weight: bold;
+    }
+    .rf-control {
+      color: var(--rf-control);
+      font-weight: bold;
+    }
+    .rf-setting,
+    .robot-settings {
+      color: var(--rf-setting);
+      font-weight: bold;
+    }
+    .rf-variable,
+    .robot-variables {
+      color: var(--rf-variable);
+    }
+    .rf-comment,
+    .robot-comments {
+      color: var(--rf-comment);
+      font-style: italic;
+    }
+    .rf-section {
+      color: var(--rf-section);
+      font-weight: bold;
+    }
+    .rf-name,
+    .robot-test-cases {
+      color: var(--rf-name);
+      font-weight: bold;
+    }
+    .rf-arg {
+      color: var(--rf-arg);
+    }
+    .rf-string,
+    .robot-strings {
+      color: var(--rf-string);
+    }
+    .rf-number,
+    .robot-numbers {
+      color: var(--rf-number);
+    }
+
+    .help-strip {
+      margin: 1.25rem 0 0.25rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      background: color-mix(in srgb, var(--card) 88%, var(--accent-soft) 12%);
+    }
+
+    .help-strip-body {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .help-strip-copy {
+      min-width: min(100%, 18rem);
+      flex: 1 1 16rem;
+    }
+
+    .help-strip-copy h2 {
+      margin: 0 0 0.2rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .help-strip-copy p {
+      margin: 0;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: var(--muted);
+      max-width: 40rem;
+    }
+
+    .help-strip-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .help-strip-actions .btn {
+      padding: 0.45rem 0.85rem;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
     footer {
       border-top: 1px solid var(--border);
       padding: 1.2rem 2.4rem 1.6rem;
       font-size: 0.8rem;
       color: var(--muted);
       text-align: center;
-      background: radial-gradient(circle at bottom, rgba(56,189,248,0.15), rgba(15,23,42,1));
-    }
-
-    @media (max-width: 768px) {
-      .menu-toggle {
-        display: block;
-      }
-
-      header nav {
-        display: none;
-      }
-
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      aside {
-        position: fixed !important;
-        top: 70px;
-        left: 0;
-        width: 280px;
-        max-width: 85vw;
-        height: calc(100vh - 70px);
-        z-index: 26;
-        transform: translateX(-100%) !important;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
-        border-right: 1px solid var(--border);
-      }
-
-      aside.active {
-        transform: translateX(0) !important;
-      }
-
-      .sidebar-overlay {
-        display: block;
-      }
-
-      main {
-        width: 100%;
-      }
+      background: radial-gradient(
+        circle at bottom,
+        var(--accent-soft),
+        var(--bg-alt) 70%
+      );
     }
 
     @media (max-width: 1024px) {
       .menu-toggle {
-        display: block;
+        display: flex;
       }
 
-      header nav {
+      /* Keep Back to Dashboard visible; hide in-page Overview/Keywords links */
+      header nav a {
         display: none;
+      }
+
+      header nav a.nav-back {
+        display: inline-flex;
       }
 
       .layout {
         grid-template-columns: minmax(0, 1fr);
       }
 
+      .sidebar-resizer {
+        display: none;
+      }
+
       aside {
         position: fixed !important;
         top: 70px;
@@ -833,25 +1283,36 @@
         max-width: 85vw;
         height: calc(100vh - 70px);
         z-index: 26;
-        transform: translateX(-100%) !important;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
+        transform: translate3d(-100%, 0, 0);
+        transition: transform 0.3s ease-in-out;
+        box-shadow: 2px 0 10px var(--shadow);
+        background: linear-gradient(
+          to bottom,
+          var(--bg),
+          color-mix(in srgb, var(--bg) 94%, var(--bg-alt) 6%)
+        ) !important;
         border-right: 1px solid var(--border);
+        overflow-y: auto;
+        /* Override desktop sticky so the drawer can slide in */
+        bottom: auto;
       }
 
       aside.active {
-        transform: translateX(0) !important;
+        transform: translate3d(0, 0, 0) !important;
       }
 
       .sidebar-overlay {
+        display: none;
+      }
+
+      .sidebar-overlay.active {
         display: block;
+        opacity: 1;
+        pointer-events: auto;
       }
 
       main {
         width: 100%;
-      }
-
-      main {
         padding: 1.25rem 1.4rem 2.5rem;
       }
     }
@@ -859,10 +1320,6 @@
     @media (max-width: 640px) {
       header {
         padding: 0.7rem 1rem;
-      }
-
-      header nav {
-        display: none;
       }
 
       .hero {
@@ -876,6 +1333,7 @@
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header>
     <div class="brand">
       <div class="logo">
@@ -886,11 +1344,12 @@
         <div class="tagline">Robot Framework library documentation</div>
       </div>
     </div>
-    <nav><a href="../index.html">← Back to Dashboard</a>
+    <nav><a class="nav-back" href="../index.html">← Back to Dashboard</a>
       <a href="#intro">Overview</a>
+      
       <a href="#keywords">Keywords</a>
     </nav>
-    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -907,39 +1366,52 @@
         <h2>Getting Started</h2>
         <ul>
           <li><a href="#intro">Introduction</a></li>
+          
         </ul>
       </div>
 
       <div class="toc-section">
         <h2>Keywords</h2>
         <div class="search-box">
-          <input type="text" id="keyword-search" placeholder="Search keywords…">
+          <label class="visually-hidden" for="keyword-search">Search keywords, docs, and tags</label>
+          <input type="text" id="keyword-search" placeholder="Search keywords, docs, tags…" aria-label="Search keywords, docs, and tags">
         </div>
         <ul class="keyword-list" id="keyword-list">
-          <li><a href="#connect-to-database">Connect To Database</a></li>
-        <li><a href="#disconnect-from-database">Disconnect From Database</a></li>
-        <li><a href="#execute-query">Execute Query</a></li>
-        <li><a href="#execute-non-query">Execute Non Query</a></li>
-        <li><a href="#insert-record">Insert Record</a></li>
-        <li><a href="#update-record">Update Record</a></li>
-        <li><a href="#delete-record">Delete Record</a></li>
-        <li><a href="#get-table-count">Get Table Count</a></li>
-        <li><a href="#begin-transaction">Begin Transaction</a></li>
-        <li><a href="#commit-transaction">Commit Transaction</a></li>
-        <li><a href="#rollback-transaction">Rollback Transaction</a></li>
-        <li><a href="#query-single-row">Query Single Row</a></li>
-        <li><a href="#query-single-value">Query Single Value</a></li>
+          <li data-search="connect to database connect to a database. arguments: host: database host address database: database name username: database username password: database password port: database port (default: 5432) example: *** settings *** library dbutils *** test cases *** connect to database example connect to database localhost mydb admin secret123 [teardown] disconnect from database"><a href="#connect-to-database">Connect To Database</a></li>
+        <li data-search="disconnect from database disconnect from the database."><a href="#disconnect-from-database">Disconnect From Database</a></li>
+        <li data-search="execute query execute a select query and return results. arguments: query: sql select query string params: optional list of query parameters returns: list of dictionaries representing rows example: *** settings *** library dbutils *** test cases *** execute query example connect to database localhost mydb admin secret123 ${results} execute query select * from users where age &gt; ? ${[25]} should not be empty ${results} [teardown] disconnect from database"><a href="#execute-query">Execute Query</a></li>
+        <li data-search="execute non query execute a non-select query (insert, update, delete). arguments: query: sql query string params: optional list of query parameters returns: number of affected rows example: *** settings *** library dbutils *** test cases *** execute non query example connect to database localhost mydb admin secret123 ${count} execute non query update users set status=? where id=? ... ${[&amp;#x27;active&amp;#x27;, 1]} should be equal as integers ${count} ${1} [teardown] disconnect from database"><a href="#execute-non-query">Execute Non Query</a></li>
+        <li data-search="insert record insert a record into a table. arguments: table: table name data: dictionary of column names and values returns: id of inserted record example: *** settings *** library dbutils *** test cases *** insert record example connect to database localhost mydb admin secret123 ${record} create dictionary name=john email=john@example.com age=30 ${id} insert record users ${record} should not be empty ${id} [teardown] disconnect from database"><a href="#insert-record">Insert Record</a></li>
+        <li data-search="update record update records in a table. arguments: table: table name data: dictionary of column names and new values where_clause: where clause (without where keyword) params: optional list of parameters for where clause returns: number of affected rows example: *** settings *** library dbutils *** test cases *** update record example connect to database localhost mydb admin secret123 ${data} create dictionary status=active updated_at=${timestamp} ${count} update record users ${data} id=? ${[1]} should be equal as integers ${count} ${1} [teardown] disconnect from database"><a href="#update-record">Update Record</a></li>
+        <li data-search="delete record delete records from a table. arguments: table: table name where_clause: where clause (without where keyword) params: optional list of parameters for where clause returns: number of deleted rows example: *** settings *** library dbutils *** test cases *** delete record example connect to database localhost mydb admin secret123 ${count} delete record users id=? ${[1]} should be equal as integers ${count} ${1} [teardown] disconnect from database"><a href="#delete-record">Delete Record</a></li>
+        <li data-search="get table count get count of records in a table. arguments: table: table name where_clause: optional where clause (without where keyword) params: optional list of parameters for where clause returns: record count example: *** settings *** library dbutils *** test cases *** get table count example connect to database localhost mydb admin secret123 ${count} get table count users status=? ${[&amp;#x27;active&amp;#x27;]} should be true ${count} &gt; 0 [teardown] disconnect from database"><a href="#get-table-count">Get Table Count</a></li>
+        <li data-search="begin transaction begin a database transaction. example: *** settings *** library dbutils *** test cases *** transaction example connect to database localhost mydb admin secret123 begin transaction insert record users ${data1} insert record users ${data2} commit transaction [teardown] disconnect from database"><a href="#begin-transaction">Begin Transaction</a></li>
+        <li data-search="commit transaction commit the current transaction."><a href="#commit-transaction">Commit Transaction</a></li>
+        <li data-search="rollback transaction rollback the current transaction."><a href="#rollback-transaction">Rollback Transaction</a></li>
+        <li data-search="query single row execute a query and return a single row. arguments: query: sql select query string params: optional list of query parameters returns: dictionary representing a single row raises: valueerror if no rows or multiple rows found example: *** settings *** library dbutils *** test cases *** query single row example connect to database localhost mydb admin secret123 ${user} query single row select * from users where id=? ${[1]} should be equal ${user}[name] john [teardown] disconnect from database"><a href="#query-single-row">Query Single Row</a></li>
+        <li data-search="query single value execute a query and return a single value. arguments: query: sql select query string (should return one column) params: optional list of query parameters returns: single value from query result example: *** settings *** library dbutils *** test cases *** query single value example connect to database localhost mydb admin secret123 ${count} query single value select count(*) from users should be true ${count} &gt;= 0 [teardown] disconnect from database"><a href="#query-single-value">Query Single Value</a></li>
         </ul>
       </div>
     </aside>
+    <div
+      class="sidebar-resizer"
+      id="sidebar-resizer"
+      role="separator"
+      aria-orientation="vertical"
+      aria-label="Resize sidebar"
+      aria-valuemin="200"
+      aria-valuemax="520"
+      aria-valuenow="260"
+      tabindex="0"
+    ></div>
 
-    <main>
+    <main id="main-content">
       <section id="intro" class="hero">
         <div>
           <h2>DBUtils Documentation</h2>
           
           <div class="hero-badges">
-            <!-- <span class="badge primary">Robot Framework Library</span> -->
+            <span class="badge badge-kind">Library</span>
             <span class="badge">Version 1.5.0</span>
             <span class="badge">Scope GLOBAL</span>
             <span class="badge">13 Keywords</span>
@@ -952,18 +1424,18 @@
             <div class="hero-card-title">Sample Usage</div>
             <div class="hero-card-lang">Robot</div>
           </div>
-          <pre class="language-robot"><code><span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    DBUtils
+          <pre class="language-robot"><code><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    DBUtils
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Example</span>
-    [Documentation]    Demonstrates using DBUtils
-<span style="color: #6a9955; font-style: italic;">    # add your keyword calls here</span></code></pre>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Example</span>
+    <span class="rf-setting">[Documentation]</span>    Demonstrates using DBUtils
+    <span class="rf-keyword">Connect To Database</span>    <span class="rf-variable">${host}</span>    <span class="rf-variable">${database}</span>    <span class="rf-variable">${username}</span></code></pre>
         </div>
       </section>
 
       <section class="keyword-container intro-section"><div class="keyword-name"><h2>Introduction</h2></div><div class="kw-overview"><div class="kw-docs"><div class="intro-content"><p>Database utilities library for Robot Framework.</p>
-<p>    This library provides keywords for:</p>
+<p>This library provides keywords for:</p>
 <ul>
 <li>Database connection management</li>
 <li>Executing SQL queries</li>
@@ -972,57 +1444,84 @@
 <li>Transaction management</li>
 </ul></div></div></div></section>
 
+      
+
       <section id="keywords">
         <div class="keyword-container" id="connect-to-database">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#connect-to-database">Connect To Database</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/db_utils.py#L34" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L34</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">host</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">host</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">database</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">database</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">username</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">username</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">password</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">password</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">port</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">int</span>
-               <span class="badge badge-default">default: 5432</span>
+              <span class="argument-signature">
+                <span class="arg-name">port</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">int</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: 5432</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Connect to a database.</p>
 <p><strong>Arguments:</strong></p>
@@ -1034,16 +1533,14 @@
 <li><code>port</code>: Database port (default: 5432)</li>
 </ul>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    DBUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    DBUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Connect To Database Example</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Connect To Database</span>     localhost    mydb    admin    secret123
-    [Teardown]    <span style="color: #4ec9b0; font-weight: bold;">Disconnect From Database</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Connect To Database</span> Example</span>
+    <span class="rf-keyword">Connect To Database</span>    localhost    mydb    admin    secret123
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Disconnect From Database</span></pre></div>
       </div>
     </div>
   </div>
@@ -1051,11 +1548,12 @@
         <div class="keyword-container" id="disconnect-from-database">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#disconnect-from-database">Disconnect From Database</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/db_utils.py#L68" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L68</a></div>
   </div>
   <div class="keyword-content">
     <div style="margin-bottom: 1rem;"></div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Disconnect from the database.</p>
       </div>
@@ -1065,36 +1563,56 @@
         <div class="keyword-container" id="execute-query">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#execute-query">Execute Query</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/db_utils.py#L75" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L75</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">query</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">query</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">params</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">Optional[List[Any]]</span>
-               <span class="badge badge-default">default: None</span>
+              <span class="argument-signature">
+                <span class="arg-name">params</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">Optional[List[Any]]</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: None</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">List[Dict[str, Any]]</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">List[Dict[str, Any]]</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Execute a SELECT query and return results.</p>
 <p><strong>Arguments:</strong></p>
@@ -1104,18 +1622,16 @@
 </ul>
 <p><strong>Returns:</strong> List of dictionaries representing rows</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    DBUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    DBUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Execute Query Example</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Connect To Database</span>     localhost    mydb    admin    secret123
-    <span style="color: #9cdcfe;">${results}</span>    <span style="color: #4ec9b0; font-weight: bold;">Execute Query</span>    SELECT * FROM users WHERE age &gt; ?    <span style="color: #9cdcfe;">${[25]}</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Should Not Be Empty</span>     <span style="color: #9cdcfe;">${results}</span>
-    [Teardown]    <span style="color: #4ec9b0; font-weight: bold;">Disconnect From Database</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Execute Query</span> Example</span>
+    <span class="rf-keyword">Connect To Database</span>    localhost    mydb    admin    secret123
+    <span class="rf-variable">${results}</span>    <span class="rf-keyword">Execute Query</span>    SELECT * FROM users WHERE age &gt; ?    <span class="rf-variable">${[25]}</span>
+    <span class="rf-keyword">Should Not Be Empty</span>    <span class="rf-variable">${results}</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Disconnect From Database</span></pre></div>
       </div>
     </div>
   </div>
@@ -1123,36 +1639,56 @@
         <div class="keyword-container" id="execute-non-query">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#execute-non-query">Execute Non Query</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/db_utils.py#L106" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L106</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">query</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">query</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">params</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">Optional[List[Any]]</span>
-               <span class="badge badge-default">default: None</span>
+              <span class="argument-signature">
+                <span class="arg-name">params</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">Optional[List[Any]]</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: None</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">int</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">int</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Execute a non-SELECT query (INSERT, UPDATE, DELETE).</p>
 <p><strong>Arguments:</strong></p>
@@ -1162,19 +1698,17 @@
 </ul>
 <p><strong>Returns:</strong> Number of affected rows</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    DBUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    DBUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Execute Non Query Example</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Connect To Database</span>     localhost    mydb    admin    secret123
-    <span style="color: #9cdcfe;">${count}</span>    <span style="color: #4ec9b0; font-weight: bold;">Execute Non Query</span>    UPDATE users SET <span style="color: #dcdcaa;">status</span>=? WHERE <span style="color: #dcdcaa;">id</span>=?
-    ...    <span style="color: #9cdcfe;">${[&<span style="color: #6a9955; font-style: italic;">#x27;active&#x27;, 1]}</span></span>
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal As Integers</span>     <span style="color: #9cdcfe;">${count}</span>    <span style="color: #9cdcfe;">${1}</span>
-    [Teardown]    <span style="color: #4ec9b0; font-weight: bold;">Disconnect From Database</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Execute Non Query</span> Example</span>
+    <span class="rf-keyword">Connect To Database</span>    localhost    mydb    admin    secret123
+    <span class="rf-variable">${count}</span>    <span class="rf-keyword">Execute Non Query</span>    UPDATE users SET <span class="rf-arg">status</span>=? WHERE <span class="rf-arg">id</span>=?
+    ...    <span class="rf-keyword">${[&#x27;active&#x27;, 1]}</span>
+    <span class="rf-keyword">Should Be Equal As Integers</span>    <span class="rf-variable">${count}</span>    <span class="rf-variable">${1}</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Disconnect From Database</span></pre></div>
       </div>
     </div>
   </div>
@@ -1182,35 +1716,56 @@
         <div class="keyword-container" id="insert-record">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#insert-record">Insert Record</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/db_utils.py#L135" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L135</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">table</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">table</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">data</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">Dict[str, Any]</span>
+              <span class="argument-signature">
+                <span class="arg-name">data</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">Dict[str, Any]</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">int</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">int</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Insert a record into a table.</p>
 <p><strong>Arguments:</strong></p>
@@ -1220,19 +1775,17 @@
 </ul>
 <p><strong>Returns:</strong> ID of inserted record</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    DBUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    DBUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Insert Record Example</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Connect To Database</span>     localhost    mydb    admin    secret123
-    <span style="color: #9cdcfe;">${record}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">name</span>=John    <span style="color: #dcdcaa;">email</span>=john@example.com    <span style="color: #dcdcaa;">age</span>=30
-    <span style="color: #9cdcfe;">${id}</span>    <span style="color: #4ec9b0; font-weight: bold;">Insert Record</span>    users    <span style="color: #9cdcfe;">${record}</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Should Not Be Empty</span>     <span style="color: #9cdcfe;">${id}</span>
-    [Teardown]    <span style="color: #4ec9b0; font-weight: bold;">Disconnect From Database</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Insert Record</span> Example</span>
+    <span class="rf-keyword">Connect To Database</span>    localhost    mydb    admin    secret123
+    <span class="rf-variable">${record}</span>    <span class="rf-keyword">Create Dictionary</span>    <span class="rf-arg">name</span>=John    <span class="rf-arg">email</span>=john@example.com    <span class="rf-arg">age</span>=30
+    <span class="rf-variable">${id}</span>    <span class="rf-keyword">Insert Record</span>    users    <span class="rf-variable">${record}</span>
+    <span class="rf-keyword">Should Not Be Empty</span>    <span class="rf-variable">${id}</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Disconnect From Database</span></pre></div>
       </div>
     </div>
   </div>
@@ -1240,50 +1793,80 @@
         <div class="keyword-container" id="update-record">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#update-record">Update Record</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/db_utils.py#L164" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L164</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">table</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">table</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">data</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">Dict[str, Any]</span>
+              <span class="argument-signature">
+                <span class="arg-name">data</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">Dict[str, Any]</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">where_clause</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">where_clause</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">params</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">Optional[List[Any]]</span>
-               <span class="badge badge-default">default: None</span>
+              <span class="argument-signature">
+                <span class="arg-name">params</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">Optional[List[Any]]</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: None</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">int</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">int</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Update records in a table.</p>
 <p><strong>Arguments:</strong></p>
@@ -1295,19 +1878,17 @@
 </ul>
 <p><strong>Returns:</strong> Number of affected rows</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    DBUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    DBUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Update Record Example</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Connect To Database</span>     localhost    mydb    admin    secret123
-    <span style="color: #9cdcfe;">${data}</span>    <span style="color: #4ec9b0; font-weight: bold;">Create Dictionary</span>    <span style="color: #dcdcaa;">status</span>=active    <span style="color: #dcdcaa;">updated_at</span>=<span style="color: #9cdcfe;">${timestamp}</span>
-    <span style="color: #9cdcfe;">${count}</span>    <span style="color: #4ec9b0; font-weight: bold;">Update Record</span>    users    <span style="color: #9cdcfe;">${data}</span>    <span style="color: #dcdcaa;">id</span>=?    <span style="color: #9cdcfe;">${[1]}</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal As Integers</span>     <span style="color: #9cdcfe;">${count}</span>    <span style="color: #9cdcfe;">${1}</span>
-    [Teardown]    <span style="color: #4ec9b0; font-weight: bold;">Disconnect From Database</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Update Record</span> Example</span>
+    <span class="rf-keyword">Connect To Database</span>    localhost    mydb    admin    secret123
+    <span class="rf-variable">${data}</span>    <span class="rf-keyword">Create Dictionary</span>    <span class="rf-arg">status</span>=active    <span class="rf-arg">updated_at</span>=<span class="rf-variable">${timestamp}</span>
+    <span class="rf-variable">${count}</span>    <span class="rf-keyword">Update Record</span>    users    <span class="rf-variable">${data}</span>    <span class="rf-arg">id</span>=?    <span class="rf-variable">${[1]}</span>
+    <span class="rf-keyword">Should Be Equal As Integers</span>    <span class="rf-variable">${count}</span>    <span class="rf-variable">${1}</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Disconnect From Database</span></pre></div>
       </div>
     </div>
   </div>
@@ -1315,43 +1896,68 @@
         <div class="keyword-container" id="delete-record">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#delete-record">Delete Record</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/db_utils.py#L196" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L196</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">table</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">table</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">where_clause</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">where_clause</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">params</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">Optional[List[Any]]</span>
-               <span class="badge badge-default">default: None</span>
+              <span class="argument-signature">
+                <span class="arg-name">params</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">Optional[List[Any]]</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: None</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">int</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">int</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Delete records from a table.</p>
 <p><strong>Arguments:</strong></p>
@@ -1362,18 +1968,16 @@
 </ul>
 <p><strong>Returns:</strong> Number of deleted rows</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    DBUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    DBUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Delete Record Example</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Connect To Database</span>     localhost    mydb    admin    secret123
-    <span style="color: #9cdcfe;">${count}</span>    <span style="color: #4ec9b0; font-weight: bold;">Delete Record</span>    users    <span style="color: #dcdcaa;">id</span>=?    <span style="color: #9cdcfe;">${[1]}</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal As Integers</span>     <span style="color: #9cdcfe;">${count}</span>    <span style="color: #9cdcfe;">${1}</span>
-    [Teardown]    <span style="color: #4ec9b0; font-weight: bold;">Disconnect From Database</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Delete Record</span> Example</span>
+    <span class="rf-keyword">Connect To Database</span>    localhost    mydb    admin    secret123
+    <span class="rf-variable">${count}</span>    <span class="rf-keyword">Delete Record</span>    users    <span class="rf-arg">id</span>=?    <span class="rf-variable">${[1]}</span>
+    <span class="rf-keyword">Should Be Equal As Integers</span>    <span class="rf-variable">${count}</span>    <span class="rf-variable">${1}</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Disconnect From Database</span></pre></div>
       </div>
     </div>
   </div>
@@ -1381,44 +1985,68 @@
         <div class="keyword-container" id="get-table-count">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#get-table-count">Get Table Count</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/db_utils.py#L226" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L226</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">table</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">table</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">where_clause</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">Optional[str]</span>
-               <span class="badge badge-default">default: None</span>
+              <span class="argument-signature">
+                <span class="arg-name">where_clause</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">Optional[str]</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: None</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">params</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">Optional[List[Any]]</span>
-               <span class="badge badge-default">default: None</span>
+              <span class="argument-signature">
+                <span class="arg-name">params</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">Optional[List[Any]]</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: None</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">int</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">int</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Get count of records in a table.</p>
 <p><strong>Arguments:</strong></p>
@@ -1429,18 +2057,16 @@
 </ul>
 <p><strong>Returns:</strong> Record count</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    DBUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    DBUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Get Table Count Example</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Connect To Database</span>     localhost    mydb    admin    secret123
-    <span style="color: #9cdcfe;">${count}</span>    <span style="color: #4ec9b0; font-weight: bold;">Get Table Count</span>    users    <span style="color: #dcdcaa;">status</span>=?    <span style="color: #9cdcfe;">${[&<span style="color: #6a9955; font-style: italic;">#x27;active&#x27;]}</span></span>
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be True</span>     <span style="color: #9cdcfe;">${count}</span> &gt; 0
-    [Teardown]    <span style="color: #4ec9b0; font-weight: bold;">Disconnect From Database</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Get Table Count</span> Example</span>
+    <span class="rf-keyword">Connect To Database</span>    localhost    mydb    admin    secret123
+    <span class="rf-variable">${count}</span>    <span class="rf-keyword">Get Table Count</span>    users    <span class="rf-arg">status</span>=?    <span class="rf-variable">${[&<span class="rf-comment">#x27;active&#x27;]}</span></span>
+    <span class="rf-keyword">Should Be True</span>    <span class="rf-variable">${count}</span> &gt; 0
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Disconnect From Database</span></pre></div>
       </div>
     </div>
   </div>
@@ -1448,28 +2074,27 @@
         <div class="keyword-container" id="begin-transaction">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#begin-transaction">Begin Transaction</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/db_utils.py#L256" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L256</a></div>
   </div>
   <div class="keyword-content">
     <div style="margin-bottom: 1rem;"></div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Begin a database transaction.</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    DBUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    DBUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Transaction Example</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Connect To Database</span>     localhost    mydb    admin    secret123
-    <span style="color: #4ec9b0; font-weight: bold;">Begin Transaction</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Insert Record</span>     users    <span style="color: #9cdcfe;">${data1}</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Insert Record</span>     users    <span style="color: #9cdcfe;">${data2}</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Commit Transaction</span>
-    [Teardown]    <span style="color: #4ec9b0; font-weight: bold;">Disconnect From Database</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name">Transaction Example</span>
+    <span class="rf-keyword">Connect To Database</span>    localhost    mydb    admin    secret123
+    <span class="rf-keyword">Begin Transaction</span>
+    <span class="rf-keyword">Insert Record</span>    users    <span class="rf-variable">${data1}</span>
+    <span class="rf-keyword">Insert Record</span>    users    <span class="rf-variable">${data2}</span>
+    <span class="rf-keyword">Commit Transaction</span>
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Disconnect From Database</span></pre></div>
       </div>
     </div>
   </div>
@@ -1477,11 +2102,12 @@
         <div class="keyword-container" id="commit-transaction">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#commit-transaction">Commit Transaction</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/db_utils.py#L279" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L279</a></div>
   </div>
   <div class="keyword-content">
     <div style="margin-bottom: 1rem;"></div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Commit the current transaction.</p>
       </div>
@@ -1491,11 +2117,12 @@
         <div class="keyword-container" id="rollback-transaction">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#rollback-transaction">Rollback Transaction</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/db_utils.py#L287" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L287</a></div>
   </div>
   <div class="keyword-content">
     <div style="margin-bottom: 1rem;"></div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Rollback the current transaction.</p>
       </div>
@@ -1505,36 +2132,56 @@
         <div class="keyword-container" id="query-single-row">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#query-single-row">Query Single Row</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/db_utils.py#L295" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L295</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">query</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">query</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">params</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">Optional[List[Any]]</span>
-               <span class="badge badge-default">default: None</span>
+              <span class="argument-signature">
+                <span class="arg-name">params</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">Optional[List[Any]]</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: None</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">Dict[str, Any]</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">Dict[str, Any]</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Execute a query and return a single row.</p>
 <p><strong>Arguments:</strong></p>
@@ -1545,18 +2192,16 @@
 <p><strong>Returns:</strong> Dictionary representing a single row</p>
 <p><strong>Raises:</strong> ValueError if no rows or multiple rows found</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    DBUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    DBUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Query Single Row Example</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Connect To Database</span>     localhost    mydb    admin    secret123
-    <span style="color: #9cdcfe;">${user}</span>    <span style="color: #4ec9b0; font-weight: bold;">Query Single Row</span>    SELECT * FROM users WHERE <span style="color: #dcdcaa;">id</span>=?    <span style="color: #9cdcfe;">${[1]}</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be Equal</span>     <span style="color: #9cdcfe;">${user}</span>[name]    John
-    [Teardown]    <span style="color: #4ec9b0; font-weight: bold;">Disconnect From Database</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Query Single Row</span> Example</span>
+    <span class="rf-keyword">Connect To Database</span>    localhost    mydb    admin    secret123
+    <span class="rf-variable">${user}</span>    <span class="rf-keyword">Query Single Row</span>    SELECT * FROM users WHERE <span class="rf-arg">id</span>=?    <span class="rf-variable">${[1]}</span>
+    <span class="rf-keyword">Should Be Equal</span>    <span class="rf-variable">${user}</span>[name]    John
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Disconnect From Database</span></pre></div>
       </div>
     </div>
   </div>
@@ -1564,36 +2209,56 @@
         <div class="keyword-container" id="query-single-value">
   <div class="keyword-name">
     <h2><a class="kw-name" href="#query-single-value">Query Single Value</a></h2>
+    <div class="kw-meta"><a class="kw-source" href="https://github.com/username/repo/blob/main/sample_libs/db_utils.py#L325" target="_blank" rel="noopener noreferrer" title="View source on GitHub">Source:L325</a></div>
   </div>
   <div class="keyword-content">
     <div class="kw-overview">
       <div class="args">
-        <h4>Arguments</h4>
+        <h3>Arguments</h3>
         <div class="arguments-list-container">
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">query</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">str</span>
+              <span class="argument-signature">
+                <span class="arg-name">query</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">str</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-required">required</span>
+              </span>
             </div>
           </div>
           <div class="argument-item">
             <div class="argument-header">
-              <span class="arg-name">params</span>
-              <span class="arg-separator">:</span>
-              <span class="arg-type">Optional[List[Any]]</span>
-               <span class="badge badge-default">default: None</span>
+              <span class="argument-signature">
+                <span class="arg-name">params</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">Optional[List[Any]]</span>
+              </span>
+              <span class="argument-flags">
+                 <span class="badge badge-default">default: None</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="return-type">
-        <h4>Return Type</h4>
-        <span class="arg-type">Any</span>
+        <h3>Returns</h3>
+        <div class="returns-list-container">
+          <div class="return-item">
+            <div class="argument-header">
+              <span class="argument-signature">
+                <span class="arg-name">return</span>
+                <span class="arg-separator">:</span>
+                <span class="arg-type">Any</span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="kw-docs">
-      <h4>Documentation</h4>
+      <h3>Documentation</h3>
       <div class="kwdoc doc">
         <p>Execute a query and return a single value.</p>
 <p><strong>Arguments:</strong></p>
@@ -1603,43 +2268,27 @@
 </ul>
 <p><strong>Returns:</strong> Single value from query result</p>
 <p><strong>Example:</strong></p>
-<div class="code-block"><pre class="language-robot">
-<span style="color: #569cd6; font-weight: bold;">*** Settings ***</span>
-<span style="color: #c586c0; font-weight: bold;">Library</span>    DBUtils
+<div class="code-block"><pre class="language-robot"><span class="rf-section">*** Settings ***</span>
+<span class="rf-setting">Library</span>    DBUtils
 
 
-<span style="color: #569cd6; font-weight: bold;">*** Test Cases ***</span>
-<span style="color: #dcdcaa; font-weight: bold;">Query Single Value Example</span>
-    <span style="color: #4ec9b0; font-weight: bold;">Connect To Database</span>     localhost    mydb    admin    secret123
-    <span style="color: #9cdcfe;">${count}</span>    <span style="color: #4ec9b0; font-weight: bold;">Query Single Value</span>    SELECT COUNT(*) FROM users
-    <span style="color: #4ec9b0; font-weight: bold;">Should Be True</span>     <span style="color: #9cdcfe;">${count}</span> &gt;= 0
-    [Teardown]    <span style="color: #4ec9b0; font-weight: bold;">Disconnect From Database</span>
-</pre></div>
+<span class="rf-section">*** Test Cases ***</span>
+<span class="rf-name"><span class="rf-keyword">Query Single Value</span> Example</span>
+    <span class="rf-keyword">Connect To Database</span>    localhost    mydb    admin    secret123
+    <span class="rf-variable">${count}</span>    <span class="rf-keyword">Query Single Value</span>    SELECT COUNT(*) FROM users
+    <span class="rf-keyword">Should Be True</span>    <span class="rf-variable">${count}</span> &gt;= 0
+    <span class="rf-setting">[Teardown]</span>    <span class="rf-keyword">Disconnect From Database</span></pre></div>
       </div>
     </div>
   </div>
 </div>
       </section>
 
-      <section class="keyword-container">
-        <div class="keyword-name">
-          <h2>Need Help?</h2>
-        </div>
-        <div class="kw-overview">
-          <div class="kw-docs">
-            <p>
-              Found an issue or have a feature request for this library? Let the maintainers know by opening a new
-              GitHub issue. Please include environment details and relevant log output to help us reproduce the problem.
-            </p>
-            <p style="margin-top: 1rem;"><a class="btn btn-primary" href="https://github.com/username/repo/issues/new" target="_blank" rel="noopener noreferrer">Open an Issue on GitHub</a></p>
-          </div>
-        </div>
-      </section>
+      <section class="help-strip" id="need-help" aria-label="Need help"><div class="help-strip-body"><div class="help-strip-copy"><h2>Need help?</h2><p>Questions or bugs in this library? Open an issue or email support — include environment details when you can.</p></div><div class="help-strip-actions"><a class="btn btn-primary" href="https://github.com/username/repo/issues/new" target="_blank" rel="noopener noreferrer">Open an Issue</a><a class="btn btn-ghost" href="mailto:support@example.com">Contact Support</a></div></div></section>
     </main>
   </div>
-
   <footer>
-    Generated by <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · DBUtils Documentation · Last updated: 2026-01-24 19:31:46
+    Generated by <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · DBUtils Documentation · Last updated: 2026-10-13 14:21:27
   </footer>
 
   <script>
@@ -1648,15 +2297,107 @@
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.querySelector('aside');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const layout = document.querySelector('.layout');
+    const sidebarResizer = document.getElementById('sidebar-resizer');
+    const SIDEBAR_WIDTH_KEY = 'docgen-sidebar-width';
+    const SIDEBAR_MIN = 200;
+    const SIDEBAR_MAX = 520;
+    const SIDEBAR_DEFAULT = 260;
+
+    function clampSidebarWidth(width) {
+      return Math.min(SIDEBAR_MAX, Math.max(SIDEBAR_MIN, Math.round(width)));
+    }
+
+    function applySidebarWidth(width) {
+      const px = clampSidebarWidth(width);
+      document.documentElement.style.setProperty('--sidebar-width', px + 'px');
+      if (sidebarResizer) {
+        sidebarResizer.setAttribute('aria-valuenow', String(px));
+      }
+      return px;
+    }
+
+    function loadSidebarWidth() {
+      try {
+        const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY);
+        if (saved) {
+          const parsed = parseInt(saved, 10);
+          if (!Number.isNaN(parsed)) {
+            applySidebarWidth(parsed);
+            return;
+          }
+        }
+      } catch (_) { /* ignore */ }
+      applySidebarWidth(SIDEBAR_DEFAULT);
+    }
+
+    function persistSidebarWidth(width) {
+      try {
+        localStorage.setItem(SIDEBAR_WIDTH_KEY, String(clampSidebarWidth(width)));
+      } catch (_) { /* ignore */ }
+    }
+
+    if (sidebar && sidebarResizer && layout) {
+      loadSidebarWidth();
+
+      sidebarResizer.addEventListener('pointerdown', (event) => {
+        if (window.innerWidth <= 1024) return;
+        event.preventDefault();
+        const startX = event.clientX;
+        const startWidth = sidebar.getBoundingClientRect().width;
+        layout.classList.add('is-resizing');
+        sidebarResizer.setPointerCapture(event.pointerId);
+
+        const onMove = (moveEvent) => {
+          applySidebarWidth(startWidth + (moveEvent.clientX - startX));
+        };
+
+        const onUp = (upEvent) => {
+          layout.classList.remove('is-resizing');
+          persistSidebarWidth(
+            parseInt(
+              getComputedStyle(document.documentElement)
+                .getPropertyValue('--sidebar-width'),
+              10
+            ) || SIDEBAR_DEFAULT
+          );
+          sidebarResizer.releasePointerCapture(upEvent.pointerId);
+          sidebarResizer.removeEventListener('pointermove', onMove);
+          sidebarResizer.removeEventListener('pointerup', onUp);
+          sidebarResizer.removeEventListener('pointercancel', onUp);
+        };
+
+        sidebarResizer.addEventListener('pointermove', onMove);
+        sidebarResizer.addEventListener('pointerup', onUp);
+        sidebarResizer.addEventListener('pointercancel', onUp);
+      });
+
+      sidebarResizer.addEventListener('keydown', (event) => {
+        if (window.innerWidth <= 1024) return;
+        let delta = 0;
+        if (event.key === 'ArrowLeft') delta = -16;
+        if (event.key === 'ArrowRight') delta = 16;
+        if (!delta) return;
+        event.preventDefault();
+        const current = parseInt(
+          getComputedStyle(document.documentElement)
+            .getPropertyValue('--sidebar-width'),
+          10
+        ) || SIDEBAR_DEFAULT;
+        persistSidebarWidth(applySidebarWidth(current + delta));
+      });
+    }
 
     function searchKeywords() {
       const term = (searchInput.value || '').toLowerCase().trim();
-      const entries = keywordList.querySelectorAll('li');
+      const entries = keywordList.querySelectorAll('li:not(.no-results)');
       let matches = 0;
 
       entries.forEach((entry) => {
-        const text = entry.textContent.toLowerCase();
-        const hit = text.includes(term);
+        const haystack = (
+          entry.getAttribute('data-search') || entry.textContent || ''
+        ).toLowerCase();
+        const hit = !term || haystack.includes(term);
         entry.classList.toggle('hidden', !hit);
         if (hit) matches++;
       });
@@ -1675,59 +2416,21 @@
     }
 
     function toggleSidebar() {
-      if (window.innerWidth <= 1024) {
-        const isActive = sidebar.classList.contains('active');
-        const headerHeight = document.querySelector('header').offsetHeight;
-        
-        if (!isActive) {
-          // Open sidebar - set up styles first
-          sidebar.style.display = 'block';
-          sidebar.style.visibility = 'visible';
-          sidebar.style.opacity = '1';
-          sidebar.style.position = 'fixed';
-          sidebar.style.top = headerHeight + 'px';
-          sidebar.style.left = '0';
-          sidebar.style.width = '280px';
-          sidebar.style.maxWidth = '85vw';
-          sidebar.style.height = `calc(100vh - ${headerHeight}px)`;
-          sidebar.style.zIndex = '26';
-          sidebar.style.transition = 'transform 0.3s ease-in-out';
-          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
-          
-          // Ensure sidebar starts off-screen
-          sidebar.style.transform = 'translateX(-100%)';
-          sidebar.style.webkitTransform = 'translateX(-100%)';
-          
-          // Use requestAnimationFrame to ensure transition is applied before changing transform
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              sidebar.style.transform = 'translateX(0)';
-              sidebar.style.webkitTransform = 'translateX(0)';
-              sidebar.classList.add('active');
-              sidebarOverlay.classList.add('active');
-            });
-          });
-        } else {
-          // Close sidebar
-          sidebar.style.transition = 'transform 0.3s ease-in-out';
-          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
-          sidebar.style.transform = 'translateX(-100%)';
-          sidebar.style.webkitTransform = 'translateX(-100%)';
-          sidebar.classList.remove('active');
-          sidebarOverlay.classList.remove('active');
-        }
+      if (window.innerWidth > 1024) return;
+      const opening = !sidebar.classList.contains('active');
+      sidebar.classList.toggle('active', opening);
+      sidebarOverlay.classList.toggle('active', opening);
+      if (menuToggle) {
+        menuToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
       }
     }
 
     function closeSidebar() {
-      if (window.innerWidth <= 1024) {
-        sidebar.style.transition = 'transform 0.3s ease-in-out';
-        sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
-        sidebar.style.transform = 'translateX(-100%)';
-        sidebar.style.webkitTransform = 'translateX(-100%)';
-      }
       sidebar.classList.remove('active');
       sidebarOverlay.classList.remove('active');
+      if (menuToggle) {
+        menuToggle.setAttribute('aria-expanded', 'false');
+      }
     }
 
     if (searchInput && keywordList) {
@@ -1756,44 +2459,113 @@
       });
     }
 
-    if (keywordList) {
-      const keywordLinks = keywordList.querySelectorAll('a[href^="#"]');
+    if (sidebar) {
+      const navLinks = Array.from(sidebar.querySelectorAll('a[href^="#"]'));
 
-      function setActiveKeyword(hash) {
-        if (!hash) {
-          keywordLinks.forEach(link => {
-            link.classList.remove('active');
-            link.removeAttribute('aria-current');
-          });
+      // Spy targets: hero/intro, importing, and each keyword card.
+      const sectionIds = [];
+      navLinks.forEach((link) => {
+        const id = (link.hash || '').slice(1);
+        if (id && !sectionIds.includes(id) && document.getElementById(id)) {
+          sectionIds.push(id);
+        }
+      });
+      const sections = sectionIds
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+
+      let activeHash = '';
+      let clickLockUntil = 0;
+
+      function ensureSidebarLinkVisible(link) {
+        if (!link || !sidebar) return;
+        const pad = 10;
+        const sidebarRect = sidebar.getBoundingClientRect();
+        const linkRect = link.getBoundingClientRect();
+        // Already fully visible in the aside viewport — leave scroll alone.
+        if (
+          linkRect.top >= sidebarRect.top + pad &&
+          linkRect.bottom <= sidebarRect.bottom - pad
+        ) {
           return;
         }
+        // Nudge only the aside scrollport (avoid scrollIntoView side effects).
+        if (linkRect.top < sidebarRect.top + pad) {
+          sidebar.scrollTop += linkRect.top - sidebarRect.top - pad;
+        } else if (linkRect.bottom > sidebarRect.bottom - pad) {
+          sidebar.scrollTop += linkRect.bottom - sidebarRect.bottom + pad;
+        }
+      }
 
-        keywordLinks.forEach(link => {
-          if (link.hash === hash) {
-            link.classList.add('active');
+      function setActiveNav(hash) {
+        if (hash === activeHash) return;
+        activeHash = hash || '';
+
+        let activeLink = null;
+        navLinks.forEach((link) => {
+          const isActive = Boolean(hash) && link.hash === hash;
+          link.classList.toggle('active', isActive);
+          if (isActive) {
             link.setAttribute('aria-current', 'true');
+            activeLink = link;
           } else {
-            link.classList.remove('active');
             link.removeAttribute('aria-current');
           }
         });
+
+        ensureSidebarLinkVisible(activeLink);
       }
 
       function updateActiveFromHash() {
-        const hash = window.location.hash;
-        setActiveKeyword(hash);
+        setActiveNav(window.location.hash);
+      }
+
+      function headerOffset() {
+        const header = document.querySelector('header');
+        return (header ? header.getBoundingClientRect().height : 70) + 16;
+      }
+
+      function updateActiveFromScroll() {
+        if (Date.now() < clickLockUntil) return;
+        if (!sections.length) return;
+
+        const offset = headerOffset();
+        let current = sections[0];
+        for (const section of sections) {
+          if (section.getBoundingClientRect().top <= offset) {
+            current = section;
+          } else {
+            break;
+          }
+        }
+        setActiveNav('#' + current.id);
+      }
+
+      let scrollRaf = 0;
+      function onScrollOrResize() {
+        if (scrollRaf) return;
+        scrollRaf = window.requestAnimationFrame(() => {
+          scrollRaf = 0;
+          updateActiveFromScroll();
+        });
       }
 
       window.addEventListener('hashchange', updateActiveFromHash);
+      window.addEventListener('scroll', onScrollOrResize, { passive: true });
+      window.addEventListener('resize', onScrollOrResize);
 
-      keywordLinks.forEach(link => {
+      navLinks.forEach((link) => {
         link.addEventListener('click', () => {
-          setActiveKeyword(link.hash);
+          clickLockUntil = Date.now() + 600;
+          setActiveNav(link.hash);
         });
       });
 
-      // Initialize active state on load
-      updateActiveFromHash();
+      if (window.location.hash) {
+        updateActiveFromHash();
+      } else {
+        updateActiveFromScroll();
+      }
     }
   </script>
 </body>

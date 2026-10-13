@@ -3,28 +3,38 @@
 CLI entry point for Robot Framework Documentation Generator
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import os
+import shutil
+import sys
 import http.server
 import socketserver
 import webbrowser
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from typing import Optional, Tuple, Dict, Any
+from typing import Optional, Tuple, Dict, Any, List
 
+from robotframework_docgen._meta import __version__
 from robotframework_docgen.parser import RobotFrameworkDocParser, LibraryInfo
 from robotframework_docgen.generator import DocumentationGenerator
 from robotframework_docgen.dashboard import generate_dashboard, add_dashboard_navigation
+from robotframework_docgen.diff import diff_paths
+from robotframework_docgen.coverage import coverage_for_path
+from robotframework_docgen.catalog import load_catalog_bundle
+from robotframework_docgen.examples import attach_examples_to_library
+from robotframework_docgen.config_validation import (
+    format_validation_errors,
+    validate_multi_lib_config,
+    validate_single_lib_config,
+)
 from robotframework_docgen.errors import (
     RICH_AVAILABLE,
     console,
     REPOSITORY_URL,
     error_multi_lib_no_config,
-    error_missing_libraries_array,
-    error_empty_libraries_array,
-    error_missing_site_object,
-    error_invalid_library_entries,
     error_config_mismatch,
     error_missing_input_file,
     error_parse_file,
@@ -33,53 +43,112 @@ from robotframework_docgen.errors import (
 
 # Import Rich components for success messages (not errors)
 if RICH_AVAILABLE:
+    from rich.align import Align
     from rich.panel import Panel
     from rich.text import Text
 
+DOCGEN_BANNER = r"""
+$$$$$$$\                       $$$$$$\                      
+$$  __$$\                     $$  __$$\                     
+$$ |  $$ | $$$$$$\   $$$$$$$\ $$ /  \__| $$$$$$\  $$$$$$$\  
+$$ |  $$ |$$  __$$\ $$  _____|$$ |$$$$\ $$  __$$\ $$  __$$\ 
+$$ |  $$ |$$ /  $$ |$$ /      $$ |\_$$ |$$$$$$$$ |$$ |  $$ |
+$$ |  $$ |$$ |  $$ |$$ |      $$ |  $$ |$$   ____|$$ |  $$ |
+$$$$$$$  |\$$$$$$  |\$$$$$$$\ \$$$$$$  |\$$$$$$$\ $$ |  $$ |
+\_______/  \______/  \_______| \______/  \_______|\__|  \__|
+""".strip(
+    "\n"
+)
+
+
+def _print_cli_banner() -> None:
+    """Print the DocGen ASCII banner centered for interactive CLI sessions."""
+    if not sys.stdout.isatty():
+        return
+    tagline = f"Robot Framework Documentation Generator v{__version__}"
+    if RICH_AVAILABLE:
+        console.print()
+        console.print(Align.center(Text(DOCGEN_BANNER, style="bold cyan")))
+        console.print()
+        console.print(Align.center(Text(tagline, style="dim")))
+        console.print()
+    else:
+        width = shutil.get_terminal_size((80, 24)).columns
+        print()
+        for line in DOCGEN_BANNER.splitlines():
+            print(line.rstrip().center(width))
+        print()
+        print(tagline.center(width))
+        print()
+
 
 def load_config(config_file: str) -> dict:
-    """Load configuration from JSON file."""
-    try:
-        with open(config_file, "r", encoding="utf-8") as f:
-            config = json.load(f)
-        return config
-    except FileNotFoundError:
-        return {}
-    except json.JSONDecodeError as e:
-        if RICH_AVAILABLE:
-            console.print(
-                f"[yellow]Warning:[/yellow] Invalid JSON in config file {config_file}: {e}"
-            )
-        else:
-            print(f"Warning: Invalid JSON in config file {config_file}: {e}")
-        return {}
-    except Exception as e:
-        if RICH_AVAILABLE:
-            console.print(
-                f"[red]Error:[/red] Could not load config file {config_file}: {e}"
-            )
-        else:
-            print(f"Error: Could not load config file {config_file}: {e}")
-        return {}
+    """Load configuration from a JSON or YAML file.
+
+    Raises:
+        FileNotFoundError: when the config path does not exist
+        ValueError: when the file is invalid or not an object/mapping
+    """
+    from robotframework_docgen.config_io import load_mapping_file
+
+    config = load_mapping_file(config_file)
+    # Used to resolve relative theme_file / theme paths.
+    config["_config_dir"] = str(Path(config_file).resolve().parent)
+    return config
+
+
+def _print_config_validation_errors(errors: list[str]) -> None:
+    """Print config validation errors and exit-friendly formatting."""
+    message = "Invalid configuration:\n" + format_validation_errors(errors)
+    if RICH_AVAILABLE:
+        console.print(f"[red]{message}[/red]")
+    else:
+        print(message)
 
 
 def is_multi_library_mode(config: dict) -> bool:
     """
     Check if config indicates multi-library mode.
-    
-    Multi-library mode is active when config contains a 'libraries' array.
+
+    Multi-library mode is active when config contains a non-empty
+    ``libraries`` and/or ``resources`` array.
     """
-    return isinstance(config.get("libraries"), list) and len(config.get("libraries", [])) > 0
+    return len(get_documentation_entries(config)) > 0
+
+
+def get_documentation_entries(config: dict) -> list[dict]:
+    """
+    Collect documentation entries from ``libraries`` and ``resources``.
+
+    Each returned dict is a shallow copy of the config entry with
+    ``_entry_kind`` set to ``\"library\"`` or ``\"resource\"``.
+    """
+    entries: list[dict] = []
+    for section, kind in (("libraries", "library"), ("resources", "resource")):
+        items = config.get(section)
+        if items is None:
+            continue
+        if not isinstance(items, list):
+            continue
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            entry = dict(item)
+            entry["_entry_kind"] = kind
+            if kind == "resource" and not entry.get("group"):
+                entry["group"] = "Resources"
+            entries.append(entry)
+    return entries
 
 
 def has_single_library_forbidden_keys(config: dict) -> tuple[bool, list[str]]:
     """
     Check if config contains keys that are not allowed in single-library mode.
-    
-    In single-library mode, 'site' and 'libraries' are forbidden.
-    In multi-library mode, 'site' is optional (for site-wide metadata),
-    and 'libraries' is required.
-    
+
+    In single-library mode, ``site``, ``libraries``, and ``resources`` are forbidden.
+    In multi-library mode, ``site`` is required and at least one of
+    ``libraries`` / ``resources`` must be present.
+
     Returns: (has_forbidden_keys, list_of_forbidden_keys)
     """
     forbidden_keys = []
@@ -87,6 +156,8 @@ def has_single_library_forbidden_keys(config: dict) -> tuple[bool, list[str]]:
         forbidden_keys.append("site")
     if "libraries" in config:
         forbidden_keys.append("libraries")
+    if "resources" in config:
+        forbidden_keys.append("resources")
     return len(forbidden_keys) > 0, forbidden_keys
 
 
@@ -233,7 +304,10 @@ def _collect_library_metadata(
         "url": library_url,
         "keywords": keywords_meta,
         "description": lib_description,
-        "version": library_info.version or (library_config.get("version") if library_config else ""),
+        "version": (
+            (library_info.version if library_info.version and library_info.version.lower() != "unknown" else "")
+            or ((library_config.get("version") if library_config else "") or "")
+        ),
         "keyword_count": len(library_info.keywords),
         "author": config_source.get("author") if config_source else None,
         "maintainer": config_source.get("maintainer") if config_source else None,
@@ -241,6 +315,10 @@ def _collect_library_metadata(
         "robot_framework": config_source.get("robot_framework") if config_source else None,
         "python": config_source.get("python") if config_source else None,
         "group": config_source.get("group") if config_source else None,
+        "kind": (
+            (library_config or {}).get("_entry_kind")
+            or ("resource" if (library_info.source_type or "").upper() in {"RESOURCE", "SUITE"} else "library")
+        ),
     }
     
     return metadata
@@ -252,13 +330,15 @@ def generate_single_library(
     output_format: str,
     config: dict,
     library_config: Optional[dict] = None,
-    return_metadata: bool = False
+    return_metadata: bool = False,
+    examples_from: Optional[List[str]] = None,
 ) -> tuple[bool, str, int, Optional[Dict[str, Any]]]:
     """
     Generate documentation for a single library.
     
     Args:
         return_metadata: If True, also return library metadata for dashboard
+        examples_from: Optional suite paths used to harvest keyword examples
     
     Returns: (success, output_file_path, keyword_count, metadata)
     """
@@ -277,18 +357,36 @@ def generate_single_library(
     if "site" in config and isinstance(config["site"], dict):
         site_config = config["site"]
         # Merge site-level metadata fields into top-level config
-        metadata_fields = ["author", "maintainer", "license", "robot_framework", "python", 
-                          "github_url", "library_url", "support_email"]
+        metadata_fields = [
+            "author",
+            "maintainer",
+            "license",
+            "robot_framework",
+            "python",
+            "github_url",
+            "library_url",
+            "support_email",
+            "github_branch",
+            "github_file",
+            "source_links",
+            "theme",
+            "theme_file",
+        ]
         for field in metadata_fields:
             if field in site_config and field not in merged_config:
                 merged_config[field] = site_config[field]
     
     if library_config:
-        # Library-specific config overrides global config (including site-level defaults)
+        # Library-specific config overrides global config (including site-level defaults).
+        # Use update() so falsey values like source_links: false still override.
         merged_config.update(library_config)
         # Preserve site-level config object
         if "site" in config:
             merged_config["site"] = config["site"]
+
+    # Ensure source path is available for Sample Usage + GitHub source links.
+    if not merged_config.get("source"):
+        merged_config["source"] = input_file
     
     doc_parser = RobotFrameworkDocParser(merged_config)
     try:
@@ -298,8 +396,19 @@ def generate_single_library(
         return (False, "", 0, None)
     
     if len(library_info.keywords) == 0:
-        error_no_keywords()
+        error_no_keywords(libdoc_error=getattr(doc_parser, "_last_libdoc_error", None))
         return (False, "", 0, None)
+
+    example_paths: List[str] = []
+    if examples_from:
+        example_paths.extend(examples_from)
+    config_examples = merged_config.get("examples_from_tests")
+    if isinstance(config_examples, str):
+        example_paths.append(config_examples)
+    elif isinstance(config_examples, list):
+        example_paths.extend(str(path) for path in config_examples if path)
+    if example_paths:
+        attach_examples_to_library(library_info, example_paths)
     
     doc_generator = DocumentationGenerator(library_info, doc_parser, merged_config)
     
@@ -343,7 +452,8 @@ def _process_library_worker(
     config: dict,
     cli_format: str,
     default_format: str,
-    enable_dashboard: bool = False
+    enable_dashboard: bool = False,
+    examples_from: Optional[List[str]] = None,
 ) -> Tuple[Optional[str], Optional[str], Optional[int], Optional[str], Optional[str], Optional[Dict[str, Any]]]:
     """
     Worker function to process a single library in parallel.
@@ -379,7 +489,8 @@ def _process_library_worker(
             output_format=library_format,
             config=config,
             library_config=library,
-            return_metadata=enable_dashboard
+            return_metadata=enable_dashboard,
+            examples_from=examples_from,
         )
         
         if success:
@@ -408,9 +519,13 @@ def serve_dashboard(output_dir: Path, host: str, port: int, use_rich: bool = Fal
         def log_message(self, format, *args):
             # Suppress default logging
             pass
+
+    # Allow quick restart after Ctrl+C (avoids macOS TIME_WAIT "Address already in use").
+    class ReusableTCPServer(socketserver.TCPServer):
+        allow_reuse_address = True
     
     try:
-        with socketserver.TCPServer((host, port), DashboardHTTPRequestHandler) as httpd:
+        with ReusableTCPServer((host, port), DashboardHTTPRequestHandler) as httpd:
             server_url = f"http://{host}:{port}"
             
             if use_rich:
@@ -464,14 +579,276 @@ def serve_dashboard(output_dir: Path, host: str, port: int, use_rich: bool = Fal
             print("\nServer stopped by user")
 
 
-def main():
+def _maybe_export_catalog(export_path: Optional[str], source_path: str, label: str = "") -> None:
+    """Write a catalog JSON when --export-catalog is requested."""
+    if not export_path:
+        return
+    bundle = load_catalog_bundle(source_path, label=label or Path(source_path).name)
+    output_path = Path(export_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    bundle.write_json(output_path)
+    total_keywords = sum(len(lib.keywords) for lib in bundle.libraries)
+    if RICH_AVAILABLE:
+        console.print(
+            f"[green]✓[/green] Exported catalog "
+            f"({len(bundle.libraries)} libraries / {total_keywords} keywords) → {output_path}"
+        )
+    else:
+        print(
+            f"✓ Exported catalog "
+            f"({len(bundle.libraries)} libraries / {total_keywords} keywords) → {output_path}"
+        )
+
+
+def run_catalog_cli(argv: List[str]) -> int:
+    """Export a machine-readable keyword catalog JSON."""
+    parser = argparse.ArgumentParser(
+        prog="docgen catalog",
+        description=(
+            "Export KeywordMetadata-shaped JSON for libraries/resources. "
+            "Suitable for Studio Library Explorer ingestion and docgen diff/coverage."
+        ),
+    )
+    parser.add_argument(
+        "path",
+        help="Source file, directory, or multi-lib config to export",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        metavar="FILE",
+        required=True,
+        help="Output catalog JSON path",
+    )
+    parser.add_argument(
+        "--label",
+        default="",
+        help="Optional label stored in the catalog bundle",
+    )
+    args = parser.parse_args(argv)
+
+    try:
+        bundle = load_catalog_bundle(args.path, label=args.label or Path(args.path).name)
+    except Exception as exc:
+        if RICH_AVAILABLE:
+            console.print(f"[red]Error:[/red] {exc}")
+        else:
+            print(f"Error: {exc}")
+        return 1
+
+    output_path = Path(args.output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    bundle.write_json(output_path)
+
+    total_keywords = sum(len(lib.keywords) for lib in bundle.libraries)
+    if RICH_AVAILABLE:
+        console.print(
+            f"[green]✓[/green] Exported {len(bundle.libraries)} libraries / "
+            f"{total_keywords} keywords → {output_path}"
+        )
+    else:
+        print(
+            f"✓ Exported {len(bundle.libraries)} libraries / "
+            f"{total_keywords} keywords → {output_path}"
+        )
+    return 0
+
+
+def run_coverage_cli(argv: List[str]) -> int:
+    """Generate a documentation coverage report for libraries/resources."""
+    parser = argparse.ArgumentParser(
+        prog="docgen coverage",
+        description=(
+            "Report missing keyword docs, undeclared argument types, "
+            "and parameters not mentioned in documentation."
+        ),
+    )
+    parser.add_argument(
+        "path",
+        help="Source file, directory, multi-lib config, or catalog JSON to analyze",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        metavar="FILE",
+        help="Optional report output path",
+    )
+    parser.add_argument(
+        "-f",
+        "--format",
+        choices=["text", "markdown", "json"],
+        default="text",
+        help="Report format (default: text)",
+    )
+    parser.add_argument(
+        "--fail-under",
+        type=float,
+        default=None,
+        metavar="PERCENT",
+        help="Exit with code 1 when documentation coverage is below this percent",
+    )
+    parser.add_argument(
+        "--label",
+        default="",
+        help="Label used in the report title",
+    )
+    args = parser.parse_args(argv)
+
+    try:
+        report = coverage_for_path(args.path, label=args.label)
+    except Exception as exc:
+        if RICH_AVAILABLE:
+            console.print(f"[red]Error:[/red] {exc}")
+        else:
+            print(f"Error: {exc}")
+        return 1
+
+    if args.format == "json":
+        content = json.dumps(report.to_dict(), indent=2, ensure_ascii=False) + "\n"
+    elif args.format == "markdown":
+        content = report.to_markdown()
+    else:
+        content = report.to_text()
+
+    if args.output:
+        output_path = Path(args.output)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(content, encoding="utf-8")
+        if RICH_AVAILABLE:
+            console.print(f"[green]✓[/green] Wrote coverage report to {output_path}")
+        else:
+            print(f"✓ Wrote coverage report to {output_path}")
+    else:
+        print(content, end="")
+
+    if args.fail_under is not None and report.documentation_coverage < args.fail_under:
+        if RICH_AVAILABLE:
+            console.print(
+                f"[red]Coverage {report.documentation_coverage}% "
+                f"is below --fail-under {args.fail_under}%[/red]"
+            )
+        else:
+            print(
+                f"Coverage {report.documentation_coverage}% "
+                f"is below --fail-under {args.fail_under}%"
+            )
+        return 1
+    return 0
+
+
+def run_diff_cli(argv: List[str]) -> int:
+    """Compare two library/resource snapshots and print a keyword changelog."""
+    parser = argparse.ArgumentParser(
+        prog="docgen diff",
+        description=(
+            "Compare two Robot Framework library versions and report "
+            "added, removed, and changed keyword signatures."
+        ),
+    )
+    parser.add_argument(
+        "old",
+        help="Old version: source file, directory, multi-lib config, or catalog JSON",
+    )
+    parser.add_argument(
+        "new",
+        help="New version: source file, directory, multi-lib config, or catalog JSON",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        metavar="FILE",
+        help="Optional report output path",
+    )
+    parser.add_argument(
+        "-f",
+        "--format",
+        choices=["text", "markdown", "json"],
+        default="text",
+        help="Report format (default: text)",
+    )
+    parser.add_argument(
+        "--old-label",
+        default="",
+        help="Label for the old version in the report",
+    )
+    parser.add_argument(
+        "--new-label",
+        default="",
+        help="Label for the new version in the report",
+    )
+    args = parser.parse_args(argv)
+
+    try:
+        report = diff_paths(
+            args.old,
+            args.new,
+            old_label=args.old_label,
+            new_label=args.new_label,
+        )
+    except Exception as exc:
+        if RICH_AVAILABLE:
+            console.print(f"[red]Error:[/red] {exc}")
+        else:
+            print(f"Error: {exc}")
+        return 1
+
+    if args.format == "json":
+        content = json.dumps(report.to_dict(), indent=2, ensure_ascii=False) + "\n"
+    elif args.format == "markdown":
+        content = report.to_markdown()
+    else:
+        content = report.to_text()
+
+    if args.output:
+        output_path = Path(args.output)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(content, encoding="utf-8")
+        if RICH_AVAILABLE:
+            console.print(f"[green]✓[/green] Wrote changelog to {output_path}")
+        else:
+            print(f"✓ Wrote changelog to {output_path}")
+    else:
+        print(content, end="")
+
+    return 0
+
+
+def main(argv: Optional[List[str]] = None):
     """Main function to run the documentation parser."""
+    argv = list(sys.argv[1:] if argv is None else argv)
+    _print_cli_banner()
+    if argv and argv[0] == "diff":
+        return run_diff_cli(argv[1:])
+    if argv and argv[0] == "coverage":
+        return run_coverage_cli(argv[1:])
+    if argv and argv[0] == "catalog":
+        return run_catalog_cli(argv[1:])
+
     parser = argparse.ArgumentParser(
         description="Generate professional documentation from Robot Framework library files",
         epilog="""
 Examples:
   # Single-library mode: Generate HTML documentation (default)
   docgen my_library.py -o docs.html -c config.json
+  
+  # Single-library mode: Document a Robot Framework resource file
+  docgen helpers.resource -o helpers.html
+  
+  # Diff keyword signatures between two versions
+  docgen diff v1/ v2/
+  docgen diff old_lib.py new_lib.py -f markdown -o changelog.md
+  
+  # Documentation coverage report
+  docgen coverage my_library.py
+  docgen coverage sample_libs/ -f markdown -o coverage.md --fail-under 80
+  
+  # Export machine-readable keyword catalog JSON
+  docgen catalog my_library.py -o catalog.json
+  docgen catalog multi_lib_config.json -o catalogs/all.json
+  docgen catalog sample_libs/ -o catalogs/sample.json
+  
+  # Harvest usage examples from Robot Framework test suites
+  docgen helpers.resource --examples-from tests/ -o helpers.html
   
   # Single-library mode: Generate Markdown documentation
   docgen my_library.py -f markdown -o README.md
@@ -487,9 +864,6 @@ Examples:
   
   # Multi-library mode: Specify custom output directory
   docgen -c multi_lib_config.json --multi-lib -d docs
-  
-  # Multi-library mode: Specify custom output directory
-  docgen -c multi_lib_config.json --multi-lib -d docs
 
 For more information, visit: """ + REPOSITORY_URL + """
         """,
@@ -498,7 +872,7 @@ For more information, visit: """ + REPOSITORY_URL + """
     parser.add_argument(
         "input_file",
         nargs="?",
-        help="Path to the Python library file containing Robot Framework keywords (required for single-library mode, optional for multi-library mode)"
+        help="Path to a Python library (.py) or Robot Framework resource/suite file (.resource, .robot) containing keywords (required for single-library mode, optional for multi-library mode)"
     )
     parser.add_argument(
         "-o",
@@ -517,12 +891,12 @@ For more information, visit: """ + REPOSITORY_URL + """
         "-c",
         "--config",
         metavar="FILE",
-        help="Path to JSON configuration file. Optional fields include: github_url, library_url, support_email, author, maintainer, license, robot_framework, python, custom_keywords"
+        help="Path to JSON or YAML configuration file (.json/.yaml/.yml). Optional fields include: github_url, library_url, support_email, author, maintainer, license, robot_framework, python, examples_from_tests, theme"
     )
     parser.add_argument(
         "--multi-lib",
         action="store_true",
-        help="Enable multi-library mode. Requires config file with 'libraries' array."
+        help="Enable multi-library mode. Requires config file with 'libraries' and/or 'resources' arrays."
     )
     parser.add_argument(
         "-d",
@@ -565,12 +939,41 @@ For more information, visit: """ + REPOSITORY_URL + """
         default=8000,
         help="Port number to bind the server to (default: 8000)."
     )
+    parser.add_argument(
+        "--export-catalog",
+        metavar="FILE",
+        help="Also write a machine-readable keyword catalog JSON while generating docs",
+    )
+    parser.add_argument(
+        "--examples-from",
+        metavar="PATH",
+        action="append",
+        default=[],
+        help=(
+            "Suite/resource path used to harvest keyword usage examples. "
+            "May be provided multiple times. Also configurable via "
+            "'examples_from_tests' in JSON config."
+        ),
+    )
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     config = {}
     if args.config:
-        config = load_config(args.config)
+        try:
+            config = load_config(args.config)
+        except FileNotFoundError:
+            if RICH_AVAILABLE:
+                console.print(f"[red]Error:[/red] Config file not found: {args.config}")
+            else:
+                print(f"Error: Config file not found: {args.config}")
+            return 1
+        except ValueError as exc:
+            if RICH_AVAILABLE:
+                console.print(f"[red]Error:[/red] {exc}")
+            else:
+                print(f"Error: {exc}")
+            return 1
     elif args.multi_lib:
         error_multi_lib_no_config()
         return 1
@@ -579,30 +982,23 @@ For more information, visit: """ + REPOSITORY_URL + """
     # Multi-library mode requires explicit --multi-lib flag OR --dashboard flag
     # (--dashboard is an extension of multi-library mode)
     if args.multi_lib or args.dashboard:
-        # --multi-lib or --dashboard flag used: must have 'libraries' array
-        libraries = config.get("libraries")
-        if not isinstance(libraries, list):
-            error_missing_libraries_array(config)
+        validation_errors = validate_multi_lib_config(config)
+        if validation_errors:
+            _print_config_validation_errors(validation_errors)
             return 1
-        
-        # Check if libraries array is empty
-        if len(libraries) == 0:
-            error_empty_libraries_array()
-            return 1
-        
-        # --multi-lib or --dashboard flag used: must have 'site' object (mandatory)
-        if "site" not in config or not isinstance(config.get("site"), dict):
-            error_missing_site_object()
-            return 1
-        
-        # Valid: --multi-lib or --dashboard flag + libraries array + site object
+
+        # Valid: --multi-lib or --dashboard flag + validated libraries/resources + site
         is_multi_lib = True
     else:
         # No --multi-lib or --dashboard flag: must be single-library mode
-        # Check for forbidden keys (site or libraries)
+        # Check for forbidden keys (site, libraries, or resources)
         has_forbidden, forbidden_keys = has_single_library_forbidden_keys(config)
         if has_forbidden:
             error_config_mismatch(forbidden_keys)
+            return 1
+        validation_errors = validate_single_lib_config(config)
+        if validation_errors:
+            _print_config_validation_errors(validation_errors)
             return 1
         # Valid: no --multi-lib or --dashboard flag + no forbidden keys
         is_multi_lib = False
@@ -623,7 +1019,7 @@ For more information, visit: """ + REPOSITORY_URL + """
         if RICH_AVAILABLE:
             console.print(
                 "[yellow]Note:[/yellow] --dashboard flag requires multi-library mode configuration. "
-                "Please ensure your config file contains 'site' and 'libraries' keys.",
+                "Please ensure your config file contains 'site' and 'libraries'/'resources' keys.",
                 style="dim"
             )
         else:
@@ -632,6 +1028,12 @@ For more information, visit: """ + REPOSITORY_URL + """
     # Validate input_file for single-library mode
     if not is_multi_lib and not args.input_file:
         error_missing_input_file()
+        return 1
+    if not is_multi_lib and args.input_file and not Path(args.input_file).is_file():
+        if RICH_AVAILABLE:
+            console.print(f"[red]Error:[/red] Input file not found: {args.input_file}")
+        else:
+            print(f"Error: Input file not found: {args.input_file}")
         return 1
 
     # Detect multi-library mode
@@ -658,23 +1060,11 @@ For more information, visit: """ + REPOSITORY_URL + """
         # Track metadata for dashboard generation (if --dashboard is enabled)
         libraries_metadata = []
         
-        # Validate each library entry has required fields
-        invalid_libraries = []
-        for idx, library in enumerate(config["libraries"]):
-            missing_fields = []
-            # Only "source" is required; "name" is optional (will use class name if not provided)
-            if "source" not in library or not library.get("source"):
-                missing_fields.append("source")
-            
-            if missing_fields:
-                invalid_libraries.append((idx + 1, missing_fields))
-        
-        if invalid_libraries:
-            error_invalid_library_entries(invalid_libraries)
-            return 1
-        
+        # Collect libraries + resources into one processing list
+        doc_entries = get_documentation_entries(config)
+
         # Determine number of workers for parallel processing
-        num_libraries = len(config["libraries"])
+        num_libraries = len(doc_entries)
         use_parallel = args.parallel and num_libraries > 1
         
         if use_parallel:
@@ -687,9 +1077,9 @@ For more information, visit: """ + REPOSITORY_URL + """
                 max_workers = min(32, num_libraries, cpu_count * 2)
             
             if RICH_AVAILABLE:
-                console.print(f"[cyan]Processing {num_libraries} libraries in parallel with {max_workers} workers...[/cyan]")
+                console.print(f"[cyan]Processing {num_libraries} libraries/resources in parallel with {max_workers} workers...[/cyan]")
             else:
-                print(f"Processing {num_libraries} libraries in parallel with {max_workers} workers...")
+                print(f"Processing {num_libraries} libraries/resources in parallel with {max_workers} workers...")
             
             # Process libraries in parallel
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -702,9 +1092,10 @@ For more information, visit: """ + REPOSITORY_URL + """
                         config,
                         args.format,
                         "html",
-                        args.dashboard  # Pass dashboard flag to worker
+                        args.dashboard,  # Pass dashboard flag to worker
+                        args.examples_from,
                     ): library
-                    for library in config["libraries"]
+                    for library in doc_entries
                 }
                 
                 # Collect results as they complete
@@ -743,7 +1134,7 @@ For more information, visit: """ + REPOSITORY_URL + """
                                 print(f"  Error: {error_msg}")
         else:
             # Sequential processing (original behavior)
-            for library in config["libraries"]:
+            for library in doc_entries:
                 source_file = library["source"]
                 library_name = library.get("name", Path(source_file).stem)
                 
@@ -772,7 +1163,8 @@ For more information, visit: """ + REPOSITORY_URL + """
                         output_format=library_format,
                         config=config,
                         library_config=library,
-                        return_metadata=True
+                        return_metadata=True,
+                        examples_from=args.examples_from,
                     )
                 else:
                     success, output_path, kw_count, _ = generate_single_library(
@@ -781,7 +1173,8 @@ For more information, visit: """ + REPOSITORY_URL + """
                         output_format=library_format,
                         config=config,
                         library_config=library,
-                        return_metadata=False
+                        return_metadata=False,
+                        examples_from=args.examples_from,
                     )
                     metadata = None
                 
@@ -814,11 +1207,19 @@ For more information, visit: """ + REPOSITORY_URL + """
             else:
                 print("Generating dashboard...")
             
-            # Get site config for dashboard
-            site_config = config.get("site", {})
+            # Get site config for dashboard (theme may live on site or top-level)
+            site_config = dict(config.get("site") or {})
             site_config.setdefault("name", "Robot Framework Libraries")
-            site_config.setdefault("description", "Documentation for Robot Framework libraries")
-            
+            site_config.setdefault(
+                "description", "Documentation for Robot Framework libraries"
+            )
+            if "theme" not in site_config and config.get("theme") is not None:
+                site_config["theme"] = config["theme"]
+            if "theme_file" not in site_config and config.get("theme_file"):
+                site_config["theme_file"] = config["theme_file"]
+            if config.get("_config_dir"):
+                site_config["_config_dir"] = config["_config_dir"]
+
             # Generate dashboard files
             generate_dashboard(output_base_dir, libraries_metadata, site_config)
             
@@ -905,6 +1306,9 @@ For more information, visit: """ + REPOSITORY_URL + """
             print(f"✓ Output directory: {output_base_dir}")
             for lib_name, out_path, kw_count, fmt in results:
                 print(f"  • {lib_name}: {kw_count} keywords → {out_path}")
+
+        if results and args.export_catalog and args.config:
+            _maybe_export_catalog(args.export_catalog, args.config, label="multi-lib")
         
         return 0 if results else 1
     
@@ -942,7 +1346,8 @@ For more information, visit: """ + REPOSITORY_URL + """
             output_file=output_file,
             output_format=args.format,
             config=config,
-            return_metadata=False
+            return_metadata=False,
+            examples_from=args.examples_from,
         )
         
         if not success:
@@ -950,8 +1355,6 @@ For more information, visit: """ + REPOSITORY_URL + """
 
         # Print summary (preserve existing format)
         if RICH_AVAILABLE:
-            custom_keywords_count = len(config.get("custom_keywords", [])) if config else 0
-
             summary_text = Text()
             summary_text.append("✓ ", style="green")
             summary_text.append(f"Parsed {kw_count} keywords from ", style="")
@@ -963,11 +1366,6 @@ For more information, visit: """ + REPOSITORY_URL + """
                 summary_text.append(library_info.name, style="bold cyan")
             except Exception:
                 summary_text.append(Path(args.input_file).stem, style="bold cyan")
-
-            if custom_keywords_count > 0:
-                summary_text.append(
-                    f"\n✓ Added {custom_keywords_count} custom keywords", style="green"
-                )
 
             summary_text.append(
                 f"\n✓ Generated {args.format.upper()} documentation", style="green"
@@ -984,6 +1382,9 @@ For more information, visit: """ + REPOSITORY_URL + """
         else:
             print(f"✓ Parsed {kw_count} keywords")
             print(f"✓ Documentation generated: {output_file}")
+
+        if args.export_catalog:
+            _maybe_export_catalog(args.export_catalog, args.input_file)
 
         return 0
 

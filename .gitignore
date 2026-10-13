@@ -10,7 +10,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# Only ignore a root-level packaging `lib/` dir — not sample_configs/lib/.
+/lib/
 lib64/
 parts/
 sdist/
@@ -44,3 +45,6 @@ Thumbs.db
 
 # Scripts
 *.sh
+
+connect-hr-docs/
+timetravel-theme-gallery/

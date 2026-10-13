@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "robotframework-libdocgen"
-version = "2.1.2"
+dynamic = ["version"]
 description = "A powerful documentation generator for Robot Framework libraries that creates professional HTML and Markdown documentation"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -33,6 +33,7 @@ dependencies = [
     "markdown>=3.4.0",
     "pygments>=2.10.0",
     "rich>=13.0.0",
+    "PyYAML>=6.0",
 ]
 
 [project.optional-dependencies]
@@ -40,6 +41,7 @@ dev = [
     "pytest>=7.0.0",
     "black>=22.0.0",
     "flake8>=4.0.0",
+    "robotframework-pythonlibcore>=4.0.0",
 ]
 
 [project.urls]
@@ -55,6 +57,9 @@ docgen = "robotframework_docgen.cli:main"
 
 [tool.setuptools]
 packages = ["robotframework_docgen"]
+
+[tool.setuptools.dynamic]
+version = {attr = "robotframework_docgen._meta.__version__"}
 
 [tool.setuptools.package-data]
 robotframework_docgen = ["templates/*.html"]

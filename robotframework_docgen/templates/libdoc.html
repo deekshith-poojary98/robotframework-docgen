@@ -17,24 +17,108 @@
       --border: #1e293b;
       --text: #e5e7eb;
       --muted: #9ca3af;
+      --badge-required: #fca5a5;
+      --badge-required-text: var(--badge-required);
+      --badge-required-bg: color-mix(in srgb, var(--badge-required) 12%, transparent);
+      --badge-default: #4ade80;
+      --badge-default-text: var(--badge-default);
+      --badge-default-bg: color-mix(in srgb, var(--badge-default) 15%, transparent);
+      --badge-tag-text: var(--muted);
+      --badge-tag-bg: color-mix(in srgb, var(--card) 88%, var(--text) 12%);
+      --badge-primary-text: var(--accent);
+      --badge-primary-bg: var(--accent-soft);
+      --arg-type: var(--muted);
+      --hero-badge-bg: color-mix(in srgb, var(--bg) 90%, var(--card) 10%);
+      --hero-badge-text: var(--muted);
+      --hero-badge-kind-bg: rgba(167, 139, 250, 0.12);
+      --hero-badge-kind-text: #c4b5fd;
+      --btn-primary-bg: var(--accent);
+      --btn-primary-text: var(--on-accent);
+      --btn-ghost-bg: color-mix(in srgb, var(--bg) 75%, transparent);
+      --btn-ghost-text: var(--muted);
+      --code-bg: var(--bg-alt);
+      --code-inline-bg: color-mix(in srgb, var(--accent) 8%, transparent);
+      /* Robot Framework syntax highlighting (VS Code Dark+ defaults) */
+      --rf-keyword: #4ec9b0;
+      --rf-control: #ce9178;
+      --rf-setting: #c586c0;
+      --rf-variable: #9cdcfe;
+      --rf-comment: #6a9955;
+      --rf-section: #569cd6;
+      --rf-name: #dcdcaa;
+      --rf-arg: #dcdcaa;
+      --rf-string: #ce9178;
+      --rf-number: #b5cea8;
       --mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --sidebar-width: 260px;
+    }
+  </style>
+  {{THEME_OVERRIDE}}
+  <style>
+    /* Surfaces derived from theme tokens so light/brand themes actually apply. */
+    :root {
+      --surface: var(--bg);
+      --surface-2: color-mix(in srgb, var(--bg) 82%, var(--bg-alt) 18%);
+      --panel: var(--card);
+      --panel-2: color-mix(in srgb, var(--card) 88%, var(--text) 12%);
+      --header-bg: color-mix(in srgb, var(--bg) 92%, transparent);
+      --shadow: color-mix(in srgb, var(--bg-alt) 45%, transparent);
+      --on-accent: #0b1120;
     }
 
     * {
       box-sizing: border-box;
     }
+
+    /* Thin scrollbars (Firefox + WebKit/Blink) */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent;
+    }
+
+    *::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background: color-mix(in srgb, var(--accent) 30%, transparent);
+      border-radius: 3px;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+      background: color-mix(in srgb, var(--accent) 50%, transparent);
+    }
     
     body {
       margin: 0;
       font-family: var(--sans);
-      background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+      background: radial-gradient(
+        circle at top,
+        var(--border) 0,
+        var(--bg-alt) 45%,
+        var(--bg-alt) 100%
+      );
       color: var(--text);
       line-height: 1.6;
     }
 
     html {
       scroll-behavior: smooth;
+      /* Sticky header clearance for hash jumps / scroll-spy. */
+      scroll-padding-top: calc(4.75rem + 12px);
+    }
+
+    .keyword-container,
+    #intro,
+    #importing,
+    #keywords {
+      scroll-margin-top: calc(4.75rem + 12px);
     }
 
     a {
@@ -51,7 +135,11 @@
       top: 0;
       z-index: 30;
       backdrop-filter: blur(16px);
-      background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.8));
+      background: linear-gradient(
+        to right,
+        color-mix(in srgb, var(--bg) 95%, transparent),
+        color-mix(in srgb, var(--bg) 80%, transparent)
+      );
       border-bottom: 1px solid var(--border);
       padding: 0.9rem 2rem;
       display: flex;
@@ -74,9 +162,54 @@
     header h1 {
       font-size: 1.05rem;
       margin: 0;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #f4f6ff;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 0;
+      background: var(--accent);
+      color: var(--on-accent);
+      padding: 0.5rem 0.75rem;
+      z-index: 100;
+      border-radius: 0 0 6px 0;
+      font-weight: 600;
+    }
+
+    .skip-link:focus {
+      left: 0;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .badge-kind {
+      border-color: color-mix(in srgb, var(--hero-badge-kind-text) 45%, transparent);
+      color: var(--hero-badge-kind-text);
+      background: var(--hero-badge-kind-bg);
+    }
+
+    .no-docs {
+      color: var(--muted);
+      font-style: italic;
+      margin: 0;
+    }
+
+    #intro,
+    #keywords,
+    .keyword-container {
+      scroll-margin-top: 5.5rem;
     }
 
     header .tagline {
@@ -127,14 +260,28 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 260px minmax(0, 1fr);
+      grid-template-columns: var(--sidebar-width) 3px minmax(0, 1fr);
       min-height: 100vh;
     }
 
+    .layout.is-resizing {
+      cursor: col-resize;
+      user-select: none;
+    }
+
+    .layout.is-resizing * {
+      cursor: col-resize !important;
+      user-select: none !important;
+    }
+
     aside {
-      border-right: 1px solid var(--border);
+      border-right: none;
       padding: calc(1.25rem + 10px) 1.5rem 1.5rem;
-      background: linear-gradient(to bottom, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+      background: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--bg) 96%, transparent),
+        color-mix(in srgb, var(--bg) 78%, var(--bg-alt) 22%)
+      );
       position: sticky;
       top: 0;
       height: 100vh;
@@ -142,6 +289,43 @@
       overflow-y: auto;
       font-size: 0.9rem;
       transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar-resizer {
+      position: sticky;
+      top: 0;
+      align-self: stretch;
+      height: 100vh;
+      width: 3px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      cursor: col-resize;
+      z-index: 5;
+      touch-action: none;
+      background: transparent;
+      border-right: 1px solid var(--border);
+    }
+
+    .sidebar-resizer::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 1px;
+      width: 1px;
+      background: transparent;
+      transition: background 0.15s ease;
+    }
+
+    .sidebar-resizer:hover::after,
+    .sidebar-resizer:focus-visible::after,
+    .layout.is-resizing .sidebar-resizer::after {
+      background: var(--accent);
+    }
+
+    .sidebar-resizer:focus-visible {
+      outline: none;
     }
 
     .sidebar-overlay {
@@ -195,6 +379,11 @@
       color: var(--text);
     }
 
+    .toc-section > ul > li > a.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
     .keyword-list {
       list-style: none;
       padding: 0;
@@ -211,6 +400,10 @@
     .keyword-list li.hidden {
       display: none;
     }
+
+    .keyword-container.is-search-hidden {
+      display: none;
+    }
     
     .keyword-list a {
       position: relative;
@@ -220,7 +413,7 @@
       border-radius: 0.55rem;
       border: 1px solid transparent;
       line-height: 1.4;
-      background: rgba(15,23,42,0.5);
+      background: color-mix(in srgb, var(--bg) 70%, var(--card) 30%);
       transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
     }
     
@@ -243,12 +436,12 @@
     }
     
     .keyword-list a:focus-visible {
-      outline: 2px solid rgba(56,189,248,0.6);
+      outline: 2px solid color-mix(in srgb, var(--accent) 60%, transparent);
       outline-offset: 2px;
     }
     
     .keyword-list a.active {
-      border-color: rgba(56,189,248,0.7);
+      border-color: color-mix(in srgb, var(--accent) 70%, var(--border));
       color: var(--accent);
     }
     
@@ -266,13 +459,13 @@
       padding: 0.5rem 0.6rem;
       border-radius: 6px;
       border: 1px solid var(--border);
-      background: rgba(2,6,23,0.8);
+      background: color-mix(in srgb, var(--card) 88%, var(--bg) 12%);
       color: var(--text);
       font-size: 0.85rem;
     }
 
     .search-box input:focus {
-      outline: 2px solid rgba(56,189,248,0.4);
+      outline: 2px solid color-mix(in srgb, var(--accent) 40%, transparent);
     }
 
     .no-results {
@@ -282,7 +475,9 @@
     }
 
     main {
-      padding: 1.75rem 2.4rem 3rem;
+      /* Modest end padding: scroll-spy pins the clicked/last keyword in JS, so
+         we don't need a full viewport of empty space under the final card. */
+      padding: 1.75rem 2.4rem 4rem;
     }
 
     .hero {
@@ -316,27 +511,68 @@
       padding: 0.2rem 0.55rem;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(15,23,42,0.9);
-      color: var(--muted);
-      border-color: rgba(56,189,248,0.4);
+      background: var(--hero-badge-bg);
+      color: var(--hero-badge-text);
+      border-color: color-mix(in srgb, var(--accent) 40%, var(--border) 60%);
     }
 
     .badge.primary {
-      border-color: var(--accent-soft);
-      color: var(--accent);
+      border-color: color-mix(in srgb, var(--badge-primary-text) 40%, var(--border) 60%);
+      color: var(--badge-primary-text);
+      background: var(--badge-primary-bg);
+    }
+
+    .badge.badge-required {
+      color: var(--badge-required-text);
+      background: var(--badge-required-bg);
+      border-color: color-mix(in srgb, var(--badge-required-text) 35%, transparent);
     }
 
     .badge.badge-default {
       font-size: 0.75rem;
       padding: 0.2rem 0.6rem;
       margin-left: 0.4rem;
-      background: rgba(34,197,94,0.15);
-      border-color: rgba(34,197,94,0.3);
-      color: #4ade80;
+      color: var(--badge-default-text);
+      background: var(--badge-default-bg);
+      border-color: color-mix(in srgb, var(--badge-default-text) 30%, transparent);
       font-weight: 500;
       display: inline-block;
       line-height: 1.4;
       border-radius: 999px;
+    }
+
+    .badge.badge-tag {
+      border-radius: 0.35rem;
+      border-color: color-mix(in srgb, var(--border) 70%, var(--badge-tag-text) 30%);
+      color: var(--badge-tag-text);
+      background: var(--badge-tag-bg);
+    }
+
+    .kw-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+      margin: 0.35rem 0 0.15rem;
+    }
+
+    .kw-tags {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .kw-source {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(148, 163, 184, 0.55);
+    }
+
+    .kw-source:hover {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom-color: var(--accent);
     }
 
     .hero-actions {
@@ -356,31 +592,70 @@
       border: 1px solid transparent;
       text-decoration: none;
       white-space: nowrap;
+      transform: translateY(0);
+      box-shadow: 0 0 0 transparent;
+      transition:
+        transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+        background-color 0.28s ease,
+        border-color 0.28s ease,
+        color 0.28s ease,
+        filter 0.28s ease;
+      will-change: transform;
     }
 
     .btn-primary {
-      background: radial-gradient(circle at top left, #38bdf8, #0ea5e9 45%, #0369a1 100%);
-      border-color: rgba(56,189,248,0.4);
-      color: #0b1120;
-      box-shadow: 0 10px 30px rgba(56,189,248,0.4);
+      background: radial-gradient(
+        circle at top left,
+        var(--btn-primary-bg),
+        color-mix(in srgb, var(--btn-primary-bg) 75%, black) 45%,
+        color-mix(in srgb, var(--btn-primary-bg) 45%, black) 100%
+      );
+      border-color: color-mix(in srgb, var(--btn-primary-bg) 45%, var(--border));
+      color: var(--btn-primary-text);
+      box-shadow: 0 8px 22px color-mix(in srgb, var(--btn-primary-bg) 32%, transparent);
     }
 
     .btn-ghost {
-      background: rgba(15,23,42,0.75);
+      background: var(--btn-ghost-bg);
       border-color: var(--border);
-      color: var(--muted);
+      color: var(--btn-ghost-text);
+      box-shadow: 0 1px 0 color-mix(in srgb, var(--border) 55%, transparent);
     }
 
     .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 35px rgba(56,189,248,0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px color-mix(in srgb, var(--accent) 28%, transparent);
       text-decoration: none;
     }
 
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 18%, transparent);
+      transition-duration: 0.12s;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      box-shadow: 0 12px 28px color-mix(in srgb, var(--btn-primary-bg) 42%, transparent);
+    }
+
     .btn-ghost:hover {
-      background: rgba(15,23,42,0.9);
+      background: color-mix(in srgb, var(--bg) 88%, var(--card) 12%);
       color: var(--text);
-      border-color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn {
+        transition: none;
+        will-change: auto;
+      }
+
+      .btn:hover,
+      .btn:active {
+        transform: none;
+      }
     }
 
     .hero-meta {
@@ -409,9 +684,13 @@
 
     .hero-card {
       border-radius: 1.2rem;
-      background: radial-gradient(circle at top, rgba(56,189,248,0.2), rgba(15,23,42,1));
+      background: radial-gradient(
+        circle at top,
+        var(--accent-soft),
+        var(--bg) 70%
+      );
       border: 1px solid var(--border);
-      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      box-shadow: 0 18px 40px var(--shadow);
       padding: 1rem 1rem 1.2rem;
       font-size: 0.75rem;
     }
@@ -437,11 +716,18 @@
       padding: 0.1rem 0.4rem;
       border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(15,23,42,0.85);
+      background: color-mix(in srgb, var(--bg) 85%, var(--card) 15%);
+    }
+
+    /* Long harvested suite examples scroll instead of stretching the hero. */
+    .hero-card > pre {
+      max-height: 16rem;
+      overflow: auto;
+      margin: 0;
     }
 
     pre {
-      background: rgba(2,6,23,0.95);
+      background: var(--code-bg);
       border-radius: 0.75rem;
       padding: 0.9rem 1rem;
       overflow-x: auto;
@@ -452,12 +738,12 @@
     }
 
     .keyword-container {
-      background: rgba(15,23,42,0.9);
+      background: color-mix(in srgb, var(--bg) 92%, var(--card) 8%);
       border-radius: 1rem;
       border: 1px solid var(--border);
       padding: 1rem 1.1rem;
       font-size: 0.92rem;
-      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
+      box-shadow: 0 18px 40px var(--shadow);
       margin-bottom: 1.5rem;
     }
 
@@ -476,16 +762,27 @@
 
     .args,
     .return-type,
-    .kw-docs {
+    .kw-docs,
+    .kw-example {
       border: 1px solid var(--border);
       border-radius: 0.75rem;
       padding: 0.85rem;
-      background: rgba(2,6,23,0.75);
+      background: color-mix(in srgb, var(--card) 92%, var(--bg) 8%);
     }
 
+    .keyword-content > .kw-docs,
+    .keyword-content > .kw-example {
+      margin-top: 0.85rem;
+    }
+
+    .args h3,
+    .return-type h3,
+    .kw-docs h3,
+    .kw-example h3,
     .args h4,
     .return-type h4,
-    .kw-docs h4 {
+    .kw-docs h4,
+    .kw-example h4 {
       margin: 0 0 0.4rem;
       font-size: 0.78rem;
       letter-spacing: 0.08em;
@@ -493,76 +790,159 @@
       color: var(--muted);
     }
 
+    /* Nested code fence sits inside the Example card (no double frame). */
+    .kw-example .code-block {
+      margin: 0.35rem 0 0;
+      border: none;
+      border-radius: 0.5rem;
+      background: var(--code-bg);
+      max-height: 20rem;
+      overflow: auto;
+    }
+
+    .kw-example .code-block pre {
+      overflow: visible;
+    }
+
     .arguments-list-container {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 0.55rem;
+      overflow: hidden;
+      background: color-mix(in srgb, var(--card) 78%, var(--bg) 22%);
     }
 
     .argument-item {
-      background: rgba(2,6,23,0.6);
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      padding: 0.75rem;
-      transition: all 0.2s ease;
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      min-width: 0;
+      transition: background 0.15s ease;
+    }
+
+    .argument-item:last-child {
+      border-bottom: none;
     }
 
     .argument-item:hover {
-      background: rgba(2,6,23,0.8);
-      border-color: rgba(56,189,248,0.3);
+      background: color-mix(in srgb, var(--card) 55%, var(--bg) 45%);
+    }
+
+    .argument-item.has-enum {
+      padding-bottom: 0.7rem;
     }
 
     .argument-header {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: space-between;
+      gap: 0.65rem 1rem;
       flex-wrap: wrap;
+    }
+
+    .argument-signature {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .argument-flags {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      margin-left: auto;
     }
 
     .arg-name {
       font-family: var(--mono);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 600;
-      background: rgba(15,76,204,0.15);
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-      border: 1px solid rgba(15,76,204,0.3);
       color: var(--accent);
+      background: none;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      word-break: break-word;
     }
 
     .arg-separator {
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 400;
     }
 
     .arg-type {
       font-family: var(--mono);
       font-size: 0.75rem;
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 0.2rem 0.6rem;
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(15,23,42,0.5);
-      display: inline-block;
-      line-height: 1.4;
-    }
-
-    .return-type .arg-type {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.6rem;
-      line-height: 1.4;
-    }
-
-    .enum-values {
-      list-style: none;
-      margin: 0.75rem 0 0.5rem 0;
+      border: none;
       padding: 0;
-      width: 100%;
+      border-radius: 0;
+      color: var(--arg-type);
+      background: transparent;
+      display: inline;
+      line-height: 1.35;
+    }
+
+    .argument-item .badge {
+      font-size: 0.68rem;
+      padding: 0.12rem 0.42rem;
+      flex-shrink: 0;
+    }
+
+    .returns-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 0.55rem;
+      overflow: hidden;
+      background: color-mix(in srgb, var(--card) 78%, var(--bg) 22%);
+    }
+
+    .return-item {
+      padding: 0.55rem 0.75rem;
+      min-width: 0;
+      transition: background 0.15s ease;
+    }
+
+    .return-item:hover {
+      background: color-mix(in srgb, var(--card) 55%, var(--bg) 45%);
+    }
+
+    .arg-type.arg-type-muted {
+      font-style: italic;
+      opacity: 0.85;
+    }
+
+    .argument-doc,
+    .return-doc {
+      margin-top: 0.28rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .argument-doc p,
+    .return-doc p {
+      margin: 0;
+    }
+
+    a.kw-ref {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    a.kw-ref:hover {
+      color: color-mix(in srgb, var(--accent) 75%, white);
     }
 
     .enum-container {
-      background: rgba(2,6,23,0.6);
+      background: color-mix(in srgb, var(--card) 70%, var(--bg) 30%);
       border: 1px solid var(--border);
       border-radius: 0.5rem;
       padding: 0.75rem;
@@ -591,9 +971,9 @@
       color: var(--muted);
       font-family: var(--mono);
       padding: 0.15rem 0.4rem;
-      background: rgba(56,189,248,0.1);
+      background: var(--accent-soft);
       border-radius: 4px;
-      border: 1px solid rgba(56,189,248,0.2);
+      border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
     }
 
     .enum-members-grid {
@@ -607,8 +987,8 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.5rem 0.65rem;
-      background: rgba(15,23,42,0.8);
-      border: 1px solid rgba(56,189,248,0.15);
+      background: color-mix(in srgb, var(--bg) 80%, var(--card) 20%);
+      border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
       border-radius: 6px;
       transition: all 0.2s ease;
       font-family: var(--mono);
@@ -616,8 +996,8 @@
     }
 
     .enum-member:hover {
-      background: rgba(15,23,42,0.95);
-      border-color: rgba(56,189,248,0.3);
+      background: color-mix(in srgb, var(--bg) 70%, var(--card) 30%);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
       transform: translateY(-1px);
     }
 
@@ -645,10 +1025,10 @@
     }
 
     .enum-member-value code {
-      background: rgba(56,189,248,0.1);
+      background: var(--code-inline-bg);
       padding: 0.15rem 0.35rem;
       border-radius: 4px;
-      border: 1px solid rgba(56,189,248,0.2);
+      border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
       color: var(--text);
       font-weight: 400;
     }
@@ -659,21 +1039,24 @@
       }
     }
 
-    .kwdoc {
+    .kwdoc,
+    .intro-content {
       font-size: 0.92rem;
       color: var(--text);
     }
 
-    .kwdoc code {
+    .kwdoc code,
+    .intro-content code {
       font-family: var(--mono);
       font-size: 0.78rem;
-      background: rgba(56,189,248,0.08);
+      background: var(--code-inline-bg);
       padding: 0.2rem 0.35rem;
       border-radius: 4px;
     }
 
     .kwdoc table,
-    .kwdoc .doc-table {
+    .kwdoc .doc-table,
+    .intro-content table {
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
@@ -681,17 +1064,19 @@
       border: 2px solid var(--border);
       border-radius: 0.5rem;
       overflow: hidden;
-      background: rgba(2,6,23,0.75);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      background: color-mix(in srgb, var(--card) 88%, var(--bg) 12%);
+      box-shadow: 0 2px 8px var(--shadow);
     }
 
     .kwdoc table thead,
-    .kwdoc .doc-table thead {
-      background: rgba(56,189,248,0.1);
+    .kwdoc .doc-table thead,
+    .intro-content table thead {
+      background: var(--accent-soft);
     }
 
     .kwdoc table th,
-    .kwdoc .doc-table th {
+    .kwdoc .doc-table th,
+    .intro-content table th {
       padding: 0.65rem 0.85rem;
       text-align: left;
       font-weight: 600;
@@ -702,12 +1087,14 @@
     }
 
     .kwdoc table th:last-child,
-    .kwdoc .doc-table th:last-child {
+    .kwdoc .doc-table th:last-child,
+    .intro-content table th:last-child {
       border-right: none;
     }
 
     .kwdoc table td,
-    .kwdoc .doc-table td {
+    .kwdoc .doc-table td,
+    .intro-content table td {
       padding: 0.6rem 0.85rem;
       border-bottom: 1px solid var(--border);
       border-right: 1px solid var(--border);
@@ -716,33 +1103,143 @@
     }
 
     .kwdoc table td:last-child,
-    .kwdoc .doc-table td:last-child {
+    .kwdoc .doc-table td:last-child,
+    .intro-content table td:last-child {
       border-right: none;
     }
 
     .kwdoc table tbody tr:last-child td,
-    .kwdoc .doc-table tbody tr:last-child td {
+    .kwdoc .doc-table tbody tr:last-child td,
+    .intro-content table tbody tr:last-child td {
       border-bottom: none;
     }
 
     .kwdoc table tbody tr:hover,
-    .kwdoc .doc-table tbody tr:hover {
-      background: rgba(56,189,248,0.05);
+    .kwdoc .doc-table tbody tr:hover,
+    .intro-content table tbody tr:hover {
+      background: var(--accent-soft);
     }
 
     .kwdoc img,
-    .kwdoc .doc img {
-      max-width: 100%;
+    .kwdoc .doc img,
+    .intro-content img {
+      max-width: min(100%, 36rem);
+      width: auto;
       height: auto;
+      max-height: 24rem;
+      border-radius: 0.4rem;
+      border: 1px solid var(--border);
+      margin: 0.75rem 0;
+      display: inline-block;
+      vertical-align: middle;
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--bg-alt) 35%, transparent);
+    }
+
+    .kwdoc .admonition,
+    .intro-content .admonition {
+      margin: 1rem 0;
+      padding: 0.75rem 1rem 0.85rem;
       border-radius: 0.5rem;
       border: 1px solid var(--border);
-      margin: 1rem 0;
-      display: block;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      border-left: 4px solid var(--accent);
+      background: color-mix(in srgb, var(--card) 82%, var(--bg) 18%);
+    }
+
+    .kwdoc .admonition-title,
+    .intro-content .admonition-title {
+      margin: 0 0 0.35rem;
+      font-weight: 650;
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+
+    .kwdoc .admonition.note,
+    .kwdoc .admonition.tip,
+    .kwdoc .admonition.hint,
+    .intro-content .admonition.note,
+    .intro-content .admonition.tip,
+    .intro-content .admonition.hint {
+      border-left-color: var(--accent);
+    }
+
+    .kwdoc .admonition.warning,
+    .kwdoc .admonition.caution,
+    .kwdoc .admonition.attention,
+    .intro-content .admonition.warning,
+    .intro-content .admonition.caution,
+    .intro-content .admonition.attention {
+      border-left-color: #f59e0b;
+    }
+
+    .kwdoc .admonition.warning .admonition-title,
+    .kwdoc .admonition.caution .admonition-title,
+    .kwdoc .admonition.attention .admonition-title,
+    .intro-content .admonition.warning .admonition-title,
+    .intro-content .admonition.caution .admonition-title,
+    .intro-content .admonition.attention .admonition-title {
+      color: #f59e0b;
+    }
+
+    .kwdoc .admonition.danger,
+    .kwdoc .admonition.error,
+    .intro-content .admonition.danger,
+    .intro-content .admonition.error {
+      border-left-color: #ef4444;
+    }
+
+    .kwdoc .admonition.danger .admonition-title,
+    .kwdoc .admonition.error .admonition-title,
+    .intro-content .admonition.danger .admonition-title,
+    .intro-content .admonition.error .admonition-title {
+      color: #ef4444;
+    }
+
+    .kwdoc .admonition p:last-child,
+    .intro-content .admonition p:last-child {
+      margin-bottom: 0;
+    }
+
+    .kwdoc dl,
+    .intro-content dl {
+      margin: 0.85rem 0;
+    }
+
+    .kwdoc dt,
+    .intro-content dt {
+      font-weight: 650;
+      color: var(--text);
+      margin-top: 0.55rem;
+    }
+
+    .kwdoc dd,
+    .intro-content dd {
+      margin: 0.2rem 0 0.45rem 1.1rem;
+      color: var(--muted);
+    }
+
+    .kwdoc .footnote,
+    .intro-content .footnote {
+      margin-top: 1.25rem;
+      padding-top: 0.35rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .kwdoc .footnote hr,
+    .intro-content .footnote hr {
+      border: 0;
+      border-top: 1px solid var(--border);
+      margin: 0.5rem 0 0.75rem;
+    }
+
+    .kwdoc abbr,
+    .intro-content abbr {
+      text-decoration: underline dotted;
+      cursor: help;
     }
 
     .code-block {
-      background: rgba(15, 23, 42, 0.6);
+      background: var(--code-bg);
       border: 1px solid var(--border);
       border-radius: 8px;
       margin: 1rem 0;
@@ -763,68 +1260,136 @@
       background: transparent;
     }
 
+    .rf-keyword,
+    .robot-keywords {
+      color: var(--rf-keyword);
+      font-weight: bold;
+    }
+    .rf-control {
+      color: var(--rf-control);
+      font-weight: bold;
+    }
+    .rf-setting,
+    .robot-settings {
+      color: var(--rf-setting);
+      font-weight: bold;
+    }
+    .rf-variable,
+    .robot-variables {
+      color: var(--rf-variable);
+    }
+    .rf-comment,
+    .robot-comments {
+      color: var(--rf-comment);
+      font-style: italic;
+    }
+    .rf-section {
+      color: var(--rf-section);
+      font-weight: bold;
+    }
+    .rf-name,
+    .robot-test-cases {
+      color: var(--rf-name);
+      font-weight: bold;
+    }
+    .rf-arg {
+      color: var(--rf-arg);
+    }
+    .rf-string,
+    .robot-strings {
+      color: var(--rf-string);
+    }
+    .rf-number,
+    .robot-numbers {
+      color: var(--rf-number);
+    }
+
+    .help-strip {
+      margin: 1.25rem 0 0.25rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      background: color-mix(in srgb, var(--card) 88%, var(--accent-soft) 12%);
+    }
+
+    .help-strip-body {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .help-strip-copy {
+      min-width: min(100%, 18rem);
+      flex: 1 1 16rem;
+    }
+
+    .help-strip-copy h2 {
+      margin: 0 0 0.2rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .help-strip-copy p {
+      margin: 0;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: var(--muted);
+      max-width: 40rem;
+    }
+
+    .help-strip-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .help-strip-actions .btn {
+      padding: 0.45rem 0.85rem;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
     footer {
       border-top: 1px solid var(--border);
       padding: 1.2rem 2.4rem 1.6rem;
       font-size: 0.8rem;
       color: var(--muted);
       text-align: center;
-      background: radial-gradient(circle at bottom, rgba(56,189,248,0.15), rgba(15,23,42,1));
-    }
-
-    @media (max-width: 768px) {
-      .menu-toggle {
-        display: block;
-      }
-
-      header nav {
-        display: none;
-      }
-
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      aside {
-        position: fixed !important;
-        top: 70px;
-        left: 0;
-        width: 280px;
-        max-width: 85vw;
-        height: calc(100vh - 70px);
-        z-index: 26;
-        transform: translateX(-100%) !important;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
-        border-right: 1px solid var(--border);
-      }
-
-      aside.active {
-        transform: translateX(0) !important;
-      }
-
-      .sidebar-overlay {
-        display: block;
-      }
-
-      main {
-        width: 100%;
-      }
+      background: radial-gradient(
+        circle at bottom,
+        var(--accent-soft),
+        var(--bg-alt) 70%
+      );
     }
 
     @media (max-width: 1024px) {
       .menu-toggle {
-        display: block;
+        display: flex;
       }
 
-      header nav {
+      /* Keep Back to Dashboard visible; hide in-page Introduction/Keywords links */
+      header nav a {
         display: none;
+      }
+
+      header nav a.nav-back {
+        display: inline-flex;
       }
 
       .layout {
         grid-template-columns: minmax(0, 1fr);
       }
 
+      .sidebar-resizer {
+        display: none;
+      }
+
       aside {
         position: fixed !important;
         top: 70px;
@@ -833,25 +1398,36 @@
         max-width: 85vw;
         height: calc(100vh - 70px);
         z-index: 26;
-        transform: translateX(-100%) !important;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-        background: linear-gradient(to bottom, rgba(15,23,42,0.98), rgba(15,23,42,0.95)) !important;
+        transform: translate3d(-100%, 0, 0);
+        transition: transform 0.3s ease-in-out;
+        box-shadow: 2px 0 10px var(--shadow);
+        background: linear-gradient(
+          to bottom,
+          var(--bg),
+          color-mix(in srgb, var(--bg) 94%, var(--bg-alt) 6%)
+        ) !important;
         border-right: 1px solid var(--border);
+        overflow-y: auto;
+        /* Override desktop sticky so the drawer can slide in */
+        bottom: auto;
       }
 
       aside.active {
-        transform: translateX(0) !important;
+        transform: translate3d(0, 0, 0) !important;
       }
 
       .sidebar-overlay {
+        display: none;
+      }
+
+      .sidebar-overlay.active {
         display: block;
+        opacity: 1;
+        pointer-events: auto;
       }
 
       main {
         width: 100%;
-      }
-
-      main {
         padding: 1.25rem 1.4rem 2.5rem;
       }
     }
@@ -859,10 +1435,6 @@
     @media (max-width: 640px) {
       header {
         padding: 0.7rem 1rem;
-      }
-
-      header nav {
-        display: none;
       }
 
       .hero {
@@ -876,21 +1448,23 @@
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header>
     <div class="brand">
       <div class="logo">
-        <img src="https://docs.robotframework.org/img/robot-framework-dark.svg" alt="Robot Framework Logo">
+        <img src="{{LOGO_URL}}" alt="Robot Framework Logo">
       </div>
       <div>
         <h1>{{LIBRARY_NAME}}</h1>
-        <div class="tagline">Robot Framework library documentation</div>
+        <div class="tagline">{{TAGLINE}}</div>
       </div>
     </div>
     <nav>
-      <a href="#intro">Overview</a>
+      <a href="#intro">Introduction</a>
+      {{IMPORTING_NAV}}
       <a href="#keywords">Keywords</a>
     </nav>
-    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+    <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -907,29 +1481,42 @@
         <h2>Getting Started</h2>
         <ul>
           <li><a href="#intro">Introduction</a></li>
+          {{GETTING_STARTED_EXTRA}}
         </ul>
       </div>
 
       <div class="toc-section">
         <h2>Keywords</h2>
         <div class="search-box">
-          <input type="text" id="keyword-search" placeholder="Search keywords…">
+          <label class="visually-hidden" for="keyword-search">Search keywords, docs, and tags</label>
+          <input type="text" id="keyword-search" placeholder="Search keywords, docs, tags…" aria-label="Search keywords, docs, and tags">
         </div>
         <ul class="keyword-list" id="keyword-list">
           {{KEYWORD_LIST}}
         </ul>
       </div>
     </aside>
+    <div
+      class="sidebar-resizer"
+      id="sidebar-resizer"
+      role="separator"
+      aria-orientation="vertical"
+      aria-label="Resize sidebar"
+      aria-valuemin="200"
+      aria-valuemax="520"
+      aria-valuenow="260"
+      tabindex="0"
+    ></div>
 
-    <main>
+    <main id="main-content">
       <section id="intro" class="hero">
         <div>
           <h2>{{LIBRARY_NAME}} Documentation</h2>
           
           <div class="hero-badges">
-            <!-- <span class="badge primary">Robot Framework Library</span> -->
-            <span class="badge">Version {{VERSION}}</span>
-            <span class="badge">Scope {{SCOPE}}</span>
+            {{KIND_BADGE}}
+            {{VERSION_BADGE}}
+            {{SCOPE_BADGE}}
             <span class="badge">{{KEYWORD_COUNT}} Keywords</span>
           </div>
           {{HERO_ACTIONS}}
@@ -946,27 +1533,15 @@
 
       {{INTRO_SECTION}}
 
+      {{IMPORTING_SECTION}}
+
       <section id="keywords">
         {{KEYWORDS_SECTION}}
       </section>
 
-      <section class="keyword-container">
-        <div class="keyword-name">
-          <h2>Need Help?</h2>
-        </div>
-        <div class="kw-overview">
-          <div class="kw-docs">
-            <p>
-              Found an issue or have a feature request for this library? Let the maintainers know by opening a new
-              GitHub issue. Please include environment details and relevant log output to help us reproduce the problem.
-            </p>
-            {{GITHUB_ISSUE_BUTTON}}
-          </div>
-        </div>
-      </section>
+      {{NEED_HELP_SECTION}}
     </main>
   </div>
-
   <footer>
     Generated by <a href="https://github.com/deekshith-poojary98/robotframework-docgen" target="_blank" rel="noopener noreferrer">Robot Framework DocGen</a> · {{LIBRARY_NAME}} Documentation · Last updated: {{LAST_UPDATE}}
   </footer>
@@ -977,17 +1552,117 @@
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.querySelector('aside');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const layout = document.querySelector('.layout');
+    const sidebarResizer = document.getElementById('sidebar-resizer');
+    const SIDEBAR_WIDTH_KEY = 'docgen-sidebar-width';
+    const SIDEBAR_MIN = 200;
+    const SIDEBAR_MAX = 520;
+    const SIDEBAR_DEFAULT = 260;
+
+    function clampSidebarWidth(width) {
+      return Math.min(SIDEBAR_MAX, Math.max(SIDEBAR_MIN, Math.round(width)));
+    }
+
+    function applySidebarWidth(width) {
+      const px = clampSidebarWidth(width);
+      document.documentElement.style.setProperty('--sidebar-width', px + 'px');
+      if (sidebarResizer) {
+        sidebarResizer.setAttribute('aria-valuenow', String(px));
+      }
+      return px;
+    }
+
+    function loadSidebarWidth() {
+      try {
+        const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY);
+        if (saved) {
+          const parsed = parseInt(saved, 10);
+          if (!Number.isNaN(parsed)) {
+            applySidebarWidth(parsed);
+            return;
+          }
+        }
+      } catch (_) { /* ignore */ }
+      applySidebarWidth(SIDEBAR_DEFAULT);
+    }
+
+    function persistSidebarWidth(width) {
+      try {
+        localStorage.setItem(SIDEBAR_WIDTH_KEY, String(clampSidebarWidth(width)));
+      } catch (_) { /* ignore */ }
+    }
+
+    if (sidebar && sidebarResizer && layout) {
+      loadSidebarWidth();
+
+      sidebarResizer.addEventListener('pointerdown', (event) => {
+        if (window.innerWidth <= 1024) return;
+        event.preventDefault();
+        const startX = event.clientX;
+        const startWidth = sidebar.getBoundingClientRect().width;
+        layout.classList.add('is-resizing');
+        sidebarResizer.setPointerCapture(event.pointerId);
+
+        const onMove = (moveEvent) => {
+          applySidebarWidth(startWidth + (moveEvent.clientX - startX));
+        };
+
+        const onUp = (upEvent) => {
+          layout.classList.remove('is-resizing');
+          persistSidebarWidth(
+            parseInt(
+              getComputedStyle(document.documentElement)
+                .getPropertyValue('--sidebar-width'),
+              10
+            ) || SIDEBAR_DEFAULT
+          );
+          sidebarResizer.releasePointerCapture(upEvent.pointerId);
+          sidebarResizer.removeEventListener('pointermove', onMove);
+          sidebarResizer.removeEventListener('pointerup', onUp);
+          sidebarResizer.removeEventListener('pointercancel', onUp);
+        };
+
+        sidebarResizer.addEventListener('pointermove', onMove);
+        sidebarResizer.addEventListener('pointerup', onUp);
+        sidebarResizer.addEventListener('pointercancel', onUp);
+      });
+
+      sidebarResizer.addEventListener('keydown', (event) => {
+        if (window.innerWidth <= 1024) return;
+        let delta = 0;
+        if (event.key === 'ArrowLeft') delta = -16;
+        if (event.key === 'ArrowRight') delta = 16;
+        if (!delta) return;
+        event.preventDefault();
+        const current = parseInt(
+          getComputedStyle(document.documentElement)
+            .getPropertyValue('--sidebar-width'),
+          10
+        ) || SIDEBAR_DEFAULT;
+        persistSidebarWidth(applySidebarWidth(current + delta));
+      });
+    }
 
     function searchKeywords() {
       const term = (searchInput.value || '').toLowerCase().trim();
-      const entries = keywordList.querySelectorAll('li');
+      const entries = keywordList.querySelectorAll('li:not(.no-results)');
       let matches = 0;
 
       entries.forEach((entry) => {
-        const text = entry.textContent.toLowerCase();
-        const hit = text.includes(term);
+        const haystack = (
+          entry.getAttribute('data-search') || entry.textContent || ''
+        ).toLowerCase();
+        const hit = !term || haystack.includes(term);
         entry.classList.toggle('hidden', !hit);
         if (hit) matches++;
+
+        // Mirror sidebar filter onto the matching keyword card in main content.
+        const href = entry.querySelector('a[href^="#"]')?.getAttribute('href') || '';
+        const id = href.startsWith('#') ? href.slice(1) : '';
+        const section = id ? document.getElementById(id) : null;
+        if (section && section.classList.contains('keyword-container')) {
+          section.classList.toggle('is-search-hidden', Boolean(term) && !hit);
+        }
       });
 
       let noResults = keywordList.querySelector('.no-results');
@@ -1004,59 +1679,21 @@
     }
 
     function toggleSidebar() {
-      if (window.innerWidth <= 1024) {
-        const isActive = sidebar.classList.contains('active');
-        const headerHeight = document.querySelector('header').offsetHeight;
-        
-        if (!isActive) {
-          // Open sidebar - set up styles first
-          sidebar.style.display = 'block';
-          sidebar.style.visibility = 'visible';
-          sidebar.style.opacity = '1';
-          sidebar.style.position = 'fixed';
-          sidebar.style.top = headerHeight + 'px';
-          sidebar.style.left = '0';
-          sidebar.style.width = '280px';
-          sidebar.style.maxWidth = '85vw';
-          sidebar.style.height = `calc(100vh - ${headerHeight}px)`;
-          sidebar.style.zIndex = '26';
-          sidebar.style.transition = 'transform 0.3s ease-in-out';
-          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
-          
-          // Ensure sidebar starts off-screen
-          sidebar.style.transform = 'translateX(-100%)';
-          sidebar.style.webkitTransform = 'translateX(-100%)';
-          
-          // Use requestAnimationFrame to ensure transition is applied before changing transform
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              sidebar.style.transform = 'translateX(0)';
-              sidebar.style.webkitTransform = 'translateX(0)';
-              sidebar.classList.add('active');
-              sidebarOverlay.classList.add('active');
-            });
-          });
-        } else {
-          // Close sidebar
-          sidebar.style.transition = 'transform 0.3s ease-in-out';
-          sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
-          sidebar.style.transform = 'translateX(-100%)';
-          sidebar.style.webkitTransform = 'translateX(-100%)';
-          sidebar.classList.remove('active');
-          sidebarOverlay.classList.remove('active');
-        }
+      if (window.innerWidth > 1024) return;
+      const opening = !sidebar.classList.contains('active');
+      sidebar.classList.toggle('active', opening);
+      sidebarOverlay.classList.toggle('active', opening);
+      if (menuToggle) {
+        menuToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
       }
     }
 
     function closeSidebar() {
-      if (window.innerWidth <= 1024) {
-        sidebar.style.transition = 'transform 0.3s ease-in-out';
-        sidebar.style.webkitTransition = 'transform 0.3s ease-in-out';
-        sidebar.style.transform = 'translateX(-100%)';
-        sidebar.style.webkitTransform = 'translateX(-100%)';
-      }
       sidebar.classList.remove('active');
       sidebarOverlay.classList.remove('active');
+      if (menuToggle) {
+        menuToggle.setAttribute('aria-expanded', 'false');
+      }
     }
 
     if (searchInput && keywordList) {
@@ -1085,44 +1722,176 @@
       });
     }
 
-    if (keywordList) {
-      const keywordLinks = keywordList.querySelectorAll('a[href^="#"]');
+    if (sidebar) {
+      const navLinks = Array.from(sidebar.querySelectorAll('a[href^="#"]'));
 
-      function setActiveKeyword(hash) {
-        if (!hash) {
-          keywordLinks.forEach(link => {
-            link.classList.remove('active');
-            link.removeAttribute('aria-current');
-          });
+      // Spy targets: hero/intro, importing, and each keyword card.
+      const sectionIds = [];
+      navLinks.forEach((link) => {
+        const id = (link.hash || '').slice(1);
+        if (id && !sectionIds.includes(id) && document.getElementById(id)) {
+          sectionIds.push(id);
+        }
+      });
+      const sections = sectionIds
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+
+      let activeHash = '';
+      let clickLockUntil = 0;
+      let pinnedHash = '';
+      let pinnedScrollY = null;
+
+      function visibleSections() {
+        return sections.filter(
+          (section) => !section.classList.contains('is-search-hidden')
+        );
+      }
+
+      function ensureSidebarLinkVisible(link) {
+        if (!link || !sidebar) return;
+        const pad = 10;
+        const sidebarRect = sidebar.getBoundingClientRect();
+        const linkRect = link.getBoundingClientRect();
+        // Already fully visible in the aside viewport — leave scroll alone.
+        if (
+          linkRect.top >= sidebarRect.top + pad &&
+          linkRect.bottom <= sidebarRect.bottom - pad
+        ) {
           return;
         }
+        // Nudge only the aside scrollport (avoid scrollIntoView side effects).
+        if (linkRect.top < sidebarRect.top + pad) {
+          sidebar.scrollTop += linkRect.top - sidebarRect.top - pad;
+        } else if (linkRect.bottom > sidebarRect.bottom - pad) {
+          sidebar.scrollTop += linkRect.bottom - sidebarRect.bottom + pad;
+        }
+      }
 
-        keywordLinks.forEach(link => {
-          if (link.hash === hash) {
-            link.classList.add('active');
+      function setActiveNav(hash) {
+        if (hash === activeHash) return;
+        activeHash = hash || '';
+
+        let activeLink = null;
+        navLinks.forEach((link) => {
+          const isActive = Boolean(hash) && link.hash === hash;
+          link.classList.toggle('active', isActive);
+          if (isActive) {
             link.setAttribute('aria-current', 'true');
+            activeLink = link;
           } else {
-            link.classList.remove('active');
             link.removeAttribute('aria-current');
           }
+        });
+
+        ensureSidebarLinkVisible(activeLink);
+      }
+
+      function pinNav(hash) {
+        pinnedHash = hash || '';
+        pinnedScrollY = null;
+        // Hold through smooth-scroll; then keep the pin until the user moves.
+        clickLockUntil = Date.now() + 1200;
+        setActiveNav(pinnedHash);
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            pinnedScrollY = window.scrollY;
+          });
         });
       }
 
       function updateActiveFromHash() {
-        const hash = window.location.hash;
-        setActiveKeyword(hash);
+        pinNav(window.location.hash);
+      }
+
+      function headerOffset() {
+        const header = document.querySelector('header');
+        return (header ? header.getBoundingClientRect().height : 70) + 16;
+      }
+
+      function scrollSpyOffset() {
+        // Activate a section once its top crosses into the upper band of the
+        // viewport (not only the header edge), so the visible keyword matches
+        // the sidebar highlight while reading mid-card content.
+        const headerBand = headerOffset();
+        const viewBand = Math.min(Math.max(window.innerHeight * 0.28, 120), 260);
+        return Math.max(headerBand, viewBand);
+      }
+
+      function isScrolledToBottom() {
+        const scrollBottom = window.scrollY + window.innerHeight;
+        const docHeight = Math.max(
+          document.documentElement.scrollHeight,
+          document.body.scrollHeight
+        );
+        return scrollBottom >= docHeight - 4;
+      }
+
+      function updateActiveFromScroll() {
+        if (!sections.length) return;
+
+        if (pinnedHash) {
+          if (Date.now() < clickLockUntil) {
+            setActiveNav(pinnedHash);
+            return;
+          }
+          // Keep the clicked/hash target until the user actually scrolls away.
+          if (
+            pinnedScrollY == null ||
+            Math.abs(window.scrollY - pinnedScrollY) < 12
+          ) {
+            setActiveNav(pinnedHash);
+            return;
+          }
+          pinnedHash = '';
+          pinnedScrollY = null;
+        }
+
+        const visible = visibleSections();
+        if (!visible.length) return;
+
+        // Last card often cannot reach the spy offset; force it when at the end.
+        if (isScrolledToBottom()) {
+          setActiveNav('#' + visible[visible.length - 1].id);
+          return;
+        }
+
+        const offset = scrollSpyOffset();
+        let current = visible[0];
+        for (const section of visible) {
+          if (section.getBoundingClientRect().top <= offset) {
+            current = section;
+          } else {
+            break;
+          }
+        }
+        setActiveNav('#' + current.id);
+      }
+
+      let scrollRaf = 0;
+      function onScrollOrResize() {
+        if (scrollRaf) return;
+        scrollRaf = window.requestAnimationFrame(() => {
+          scrollRaf = 0;
+          updateActiveFromScroll();
+        });
       }
 
       window.addEventListener('hashchange', updateActiveFromHash);
+      window.addEventListener('scroll', onScrollOrResize, { passive: true });
+      window.addEventListener('resize', onScrollOrResize);
 
-      keywordLinks.forEach(link => {
+      navLinks.forEach((link) => {
         link.addEventListener('click', () => {
-          setActiveKeyword(link.hash);
+          pinNav(link.hash);
         });
       });
 
-      // Initialize active state on load
-      updateActiveFromHash();
+      if (window.location.hash) {
+        updateActiveFromHash();
+      } else {
+        updateActiveFromScroll();
+      }
     }
   </script>
 </body>

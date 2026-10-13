@@ -11,8 +11,15 @@ import json
 import importlib.resources
 from datetime import datetime
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Mapping, Optional
 from functools import lru_cache
+
+from robotframework_docgen.generator import DocumentationGenerator
+from robotframework_docgen.theme import (
+    logo_url_for_theme,
+    on_accent_for_theme,
+    resolve_theme_tokens,
+)
 
 
 def generate_dashboard(
@@ -37,9 +44,9 @@ def generate_dashboard(
     search_index_path = assets_dir / "search-index.json"
     search_index_path.write_text(json.dumps(search_index, indent=2), encoding="utf-8")
     
-    # Generate CSS
+    # Generate CSS (honors site theme / theme_file)
     css_path = assets_dir / "style.css"
-    css_path.write_text(_generate_dashboard_css(), encoding="utf-8")
+    css_path.write_text(_generate_dashboard_css(site_config), encoding="utf-8")
     
     # Generate JavaScript
     js_path = assets_dir / "app.js"
@@ -87,7 +94,10 @@ def _generate_search_index(libraries_metadata: List[Dict[str, Any]]) -> List[Dic
         # Add keyword entries
         for keyword in lib_meta.get("keywords", []):
             keyword_name = keyword.get("name", "")
-            keyword_id = keyword_name.lower().replace(" ", "-")
+            # Must match DocumentationGenerator.keyword_anchor_id. A space-only
+            # slug leaves `${}` in the fragment, so embedded-argument keywords
+            # never scroll into view from dashboard search.
+            keyword_id = DocumentationGenerator.keyword_anchor_id(keyword_name)
             
             search_index.append({
                 "type": "keyword",
@@ -100,19 +110,40 @@ def _generate_search_index(libraries_metadata: List[Dict[str, Any]]) -> List[Dic
     return search_index
 
 
-def _generate_dashboard_css() -> str:
+def _dashboard_theme_override_css(site_config: Optional[Mapping[str, Any]]) -> str:
+    """Resolve site theme tokens into a trailing ``:root`` override block."""
+    css_vars = resolve_theme_tokens(site_config or {})
+    if not css_vars:
+        return ""
+    rendered = dict(css_vars)
+    on_accent = on_accent_for_theme(css_vars)
+    if on_accent:
+        rendered["--on-accent"] = on_accent
+    lines = [":root {"]
+    for var_name in sorted(rendered.keys()):
+        lines.append(f"    {var_name}: {rendered[var_name]};")
+    lines.append("}")
+    return "\n".join(lines)
+
+
+def _generate_dashboard_css(site_config: Optional[Mapping[str, Any]] = None) -> str:
     """Generate CSS for dashboard matching library design."""
     # TODO: Separate dashboard CSS into external asset file and load it here
-    return """/* Dashboard Styles - Matching Library Design */
+    base = """/* Dashboard Styles - Matching Library Design */
 :root {
     --bg: #0f172a;
     --bg-alt: #020617;
     --card: #020617;
     --accent: #38bdf8;
-    --accent-soft: rgba(56,189,248,0.15);
+    --accent-soft: rgba(56, 189, 248, 0.15);
     --border: #1e293b;
     --text: #e5e7eb;
     --muted: #9ca3af;
+    --on-accent: #0b1120;
+    --hero-badge-bg: color-mix(in srgb, var(--accent) 10%, transparent);
+    --hero-badge-text: var(--accent);
+    --hero-badge-kind-bg: rgba(167, 139, 250, 0.12);
+    --hero-badge-kind-text: #c4b5fd;
     --mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -121,13 +152,73 @@ def _generate_dashboard_css() -> str:
     box-sizing: border-box;
 }
 
+/* Thin scrollbars (Firefox + WebKit/Blink) */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--accent) 35%, transparent) transparent;
+}
+
+*::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--accent) 30%, transparent);
+    border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+html {
+    background-color: var(--bg-alt);
+}
+
 body {
     margin: 0;
     font-family: var(--sans);
-    background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+    background-color: var(--bg-alt);
+    background-image: radial-gradient(circle at top, color-mix(in srgb, var(--border) 85%, var(--accent) 15%) 0, var(--bg-alt) 55%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
     color: var(--text);
     line-height: 1.6;
     min-height: 100vh;
+}
+
+.skip-link {
+    position: absolute;
+    left: -999px;
+    top: 0;
+    background: var(--accent);
+    color: var(--on-accent);
+    padding: 0.5rem 0.75rem;
+    z-index: 100;
+    border-radius: 0 0 6px 0;
+    font-weight: 600;
+}
+
+.skip-link:focus {
+    left: 0;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 a {
@@ -144,7 +235,7 @@ header {
     top: 0;
     z-index: 30;
     backdrop-filter: blur(16px);
-    background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.8));
+    background: linear-gradient(to right, color-mix(in srgb, var(--bg) 95%, transparent), color-mix(in srgb, var(--bg) 80%, transparent));
     border-bottom: 1px solid var(--border);
     padding: 0.9rem 2rem;
     display: flex;
@@ -193,7 +284,7 @@ header .language-selector select {
     padding: 0.5rem 0.75rem 0.5rem 2rem;
     border-radius: 8px;
     border: 1px solid var(--border);
-    background: rgba(2,6,23,0.9);
+    background: color-mix(in srgb, var(--card) 92%, transparent);
     color: var(--text);
     font-size: 0.85rem;
     font-family: var(--sans);
@@ -207,8 +298,8 @@ header .language-selector select {
 header .language-selector select:focus {
     outline: none;
     border-color: var(--accent);
-    background: rgba(2,6,23,0.95);
-    box-shadow: 0 0 0 3px rgba(56,189,248,0.1);
+    background: color-mix(in srgb, var(--card) 96%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 header .language-selector select:hover {
@@ -238,7 +329,7 @@ header .keyword-search input {
     padding: 0.6rem 0.75rem 0.6rem 2.5rem;
     border-radius: 8px;
     border: 1px solid var(--border);
-    background: rgba(2,6,23,0.9);
+    background: color-mix(in srgb, var(--card) 92%, transparent);
     color: var(--text);
     font-size: 0.9rem;
     font-family: var(--sans);
@@ -249,8 +340,8 @@ header .keyword-search input {
 header .keyword-search input:focus {
     outline: none;
     border-color: var(--accent);
-    background: rgba(2,6,23,0.95);
-    box-shadow: 0 0 0 3px rgba(56,189,248,0.1);
+    background: color-mix(in srgb, var(--card) 96%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 header .keyword-search input::placeholder {
@@ -265,10 +356,10 @@ header .keyword-search-results {
     right: 0;
     max-height: 450px;
     overflow-y: auto;
-    background: rgba(2,6,23,0.98);
+    background: color-mix(in srgb, var(--card) 98%, transparent);
     border: 1px solid var(--border);
     border-radius: 12px;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(56,189,248,0.1);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent);
     display: none;
     z-index: 100;
     backdrop-filter: blur(20px);
@@ -286,7 +377,7 @@ header .keyword-search-results .search-result-item {
     cursor: pointer;
     transition: all 0.2s ease;
     border: 1px solid transparent;
-    background: rgba(15,23,42,0.5);
+    background: color-mix(in srgb, var(--bg) 50%, transparent);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -299,8 +390,8 @@ header .keyword-search-results .search-result-item:last-child {
 
 header .keyword-search-results .search-result-item:hover,
 header .keyword-search-results .search-result-item.highlighted {
-    background: rgba(56,189,248,0.15);
-    border-color: rgba(56,189,248,0.3);
+    background: var(--accent-soft);
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
     transform: translateX(2px);
 }
 
@@ -316,7 +407,7 @@ header .keyword-search-results .result-title {
 }
 
 header .keyword-search-results .search-result-item:hover .result-title {
-    color: #60d5fa;
+    color: color-mix(in srgb, var(--accent) 75%, white);
 }
 
 header .keyword-search-results .library-name {
@@ -335,31 +426,12 @@ header .keyword-search-results .library-name::before {
     opacity: 0.7;
 }
 
-/* Scrollbar styling for dropdown */
-header .keyword-search-results::-webkit-scrollbar {
-    width: 6px;
-}
-
-header .keyword-search-results::-webkit-scrollbar-track {
-    background: rgba(15,23,42,0.5);
-    border-radius: 3px;
-}
-
-header .keyword-search-results::-webkit-scrollbar-thumb {
-    background: rgba(56,189,248,0.3);
-    border-radius: 3px;
-}
-
-header .keyword-search-results::-webkit-scrollbar-thumb:hover {
-    background: rgba(56,189,248,0.5);
-}
-
 header h1 {
     font-size: 1.05rem;
     margin: 0;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #f4f6ff;
+    color: var(--text);
 }
 
 .dashboard-container {
@@ -398,19 +470,18 @@ header h1 {
 }
 
 .stat-card {
-    background: rgba(15,23,42,0.7);
+    background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 1.5rem;
-    backdrop-filter: blur(8px);
     transition: all 0.3s ease;
 }
 
 .stat-card:hover {
-    background: rgba(15,23,42,0.9);
+    background: var(--card);
     border-color: var(--accent-soft);
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(56,189,248,0.1);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .stat-card .stat-value {
@@ -453,7 +524,7 @@ header h1 {
     padding: 0.75rem 1rem 0.75rem 2.75rem;
     border-radius: 10px;
     border: 1px solid var(--border);
-    background: rgba(2,6,23,0.9);
+    background: color-mix(in srgb, var(--card) 92%, transparent);
     color: var(--text);
     font-size: 0.95rem;
     font-family: var(--sans);
@@ -464,8 +535,8 @@ header h1 {
 .search-input:focus {
     outline: none;
     border-color: var(--accent);
-    background: rgba(2,6,23,0.95);
-    box-shadow: 0 0 0 4px rgba(56,189,248,0.1);
+    background: color-mix(in srgb, var(--card) 96%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .search-input::placeholder {
@@ -475,7 +546,7 @@ header h1 {
 .search-result-item {
     padding: 1rem 1.25rem;
     margin-bottom: 0.75rem;
-    background: rgba(15,23,42,0.7);
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
     border-radius: 10px;
     border: 1px solid var(--border);
     border-left: 4px solid var(--accent);
@@ -487,9 +558,9 @@ header h1 {
 }
 
 .search-result-item:hover {
-    background: rgba(15,23,42,0.9);
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
     transform: translateX(4px);
-    box-shadow: 0 4px 12px rgba(56,189,248,0.1);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .search-result-library {
@@ -551,7 +622,7 @@ header h1 {
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
-    background: rgba(56,189,248,0.1);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
     color: var(--accent);
     font-weight: 500;
     margin-top: 0.25rem;
@@ -573,7 +644,7 @@ header h1 {
     justify-content: center;
     padding: 0.15rem;
     border-radius: 999px;
-    background: rgba(15,23,42,0.8);
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
     border: 1px solid var(--border);
 }
 
@@ -590,8 +661,8 @@ header h1 {
     transition: background 0.2s ease, color 0.2s ease;
 }
 
-.view-toggle-btn-active {
-    background: rgba(56,189,248,0.16);
+.view-toggle-btn.view-toggle-btn-active {
+    background: var(--accent-soft);
     color: var(--accent);
 }
 
@@ -671,7 +742,7 @@ header h1 {
 .group-back-btn {
     border-radius: 999px;
     border: 1px solid var(--border);
-    background: rgba(15,23,42,0.85);
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
     color: var(--muted);
     font-size: 0.8rem;
     padding: 0.35rem 0.75rem;
@@ -680,7 +751,7 @@ header h1 {
 }
 
 .group-back-btn:hover {
-    background: rgba(15,23,42,1);
+    background: var(--bg);
     border-color: var(--accent-soft);
     color: var(--accent);
 }
@@ -732,12 +803,12 @@ header h1 {
 }
 
 .sort-select,
-.filters-toggle-btn,
-.export-toggle-btn {
+.export-select,
+.filters-toggle-btn {
     padding: 0.5rem 0.75rem;
     border-radius: 8px;
     border: 1px solid var(--border);
-    background: rgba(2,6,23,0.9);
+    background: color-mix(in srgb, var(--card) 92%, transparent);
     color: var(--text);
     font-size: 0.9rem;
     font-family: var(--sans);
@@ -751,19 +822,19 @@ header h1 {
 }
 
 .controls-disabled .sort-select,
-.controls-disabled .filters-toggle-btn,
-.controls-disabled .export-toggle-btn {
+.controls-disabled .export-select,
+.controls-disabled .filters-toggle-btn {
     cursor: not-allowed;
     opacity: 0.6;
     pointer-events: auto;
 }
 
-.sort-select {
-    min-width: 180px;
+.sort-select,
+.export-select {
+    min-width: 140px;
 }
 
-.filters-toggle-btn,
-.export-toggle-btn {
+.filters-toggle-btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -775,19 +846,19 @@ header h1 {
 }
 
 .sort-select:focus,
-.filters-toggle-btn:focus,
-.export-toggle-btn:focus {
+.export-select:focus,
+.filters-toggle-btn:focus {
     outline: none;
     border-color: var(--accent);
-    background: rgba(2,6,23,0.95);
-    box-shadow: 0 0 0 3px rgba(56,189,248,0.1);
+    background: color-mix(in srgb, var(--card) 96%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .sort-select:hover,
-.filters-toggle-btn:hover,
-.export-toggle-btn:hover {
+.export-select:hover,
+.filters-toggle-btn:hover {
     border-color: var(--accent-soft);
-    background: rgba(2,6,23,0.95);
+    background: color-mix(in srgb, var(--card) 96%, transparent);
 }
 
 .filters-toggle-btn svg {
@@ -813,76 +884,6 @@ header h1 {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    position: relative;
-}
-
-.export-toggle-btn .export-toggle-icon {
-    width: 16px;
-    height: 16px;
-    transition: transform 0.2s ease;
-    color: var(--accent);
-    margin-left: 0.25rem;
-}
-
-.export-toggle-btn.active .export-toggle-icon {
-    transform: rotate(180deg);
-}
-
-.export-container {
-    margin-bottom: 1.5rem;
-    padding: 0;
-    background: transparent;
-    border: none;
-}
-
-.export-options {
-    display: flex;
-    gap: 0.75rem;
-    overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.2s ease, margin-top 0.3s ease;
-    flex-wrap: wrap;
-}
-
-.export-container:not(.collapsed) .export-options {
-    max-height: 500px;
-    opacity: 1;
-    margin-top: 0.5rem;
-}
-
-.export-container.collapsed .export-options {
-    max-height: 0;
-    opacity: 0;
-    margin-top: 0;
-    overflow: hidden;
-}
-
-.export-option-btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: rgba(2,6,23,0.9);
-    color: var(--text);
-    font-size: 0.9rem;
-    font-family: var(--sans);
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(8px);
-}
-
-.export-option-btn:hover {
-    border-color: var(--accent-soft);
-    background: rgba(56,189,248,0.15);
-    color: var(--accent);
-    box-shadow: 0 4px 12px rgba(56,189,248,0.2);
-}
-
-.export-option-btn:focus {
-    outline: none;
-    border-color: var(--accent);
-    background: rgba(56,189,248,0.15);
-    color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(56,189,248,0.1);
 }
 
 .filters-container {
@@ -954,7 +955,7 @@ header h1 {
     padding: 0.5rem 0.75rem;
     border-radius: 8px;
     border: 1px solid var(--border);
-    background: rgba(2,6,23,0.9);
+    background: color-mix(in srgb, var(--card) 92%, transparent);
     color: var(--text);
     font-size: 0.9rem;
     font-family: var(--sans);
@@ -966,8 +967,8 @@ header h1 {
 .filter-select:focus {
     outline: none;
     border-color: var(--accent);
-    background: rgba(2,6,23,0.95);
-    box-shadow: 0 0 0 3px rgba(56,189,248,0.1);
+    background: color-mix(in srgb, var(--card) 96%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .filter-select:hover {
@@ -984,9 +985,8 @@ header h1 {
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 2rem;
-    background: rgba(15,23,42,0.7);
+    background: var(--bg);
     transition: all 0.3s ease;
-    backdrop-filter: blur(8px);
     position: relative;
     overflow: hidden;
 }
@@ -1004,10 +1004,10 @@ header h1 {
 }
 
 .library-card:hover {
-    background: rgba(15,23,42,0.9);
+    background: var(--card);
     border-color: var(--accent-soft);
     transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(56,189,248,0.15);
+    box-shadow: 0 12px 32px var(--accent-soft);
 }
 
 .library-card:hover::before {
@@ -1035,12 +1035,6 @@ header h1 {
     flex-wrap: wrap;
     gap: 0.35rem;
     margin: 0.25rem 0 0.75rem 0;
-}
-
-.badge-group {
-    border-color: rgba(147,197,253,0.4);
-    background: rgba(147,197,253,0.15);
-    color: #bfdbfe;
 }
 
 .library-meta {
@@ -1164,9 +1158,9 @@ header h1 {
     font-size: 0.75rem;
     padding: 0.35rem 0.75rem;
     border-radius: 999px;
-    border: 1px solid rgba(56,189,248,0.3);
-    background: rgba(56,189,248,0.1);
-    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border) 60%);
+    background: var(--hero-badge-bg);
+    color: var(--hero-badge-text);
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
@@ -1176,8 +1170,20 @@ header h1 {
 }
 
 .badge:hover {
-    background: rgba(56,189,248,0.2);
-    border-color: rgba(56,189,248,0.5);
+    background: color-mix(in srgb, var(--accent) 20%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 50%, var(--border) 50%);
+}
+
+.badge.badge-kind {
+    border-color: color-mix(in srgb, var(--hero-badge-kind-text) 45%, transparent);
+    color: var(--hero-badge-kind-text);
+    background: var(--hero-badge-kind-bg);
+}
+
+.badge.badge-group {
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+    background: var(--accent-soft);
+    color: var(--accent);
 }
 
 .no-results {
@@ -1283,17 +1289,10 @@ footer a:hover {
         min-width: auto;
     }
     
-    .export-toggle-btn {
+    .export-controls,
+    .export-select {
         width: 100%;
         min-width: auto;
-    }
-    
-    .export-options {
-        flex-direction: column;
-    }
-    
-    .export-option-btn {
-        width: 100%;
     }
     
     .filters-grid {
@@ -1301,6 +1300,10 @@ footer a:hover {
     }
 }
 """
+    override = _dashboard_theme_override_css(site_config)
+    if override:
+        return base + "\n\n/* Theme overrides from site.theme / site.theme_file */\n" + override + "\n"
+    return base
 
 
 def _generate_dashboard_js() -> str:
@@ -1315,11 +1318,19 @@ const translations = {
         site_description: '',
         libraries: 'Libraries',
         library: 'library',
+        resources: 'Resources',
+        resource: 'resource',
         total_keywords: 'Total Keywords',
         search_keywords: 'Search keywords...',
         search_libraries: 'Search libraries...',
+        search_resources: 'Search resources...',
+        search_groups: 'Search groups...',
         no_libraries_found: 'No libraries found.',
+        no_resources_found: 'No resources found.',
+        no_groups_found: 'No groups found.',
         available_libraries: 'Available Libraries',
+        available_resources: 'Available Resources',
+        available_groups: 'Available Groups',
         sort_by: 'Sort by:',
         sort_name_asc: 'Name (A–Z)',
         sort_keywords_desc: 'Keyword count (desc)',
@@ -1350,11 +1361,19 @@ const translations = {
         site_description: '',
         libraries: 'Bibliotecas',
         library: 'biblioteca',
+        resources: 'Recursos',
+        resource: 'recurso',
         total_keywords: 'Palabras Clave Totales',
         search_keywords: 'Buscar palabras clave...',
         search_libraries: 'Buscar bibliotecas...',
+        search_resources: 'Buscar recursos...',
+        search_groups: 'Buscar grupos...',
         no_libraries_found: 'No se encontraron bibliotecas.',
+        no_resources_found: 'No se encontraron recursos.',
+        no_groups_found: 'No se encontraron grupos.',
         available_libraries: 'Bibliotecas Disponibles',
+        available_resources: 'Recursos Disponibles',
+        available_groups: 'Grupos Disponibles',
         sort_by: 'Ordenar por:',
         sort_name_asc: 'Nombre (A–Z)',
         sort_keywords_desc: 'Cantidad de palabras clave (desc)',
@@ -1385,11 +1404,19 @@ const translations = {
         site_description: '',
         libraries: 'Bibliothèques',
         library: 'bibliothèque',
+        resources: 'Ressources',
+        resource: 'ressource',
         total_keywords: 'Mots-clés Totaux',
         search_keywords: 'Rechercher des mots-clés...',
         search_libraries: 'Rechercher des bibliothèques...',
+        search_resources: 'Rechercher des ressources...',
+        search_groups: 'Rechercher des groupes...',
         no_libraries_found: 'Aucune bibliothèque trouvée.',
+        no_resources_found: 'Aucune ressource trouvée.',
+        no_groups_found: 'Aucun groupe trouvé.',
         available_libraries: 'Bibliothèques Disponibles',
+        available_resources: 'Ressources Disponibles',
+        available_groups: 'Groupes Disponibles',
         sort_by: 'Trier par:',
         sort_name_asc: 'Nom (A–Z)',
         sort_keywords_desc: 'Nombre de mots-clés (desc)',
@@ -1420,11 +1447,19 @@ const translations = {
         site_description: '',
         libraries: 'Bibliotheken',
         library: 'Bibliothek',
+        resources: 'Ressourcen',
+        resource: 'Ressource',
         total_keywords: 'Gesamt-Schlüsselwörter',
         search_keywords: 'Schlüsselwörter suchen...',
         search_libraries: 'Bibliotheken suchen...',
+        search_resources: 'Ressourcen suchen...',
+        search_groups: 'Gruppen suchen...',
         no_libraries_found: 'Keine Bibliotheken gefunden.',
+        no_resources_found: 'Keine Ressourcen gefunden.',
+        no_groups_found: 'Keine Gruppen gefunden.',
         available_libraries: 'Verfügbare Bibliotheken',
+        available_resources: 'Verfügbare Ressourcen',
+        available_groups: 'Verfügbare Gruppen',
         sort_by: 'Sortieren nach:',
         sort_name_asc: 'Name (A–Z)',
         sort_keywords_desc: 'Schlüsselwortanzahl (abst)',
@@ -1455,11 +1490,19 @@ const translations = {
         site_description: '',
         libraries: '库',
         library: '库',
+        resources: '资源',
+        resource: '资源',
         total_keywords: '总关键字',
         search_keywords: '搜索关键字...',
         search_libraries: '搜索库...',
+        search_resources: '搜索资源...',
+        search_groups: '搜索分组...',
         no_libraries_found: '未找到库。',
+        no_resources_found: '未找到资源。',
+        no_groups_found: '未找到分组。',
         available_libraries: '可用库',
+        available_resources: '可用资源',
+        available_groups: '可用分组',
         sort_by: '排序方式:',
         sort_name_asc: '名称 (A–Z)',
         sort_keywords_desc: '关键字数量 (降序)',
@@ -1490,11 +1533,19 @@ const translations = {
         site_description: '',
         libraries: 'ライブラリ',
         library: 'ライブラリ',
+        resources: 'リソース',
+        resource: 'リソース',
         total_keywords: '総キーワード数',
         search_keywords: 'キーワードを検索...',
         search_libraries: 'ライブラリを検索...',
+        search_resources: 'リソースを検索...',
+        search_groups: 'グループを検索...',
         no_libraries_found: 'ライブラリが見つかりません。',
+        no_resources_found: 'リソースが見つかりません。',
+        no_groups_found: 'グループが見つかりません。',
         available_libraries: '利用可能なライブラリ',
+        available_resources: '利用可能なリソース',
+        available_groups: '利用可能なグループ',
         sort_by: '並び替え:',
         sort_name_asc: '名前 (A–Z)',
         sort_keywords_desc: 'キーワード数 (降順)',
@@ -1525,11 +1576,19 @@ const translations = {
         site_description: '',
         libraries: 'Bibliotecas',
         library: 'biblioteca',
+        resources: 'Recursos',
+        resource: 'recurso',
         total_keywords: 'Total de Palavras-chave',
         search_keywords: 'Pesquisar palavras-chave...',
         search_libraries: 'Pesquisar bibliotecas...',
+        search_resources: 'Pesquisar recursos...',
+        search_groups: 'Pesquisar grupos...',
         no_libraries_found: 'Nenhuma biblioteca encontrada.',
+        no_resources_found: 'Nenhum recurso encontrado.',
+        no_groups_found: 'Nenhum grupo encontrado.',
         available_libraries: 'Bibliotecas Disponíveis',
+        available_resources: 'Recursos Disponíveis',
+        available_groups: 'Grupos Disponíveis',
         sort_by: 'Ordenar por:',
         sort_name_asc: 'Nome (A–Z)',
         sort_keywords_desc: 'Contagem de palavras-chave (desc)',
@@ -1560,11 +1619,19 @@ const translations = {
         site_description: '',
         libraries: 'Библиотеки',
         library: 'библиотека',
+        resources: 'Ресурсы',
+        resource: 'ресурс',
         total_keywords: 'Всего Ключевых Слов',
         search_keywords: 'Поиск ключевых слов...',
         search_libraries: 'Поиск библиотек...',
+        search_resources: 'Поиск ресурсов...',
+        search_groups: 'Поиск групп...',
         no_libraries_found: 'Библиотеки не найдены.',
+        no_resources_found: 'Ресурсы не найдены.',
+        no_groups_found: 'Группы не найдены.',
         available_libraries: 'Доступные Библиотеки',
+        available_resources: 'Доступные Ресурсы',
+        available_groups: 'Доступные Группы',
         sort_by: 'Сортировать по:',
         sort_name_asc: 'Имя (А–Я)',
         sort_keywords_desc: 'Количество ключевых слов (убыв)',
@@ -1595,11 +1662,19 @@ const translations = {
         site_description: '',
         libraries: 'Librerie',
         library: 'libreria',
+        resources: 'Risorse',
+        resource: 'risorsa',
         total_keywords: 'Parole Chiave Totali',
         search_keywords: 'Cerca parole chiave...',
         search_libraries: 'Cerca librerie...',
+        search_resources: 'Cerca risorse...',
+        search_groups: 'Cerca gruppi...',
         no_libraries_found: 'Nessuna libreria trovata.',
+        no_resources_found: 'Nessuna risorsa trovata.',
+        no_groups_found: 'Nessun gruppo trovato.',
         available_libraries: 'Librerie Disponibili',
+        available_resources: 'Risorse Disponibili',
+        available_groups: 'Gruppi Disponibili',
         sort_by: 'Ordina per:',
         sort_name_asc: 'Nome (A–Z)',
         sort_keywords_desc: 'Conteggio parole chiave (disc)',
@@ -1630,11 +1705,19 @@ const translations = {
         site_description: '',
         libraries: '라이브러리',
         library: '라이브러리',
+        resources: '리소스',
+        resource: '리소스',
         total_keywords: '총 키워드',
         search_keywords: '키워드 검색...',
         search_libraries: '라이브러리 검색...',
+        search_resources: '리소스 검색...',
+        search_groups: '그룹 검색...',
         no_libraries_found: '라이브러리를 찾을 수 없습니다.',
+        no_resources_found: '리소스를 찾을 수 없습니다.',
+        no_groups_found: '그룹을 찾을 수 없습니다.',
         available_libraries: '사용 가능한 라이브러리',
+        available_resources: '사용 가능한 리소스',
+        available_groups: '사용 가능한 그룹',
         sort_by: '정렬 기준:',
         sort_name_asc: '이름 (A–Z)',
         sort_keywords_desc: '키워드 수 (내림차순)',
@@ -1721,6 +1804,9 @@ function translatePage(lang) {
                     updateGroupContext(activeGroupKey);
                 }
             }
+            if (typeof updateSectionTitle === 'function') {
+                updateSectionTitle();
+            }
         });
     }
     
@@ -1731,8 +1817,18 @@ function translatePage(lang) {
     let libraryCards = librariesGrid ? Array.from(librariesGrid.querySelectorAll('.library-card')) : [];
 
     // View and grouping state
-    let currentView = 'all'; // 'all' | 'groups' | 'group-libraries'
+    let currentView = 'libraries'; // 'libraries' | 'resources' | 'groups' | 'group-libraries'
     let activeGroupKey = null; // normalized group key or null
+
+    function cardKind(card) {
+        const kind = (card.getAttribute('data-kind') || 'library').toLowerCase();
+        return kind === 'resource' ? 'resource' : 'library';
+    }
+
+    function normalizePersistedView(view) {
+        if (view === 'all') return 'libraries';
+        return view;
+    }
     
     // Sort libraries function
     function sortLibraries(sortBy) {
@@ -1794,8 +1890,48 @@ function translatePage(lang) {
         sortLibraries(sortSelect.value);
     }
     
+    // Substring match only (case-insensitive). No fuzzy matching.
+    function matchesSubstring(haystack, needle) {
+        if (!needle) return true;
+        return String(haystack || '').toLowerCase().includes(needle);
+    }
+
+    function filterGroups() {
+        if (!groupsGrid) return 0;
+        const searchQuery = searchInput ? searchInput.value.trim().toLowerCase() : '';
+        let visibleCount = 0;
+        groupsGrid.querySelectorAll('.group-card').forEach(card => {
+            const key = (card.getAttribute('data-group-key') || '').toLowerCase();
+            const label = (card.getAttribute('data-group-label') || '').toLowerCase();
+            const matchesSearch = (
+                !searchQuery ||
+                matchesSubstring(label, searchQuery) ||
+                (key !== '__ungrouped__' && matchesSubstring(key, searchQuery))
+            );
+            card.style.display = matchesSearch ? '' : 'none';
+            if (matchesSearch) visibleCount++;
+        });
+        return visibleCount;
+    }
+
     // Filter libraries function
     function filterLibraries() {
+        // Groups tab: search group cards by name (substring only)
+        if (currentView === 'groups') {
+            const visibleGroups = filterGroups();
+            if (noResults) {
+                const t = translations[currentLanguage] || translations.en;
+                noResults.setAttribute('data-i18n', 'no_groups_found');
+                noResults.textContent = t.no_groups_found || 'No groups found.';
+                if (visibleGroups === 0) {
+                    noResults.classList.add('active');
+                } else {
+                    noResults.classList.remove('active');
+                }
+            }
+            return;
+        }
+
         if (!librariesGrid || libraryCards.length === 0) return;
         
         // Get filter values
@@ -1804,9 +1940,10 @@ function translatePage(lang) {
         const filterLicense = (document.getElementById('filter-license')?.value || '').toLowerCase();
         const filterRobotFramework = (document.getElementById('filter-robot-framework')?.value || '').toLowerCase();
         const filterPython = (document.getElementById('filter-python')?.value || '').toLowerCase();
+        const filterGroup = (document.getElementById('filter-group')?.value || '').toLowerCase();
         
         // Check if any filters are active
-        const hasActiveFilters = filterAuthor || filterMaintainer || filterLicense || filterRobotFramework || filterPython;
+        const hasActiveFilters = filterAuthor || filterMaintainer || filterLicense || filterRobotFramework || filterPython || filterGroup;
         const clearBtn = document.getElementById('clear-filters');
         if (clearBtn) {
             clearBtn.style.display = hasActiveFilters ? 'block' : 'none';
@@ -1818,12 +1955,11 @@ function translatePage(lang) {
         // Filter library cards
         let visibleCount = 0;
         libraryCards.forEach(card => {
-            // Check search match
+            // Check search match (name substring only — no fuzzy, no description)
             let matchesSearch = true;
             if (searchQuery.length > 0) {
                 const libraryName = card.getAttribute('data-library-name') || '';
-                const libraryDescription = card.getAttribute('data-library-description') || '';
-                matchesSearch = libraryName.includes(searchQuery) || libraryDescription.includes(searchQuery);
+                matchesSearch = matchesSubstring(libraryName, searchQuery);
             }
             
             // Check filter matches
@@ -1832,24 +1968,34 @@ function translatePage(lang) {
             const cardLicense = (card.getAttribute('data-license') || '').toLowerCase();
             const cardRobotFramework = (card.getAttribute('data-robot-framework') || '').toLowerCase();
             const cardPython = (card.getAttribute('data-python') || '').toLowerCase();
+            const cardGroup = (card.getAttribute('data-group') || '').toLowerCase();
             
             const matchesAuthor = !filterAuthor || cardAuthor === filterAuthor;
             const matchesMaintainer = !filterMaintainer || cardMaintainer === filterMaintainer;
             const matchesLicense = !filterLicense || cardLicense === filterLicense;
             const matchesRobotFramework = !filterRobotFramework || cardRobotFramework === filterRobotFramework;
             const matchesPython = !filterPython || cardPython === filterPython;
+            const matchesFilterGroup = !filterGroup || cardGroup === filterGroup;
 
             // Check group match when in group-libraries view
-            const cardGroup = (card.getAttribute('data-group') || '').toLowerCase();
             const matchesGroup = (
                 currentView !== 'group-libraries' ||
                 !activeGroupKey ||
                 (activeGroupKey === '__ungrouped__' && !cardGroup) ||
                 (activeGroupKey === cardGroup)
             );
+
+            // Libraries / Resources tabs filter by entry kind
+            const kind = cardKind(card);
+            const matchesKind = (
+                currentView === 'groups' ||
+                currentView === 'group-libraries' ||
+                (currentView === 'libraries' && kind === 'library') ||
+                (currentView === 'resources' && kind === 'resource')
+            );
             
             // Show card if it matches all criteria
-            if (matchesSearch && matchesAuthor && matchesMaintainer && matchesLicense && matchesRobotFramework && matchesPython && matchesGroup) {
+            if (matchesSearch && matchesAuthor && matchesMaintainer && matchesLicense && matchesRobotFramework && matchesPython && matchesFilterGroup && matchesGroup && matchesKind) {
                 card.style.display = '';
                 visibleCount++;
             } else {
@@ -1858,15 +2004,25 @@ function translatePage(lang) {
         });
         
         // Show/hide no results message
-        if (visibleCount === 0) {
-            noResults.classList.add('active');
-        } else {
-            noResults.classList.remove('active');
+        if (noResults) {
+            const t = translations[currentLanguage] || translations.en;
+            if (currentView === 'resources') {
+                noResults.setAttribute('data-i18n', 'no_resources_found');
+                noResults.textContent = t.no_resources_found || 'No resources found.';
+            } else {
+                noResults.setAttribute('data-i18n', 'no_libraries_found');
+                noResults.textContent = t.no_libraries_found || 'No libraries found.';
+            }
+            if (visibleCount === 0) {
+                noResults.classList.add('active');
+            } else {
+                noResults.classList.remove('active');
+            }
         }
     }
     
     // Initialize filters
-    const filterSelects = ['filter-author', 'filter-maintainer', 'filter-license', 'filter-robot-framework', 'filter-python'];
+    const filterSelects = ['filter-group', 'filter-author', 'filter-maintainer', 'filter-license', 'filter-robot-framework', 'filter-python'];
     filterSelects.forEach(filterId => {
         const filterSelect = document.getElementById(filterId);
         if (filterSelect) {
@@ -1912,7 +2068,10 @@ function translatePage(lang) {
         const filterData = window.filterData;
         const buildFilterHTML = (label, filterId, options) => {
             if (!options || options.length === 0) return '';
-            const allLabel = label.includes('Version') ? 'All Versions' : `All ${label}s`;
+            let allLabel = `All ${label}s`;
+            if (label.includes('Version')) allLabel = 'All Versions';
+            if (label === 'Python') allLabel = 'All Python versions';
+            if (label === 'Group') allLabel = 'All Groups';
             const optionsHTML = options.map(opt => 
                 `<option value="${opt.toLowerCase()}">${opt}</option>`
             ).join('');
@@ -1933,6 +2092,7 @@ function translatePage(lang) {
                     <button id="clear-filters" class="clear-filters-btn" style="display: none;" data-i18n="clear_all">Clear All</button>
                 </div>
                 <div class="filters-grid">
+                    ${buildFilterHTML('Group', 'filter-group', filterData.groups)}
                     ${buildFilterHTML('Author', 'filter-author', filterData.authors)}
                     ${buildFilterHTML('Maintainer', 'filter-maintainer', filterData.maintainers)}
                     ${buildFilterHTML('License', 'filter-license', filterData.licenses)}
@@ -1943,22 +2103,9 @@ function translatePage(lang) {
         `;
     }
     
-    // Build export container HTML
-    function buildExportContainer() {
-        return `
-            <div class="export-container">
-                <div class="export-options">
-                    <button class="export-option-btn" data-export="csv">CSV</button>
-                    <button class="export-option-btn" data-export="excel">Excel</button>
-                    <button class="export-option-btn" data-export="pdf">PDF</button>
-                </div>
-            </div>
-        `;
-    }
-    
-    // Initialize filter functionality
+    // Initialize filter functionality (called when filters panel is opened)
     function initializeFilters(filtersContainer) {
-        const filterSelects = ['filter-author', 'filter-maintainer', 'filter-license', 'filter-robot-framework', 'filter-python'];
+        const filterSelects = ['filter-group', 'filter-author', 'filter-maintainer', 'filter-license', 'filter-robot-framework', 'filter-python'];
         filterSelects.forEach(filterId => {
             const filterSelect = document.getElementById(filterId);
             if (filterSelect) {
@@ -1974,11 +2121,11 @@ function translatePage(lang) {
                         localStorage.removeItem(`dashboard_filter_${filterId}`);
                     }
                     filterLibraries();
+                    updateClearFiltersButton();
                 });
             }
         });
-        
-        // Clear filters button
+
         const clearFiltersBtn = document.getElementById('clear-filters');
         if (clearFiltersBtn) {
             clearFiltersBtn.addEventListener('click', function() {
@@ -1989,29 +2136,20 @@ function translatePage(lang) {
                         localStorage.removeItem(`dashboard_filter_${filterId}`);
                     }
                 });
-                filterLibraries();
                 clearFiltersBtn.style.display = 'none';
+                filterLibraries();
             });
         }
-        
-        // Check if any filters are active
+
         function updateClearFiltersButton() {
-            if (clearFiltersBtn) {
-                const hasActiveFilters = filterSelects.some(filterId => {
-                    const select = document.getElementById(filterId);
-                    return select && select.value;
-                });
-                clearFiltersBtn.style.display = hasActiveFilters ? 'block' : 'none';
-            }
+            if (!clearFiltersBtn) return;
+            const hasActiveFilters = filterSelects.some(filterId => {
+                const select = document.getElementById(filterId);
+                return select && select.value;
+            });
+            clearFiltersBtn.style.display = hasActiveFilters ? 'block' : 'none';
         }
-        
-        // Update clear button on filter change
-        filterSelects.forEach(filterId => {
-            const filterSelect = document.getElementById(filterId);
-            if (filterSelect) {
-                filterSelect.addEventListener('change', updateClearFiltersButton);
-            }
-        });
+
         updateClearFiltersButton();
     }
     
@@ -2054,7 +2192,8 @@ function translatePage(lang) {
     filterLibraries();
 
     // ===== Grouping and view toggle =====
-    const viewAllBtn = document.getElementById('view-all-btn');
+    const viewLibrariesBtn = document.getElementById('view-libraries-btn') || document.getElementById('view-all-btn');
+    const viewResourcesBtn = document.getElementById('view-resources-btn');
     const viewGroupsBtn = document.getElementById('view-groups-btn');
     const viewToggleEl = document.getElementById('view-toggle');
     const groupsGrid = document.getElementById('groups-grid');
@@ -2065,6 +2204,19 @@ function translatePage(lang) {
     const groupMetaKeywords = document.getElementById('group-meta-keywords');
     const groupBackBtn = document.getElementById('group-back-btn');
     const headerControls = document.querySelector('.libraries-section-header .header-controls');
+
+    const hasLibraryCards = libraryCards.some(card => cardKind(card) === 'library');
+    const hasResourceCards = libraryCards.some(card => cardKind(card) === 'resource');
+    if (viewLibrariesBtn) {
+        viewLibrariesBtn.style.display = hasLibraryCards ? '' : 'none';
+    }
+    if (viewResourcesBtn) {
+        viewResourcesBtn.style.display = hasResourceCards ? '' : 'none';
+    }
+    // Default to Resources when the dashboard only has resource entries.
+    if (!hasLibraryCards && hasResourceCards) {
+        currentView = 'resources';
+    }
 
     const groupStats = {};
 
@@ -2084,12 +2236,17 @@ function translatePage(lang) {
                 label = 'Ungrouped';
             } else {
                 key = rawGroup.toLowerCase();
-                // Convert to Title Case for display
-                label = rawGroup
-                    .split(/\s+/)
-                    .filter(Boolean)
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ');
+                // Prefer original casing from data-group-display (preserves API/UI acronyms).
+                const displayLabel = (card.getAttribute('data-group-display') || '').trim();
+                if (displayLabel) {
+                    label = displayLabel;
+                } else {
+                    label = rawGroup
+                        .split(/\\s+/)
+                        .filter(Boolean)
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(' ');
+                }
                 hasNamedGroups = true;
             }
 
@@ -2097,11 +2254,16 @@ function translatePage(lang) {
                 groupStats[key] = {
                     label,
                     libraryCount: 0,
+                    resourceCount: 0,
                     keywordCount: 0,
                 };
             }
 
-            groupStats[key].libraryCount += 1;
+            if (cardKind(card) === 'resource') {
+                groupStats[key].resourceCount += 1;
+            } else {
+                groupStats[key].libraryCount += 1;
+            }
             groupStats[key].keywordCount += keywordCount;
         });
 
@@ -2109,6 +2271,58 @@ function translatePage(lang) {
         if (!hasNamedGroups && viewToggleEl) {
             viewToggleEl.style.display = 'none';
         }
+    }
+
+    function formatKindCount(count, singular, plural) {
+        if (!count) return '';
+        const label = count === 1 ? singular : plural;
+        return `<span><strong>${count}</strong> ${label}</span>`;
+    }
+
+    function formatGroupEntryMeta(info, t) {
+        const parts = [];
+        const libPart = formatKindCount(
+            info.libraryCount || 0,
+            t.library || 'library',
+            t.libraries || 'libraries'
+        );
+        const resPart = formatKindCount(
+            info.resourceCount || 0,
+            t.resource || 'resource',
+            t.resources || 'resources'
+        );
+        if (libPart) parts.push(libPart);
+        if (resPart) parts.push(resPart);
+        // Fallback if kind metadata is missing on older dashboards.
+        if (!parts.length) {
+            const total = (info.libraryCount || 0) + (info.resourceCount || 0);
+            parts.push(formatKindCount(total, t.library || 'library', t.libraries || 'libraries'));
+        }
+        return parts.join('<span>•</span>');
+    }
+
+    function formatGroupEntryText(info, t) {
+        const parts = [];
+        if (info.libraryCount) {
+            const word = info.libraryCount === 1
+                ? (t.library || 'library')
+                : (t.libraries || 'libraries');
+            parts.push(`${info.libraryCount} ${word}`);
+        }
+        if (info.resourceCount) {
+            const word = info.resourceCount === 1
+                ? (t.resource || 'resource')
+                : (t.resources || 'resources');
+            parts.push(`${info.resourceCount} ${word}`);
+        }
+        if (!parts.length) {
+            const total = (info.libraryCount || 0) + (info.resourceCount || 0);
+            const word = total === 1
+                ? (t.library || 'library')
+                : (t.libraries || 'libraries');
+            parts.push(`${total} ${word}`);
+        }
+        return parts.join(' • ');
     }
 
     function renderGroupCards() {
@@ -2124,14 +2338,12 @@ function translatePage(lang) {
             keys.sort((a, b) => groupStats[a].label.localeCompare(groupStats[b].label));
             keys.forEach(key => {
                 const info = groupStats[key];
-                const libWord = info.libraryCount === 1
-                    ? (tForGroups.library || 'library')
-                    : (tForGroups.libraries || 'libraries');
+                const entryMeta = formatGroupEntryMeta(info, tForGroups);
                 const kwWord = info.keywordCount === 1
                     ? (tForGroups.keyword || 'keyword')
                     : (tForGroups.keywords || 'keywords');
                 html += `
-                    <div class="library-card group-card" data-group-key="${key}">
+                    <div class="library-card group-card" data-group-key="${key}" data-group-label="${escapeHtml(String(info.label || '').toLowerCase())}">
                         <h2><span class="group-card-title">${info.label}</span></h2>
                         <div class="library-stats">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2139,7 +2351,7 @@ function translatePage(lang) {
                                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                             </svg>
                             <span class="group-card-meta">
-                                <span><strong>${info.libraryCount}</strong> ${libWord}</span>
+                                ${entryMeta}
                                 <span>•</span>
                                 <span><strong>${info.keywordCount}</strong> ${kwWord}</span>
                             </span>
@@ -2151,14 +2363,12 @@ function translatePage(lang) {
 
         if (groupStats['__ungrouped__']) {
             const info = groupStats['__ungrouped__'];
-            const libWord = info.libraryCount === 1
-                ? (tForGroups.library || 'library')
-                : (tForGroups.libraries || 'libraries');
+            const entryMeta = formatGroupEntryMeta(info, tForGroups);
             const kwWord = info.keywordCount === 1
                 ? (tForGroups.keyword || 'keyword')
                 : (tForGroups.keywords || 'keywords');
             html += `
-                <div class="library-card group-card group-card-ungrouped" data-group-key="__ungrouped__">
+                <div class="library-card group-card group-card-ungrouped" data-group-key="__ungrouped__" data-group-label="${escapeHtml(String(info.label || '').toLowerCase())}">
                     <h2><span class="group-card-title">${info.label}</span></h2>
                     <div class="library-stats">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2166,7 +2376,7 @@ function translatePage(lang) {
                             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                         </svg>
                         <span class="group-card-meta">
-                            <span><strong>${info.libraryCount}</strong> ${libWord}</span>
+                            ${entryMeta}
                             <span>•</span>
                             <span><strong>${info.keywordCount}</strong> ${kwWord}</span>
                         </span>
@@ -2184,6 +2394,10 @@ function translatePage(lang) {
                 enterGroupLibrariesView(key);
             });
         });
+
+        if (currentView === 'groups') {
+            filterLibraries();
+        }
     }
 
     function updateGroupContext(key) {
@@ -2193,7 +2407,7 @@ function translatePage(lang) {
         groupBreadcrumbName.textContent = info.label;
         const tForGroup = translations[currentLanguage] || translations.en;
         if (groupMetaLibraries) {
-            groupMetaLibraries.textContent = `${info.libraryCount} ${tForGroup.libraries || 'libraries'}`;
+            groupMetaLibraries.textContent = formatGroupEntryText(info, tForGroup);
         }
         if (groupMetaKeywords) {
             const keywordText = info.keywordCount === 1
@@ -2204,33 +2418,59 @@ function translatePage(lang) {
     }
 
     function setView(view) {
-        currentView = view;
+        currentView = normalizePersistedView(view);
 
-        if (viewAllBtn && viewGroupsBtn) {
-            // Highlight "Libraries" only in flat view, and "Groups" for both
-            // the group cards overview and the group-libraries sub-dashboard.
-            viewAllBtn.classList.toggle('view-toggle-btn-active', view === 'all');
+        if (viewLibrariesBtn) {
+            viewLibrariesBtn.classList.toggle('view-toggle-btn-active', currentView === 'libraries');
+        }
+        if (viewResourcesBtn) {
+            viewResourcesBtn.classList.toggle('view-toggle-btn-active', currentView === 'resources');
+        }
+        if (viewGroupsBtn) {
             viewGroupsBtn.classList.toggle(
                 'view-toggle-btn-active',
-                view === 'groups' || view === 'group-libraries'
+                currentView === 'groups' || currentView === 'group-libraries'
             );
         }
 
         if (groupsGrid) {
-            groupsGrid.style.display = view === 'groups' ? 'grid' : 'none';
+            groupsGrid.style.display = currentView === 'groups' ? 'grid' : 'none';
         }
 
         if (librariesGrid) {
-            librariesGrid.style.display = view === 'all' || view === 'group-libraries' ? 'grid' : 'none';
+            librariesGrid.style.display = (
+                currentView === 'libraries' ||
+                currentView === 'resources' ||
+                currentView === 'group-libraries'
+            ) ? 'grid' : 'none';
         }
 
         if (groupContextEl) {
-            groupContextEl.style.display = view === 'group-libraries' ? 'flex' : 'none';
+            groupContextEl.style.display = currentView === 'group-libraries' ? 'flex' : 'none';
         }
 
         // Visually indicate disabled controls when showing group cards
         if (headerControls) {
-            headerControls.classList.toggle('controls-disabled', view === 'groups');
+            headerControls.classList.toggle('controls-disabled', currentView === 'groups');
+        }
+
+        // Update search placeholder for the active kind tab
+        if (searchInput) {
+            const t = translations[currentLanguage] || translations.en;
+            const labelEl = document.getElementById('global-search-label');
+            if (currentView === 'resources') {
+                searchInput.setAttribute('data-i18n-placeholder', 'search_resources');
+                searchInput.placeholder = t.search_resources || 'Search resources...';
+                if (labelEl) labelEl.textContent = t.search_resources || 'Search resources...';
+            } else if (currentView === 'groups') {
+                searchInput.setAttribute('data-i18n-placeholder', 'search_groups');
+                searchInput.placeholder = t.search_groups || 'Search groups...';
+                if (labelEl) labelEl.textContent = t.search_groups || 'Search groups...';
+            } else {
+                searchInput.setAttribute('data-i18n-placeholder', 'search_libraries');
+                searchInput.placeholder = t.search_libraries || 'Search libraries...';
+                if (labelEl) labelEl.textContent = t.search_libraries || 'Search libraries...';
+            }
         }
 
         // Persist current dashboard view state
@@ -2244,11 +2484,31 @@ function translatePage(lang) {
             // Ignore storage errors
         }
 
-        if (view === 'all') {
+        if (currentView === 'libraries' || currentView === 'resources') {
             activeGroupKey = null;
         }
 
+        updateSectionTitle();
         filterLibraries();
+    }
+
+    function updateSectionTitle() {
+        const titleEl = document.querySelector('.libraries-section-title');
+        if (!titleEl) return;
+        const t = translations[currentLanguage] || translations.en;
+        if (currentView === 'groups') {
+            titleEl.removeAttribute('data-i18n');
+            titleEl.textContent = t.available_groups || 'Available Groups';
+        } else if (currentView === 'resources') {
+            titleEl.setAttribute('data-i18n', 'available_resources');
+            titleEl.textContent = t.available_resources || 'Available Resources';
+        } else if (currentView === 'group-libraries' && activeGroupKey && groupStats[activeGroupKey]) {
+            titleEl.removeAttribute('data-i18n');
+            titleEl.textContent = groupStats[activeGroupKey].label;
+        } else {
+            titleEl.setAttribute('data-i18n', 'available_libraries');
+            titleEl.textContent = t.available_libraries || 'Available Libraries';
+        }
     }
 
     function enterGroupsView() {
@@ -2275,10 +2535,17 @@ function translatePage(lang) {
     computeGroupStats();
     if (Object.keys(groupStats).length > 0) {
         renderGroupCards();
+    } else if (viewGroupsBtn) {
+        viewGroupsBtn.style.display = 'none';
     }
 
-    if (viewAllBtn && viewGroupsBtn) {
-        viewAllBtn.addEventListener('click', () => setView('all'));
+    if (viewLibrariesBtn) {
+        viewLibrariesBtn.addEventListener('click', () => setView('libraries'));
+    }
+    if (viewResourcesBtn) {
+        viewResourcesBtn.addEventListener('click', () => setView('resources'));
+    }
+    if (viewGroupsBtn) {
         viewGroupsBtn.addEventListener('click', () => enterGroupsView());
     }
 
@@ -2297,11 +2564,11 @@ function translatePage(lang) {
             return;
         }
         
-        const csvRows = ['Library Name,Version,Keywords,Author,Maintainer,License,RF Version,Python,Description'];
+        const csvRows = ['Name,Type,Keywords,Author,Maintainer,License,RF Version,Python,Description'];
         
         visibleCards.forEach(card => {
             const name = card.querySelector('h2 a')?.textContent || '';
-            const version = card.querySelector('.badge')?.textContent.replace('Version: ', '') || '';
+            const type = cardKind(card) === 'resource' ? 'Resource' : 'Library';
             const keywords = card.getAttribute('data-keyword-count') || '0';
             const author = card.getAttribute('data-author') || '';
             const maintainer = card.getAttribute('data-maintainer') || '';
@@ -2323,7 +2590,7 @@ function translatePage(lang) {
             
             csvRows.push([
                 escapeCSV(name),
-                escapeCSV(version),
+                escapeCSV(type),
                 escapeCSV(keywords),
                 escapeCSV(author),
                 escapeCSV(maintainer),
@@ -2354,11 +2621,11 @@ function translatePage(lang) {
         }
         
         // Generate Excel-compatible CSV with UTF-8 BOM for proper Excel opening
-        const csvRows = ['Library Name,Version,Keywords,Author,Maintainer,License,RF Version,Python,Description'];
+        const csvRows = ['Name,Type,Keywords,Author,Maintainer,License,RF Version,Python,Description'];
         
         visibleCards.forEach(card => {
             const name = card.querySelector('h2 a')?.textContent || '';
-            const version = card.querySelector('.badge')?.textContent.replace('Version: ', '') || '';
+            const type = cardKind(card) === 'resource' ? 'Resource' : 'Library';
             const keywords = card.getAttribute('data-keyword-count') || '0';
             const author = card.getAttribute('data-author') || '';
             const maintainer = card.getAttribute('data-maintainer') || '';
@@ -2379,7 +2646,7 @@ function translatePage(lang) {
             
             csvRows.push([
                 escapeCSV(name),
-                escapeCSV(version),
+                escapeCSV(type),
                 escapeCSV(keywords),
                 escapeCSV(author),
                 escapeCSV(maintainer),
@@ -2463,12 +2730,12 @@ function translatePage(lang) {
             </head>
             <body>
                 <h1>${siteName}</h1>
-                <div class="meta">Exported: ${exportDate} | Total Libraries: ${visibleCards.length}</div>
+                <div class="meta">Exported: ${exportDate} | Total Entries: ${visibleCards.length}</div>
                 <table>
                     <thead>
                         <tr>
-                            <th>Library Name</th>
-                            <th>Version</th>
+                            <th>Name</th>
+                            <th>Type</th>
                             <th>Keywords</th>
                             <th>Author</th>
                             <th>Maintainer</th>
@@ -2483,7 +2750,7 @@ function translatePage(lang) {
         
         visibleCards.forEach(card => {
             const name = card.querySelector('h2 a')?.textContent || '';
-            const version = card.querySelector('.badge')?.textContent.replace('Version: ', '') || '';
+            const type = cardKind(card) === 'resource' ? 'Resource' : 'Library';
             const keywords = card.getAttribute('data-keyword-count') || '0';
             const author = card.getAttribute('data-author') || '';
             const maintainer = card.getAttribute('data-maintainer') || '';
@@ -2502,7 +2769,7 @@ function translatePage(lang) {
             htmlContent += `
                 <tr>
                     <td>${escapeHtml(name)}</td>
-                    <td>${escapeHtml(version)}</td>
+                    <td>${escapeHtml(type)}</td>
                     <td>${escapeHtml(keywords)}</td>
                     <td>${escapeHtml(author)}</td>
                     <td>${escapeHtml(maintainer)}</td>
@@ -2530,53 +2797,24 @@ function translatePage(lang) {
         }, 250);
     }
     
-    // Export dropdown functionality
-    // Export select functionality
-    // Export toggle functionality
-    const exportToggleBtn = document.getElementById('export-toggle-btn');
-    let exportContainer = null;
-    
-    if (exportToggleBtn) {
-        exportToggleBtn.addEventListener('click', function() {
-            // Only allow export when libraries are visible
+    // Export format dropdown
+    const exportFormatSelect = document.getElementById('export-format');
+    if (exportFormatSelect) {
+        exportFormatSelect.addEventListener('change', function() {
             if (currentView === 'groups') {
+                exportFormatSelect.value = '';
                 return;
             }
-            const librariesSection = document.querySelector('.libraries-section');
-            if (!librariesSection) return;
-            
-            if (!exportContainer) {
-                // Create and inject export container
-                const exportHTML = buildExportContainer();
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = exportHTML;
-                exportContainer = tempDiv.firstElementChild;
-                librariesSection.insertBefore(exportContainer, document.getElementById('libraries-grid'));
-                
-                // Initialize export button handlers
-                const exportOptionBtns = exportContainer.querySelectorAll('.export-option-btn');
-                exportOptionBtns.forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const format = this.getAttribute('data-export');
-                        
-                        if (format === 'csv') {
-                            exportToCSV();
-                        } else if (format === 'excel') {
-                            exportToExcel();
-                        } else if (format === 'pdf') {
-                            exportToPDF();
-                        }
-                    });
-                });
-                
-                // Show container (it's already visible since we don't add collapsed class)
-                exportToggleBtn.classList.add('active');
-            } else {
-                // Remove container from DOM
-                exportContainer.remove();
-                exportContainer = null;
-                exportToggleBtn.classList.remove('active');
+            const format = exportFormatSelect.value;
+            if (format === 'csv') {
+                exportToCSV();
+            } else if (format === 'excel') {
+                exportToExcel();
+            } else if (format === 'pdf') {
+                exportToPDF();
             }
+            // Reset so the same format can be chosen again
+            exportFormatSelect.selectedIndex = 0;
         });
     }
     
@@ -2824,15 +3062,19 @@ function translatePage(lang) {
         const persistedRaw = localStorage.getItem('dashboard_view_state');
         if (persistedRaw) {
             const persisted = JSON.parse(persistedRaw);
-            if (persisted && persisted.view === 'groups' && Object.keys(groupStats).length > 0) {
+            const persistedView = normalizePersistedView(persisted && persisted.view);
+            if (persistedView === 'groups' && Object.keys(groupStats).length > 0) {
                 enterGroupsView();
             } else if (
-                persisted &&
-                persisted.view === 'group-libraries' &&
+                persistedView === 'group-libraries' &&
                 persisted.groupKey &&
                 groupStats[persisted.groupKey]
             ) {
                 enterGroupLibrariesView(persisted.groupKey);
+            } else if (persistedView === 'resources' && hasResourceCards) {
+                setView('resources');
+            } else if (persistedView === 'libraries' && hasLibraryCards) {
+                setView('libraries');
             }
         }
     } catch (e) {
@@ -2845,20 +3087,29 @@ function translatePage(lang) {
         if (lastStateRaw) {
             const lastState = JSON.parse(lastStateRaw);
             localStorage.removeItem('dashboard_last_state');
+            const lastView = normalizePersistedView(lastState && lastState.view);
 
-            if (lastState && lastState.view === 'groups' && Object.keys(groupStats).length > 0) {
+            if (lastView === 'groups' && Object.keys(groupStats).length > 0) {
                 enterGroupsView();
             } else if (
-                lastState &&
-                lastState.view === 'group-libraries' &&
+                lastView === 'group-libraries' &&
                 lastState.groupKey &&
                 groupStats[lastState.groupKey]
             ) {
                 enterGroupLibrariesView(lastState.groupKey);
+            } else if (lastView === 'resources' && hasResourceCards) {
+                setView('resources');
+            } else if (lastView === 'libraries' && hasLibraryCards) {
+                setView('libraries');
             }
         }
     } catch (e) {
         // Fail silently if localStorage is unavailable or JSON is invalid
+    }
+
+    // Apply the active view so Libraries/Resources filtering takes effect on first paint.
+    if (currentView === 'libraries' || currentView === 'resources') {
+        setView(currentView);
     }
 });
 """
@@ -2878,7 +3129,11 @@ def _build_filter_html(label: str, filter_id: str, options: List[str]) -> str:
         return ''
     
     options_html = ''.join([f'<option value="{opt.lower()}">{opt}</option>' for opt in options])
-    all_label = f"All {label}s" if label not in ["RF Version", "Python"] else "All Versions"
+    all_label = f"All {label}s" if label not in ["RF Version", "Python", "Group"] else (
+        "All Versions" if label in ["RF Version"] else (
+            "All Python versions" if label == "Python" else "All Groups"
+        )
+    )
     
     # Map label to i18n key
     i18n_key_map = {
@@ -2898,6 +3153,17 @@ def _build_filter_html(label: str, filter_id: str, options: List[str]) -> str:
             {options_html}
         </select>
     </div>'''
+
+
+def _normalize_entry_kind(entry: Dict[str, Any]) -> str:
+    """Return ``library`` or ``resource`` for a dashboard metadata entry."""
+    kind = (entry.get("kind") or "").strip().lower()
+    if kind in {"library", "resource"}:
+        return kind
+    source_type = (entry.get("source_type") or "").strip().upper()
+    if source_type in {"RESOURCE", "SUITE"}:
+        return "resource"
+    return "library"
 
 
 @lru_cache(maxsize=1)
@@ -2935,8 +3201,9 @@ def _generate_dashboard_html(
     site_description = site_config.get("description", "Documentation for Robot Framework libraries")
     
     # Calculate statistics
-    total_libraries = len(libraries_metadata)
     total_keywords = sum(lib.get("keyword_count", 0) for lib in libraries_metadata)
+    library_count = sum(1 for lib in libraries_metadata if _normalize_entry_kind(lib) == "library")
+    resource_count = sum(1 for lib in libraries_metadata if _normalize_entry_kind(lib) == "resource")
     # Count distinct named groups (ignore empty/None)
     distinct_groups = {
         (lib.get("group") or "").strip()
@@ -2951,6 +3218,7 @@ def _generate_dashboard_html(
     unique_licenses = set()
     unique_robot_frameworks = set()
     unique_pythons = set()
+    unique_groups = set()
     
     for lib in libraries_metadata:
         if lib.get("author"):
@@ -2963,6 +3231,9 @@ def _generate_dashboard_html(
             unique_robot_frameworks.add(lib.get("robot_framework"))
         if lib.get("python"):
             unique_pythons.add(lib.get("python"))
+        group_name = (lib.get("group") or "").strip()
+        if group_name:
+            unique_groups.add(group_name)
     
     # Sort filter options
     sorted_authors = sorted(unique_authors)
@@ -2970,12 +3241,15 @@ def _generate_dashboard_html(
     sorted_licenses = sorted(unique_licenses)
     sorted_robot_frameworks = sorted(unique_robot_frameworks)
     sorted_pythons = sorted(unique_pythons)
+    sorted_groups = sorted(unique_groups)
     
     libraries_html = []
     for lib in libraries_metadata:
         lib_name = lib.get("name", "Unknown")
         lib_url = lib.get("url", "")
-        lib_version = lib.get("version", "")
+        lib_version = lib.get("version", "") or ""
+        if lib_version.lower() == "unknown":
+            lib_version = ""
         lib_description = lib.get("description", "")
         lib_keyword_count = lib.get("keyword_count", 0)
         lib_author = lib.get("author", "")
@@ -2984,10 +3258,13 @@ def _generate_dashboard_html(
         lib_robot_framework = lib.get("robot_framework", "")
         lib_python = lib.get("python", "")
         lib_group = lib.get("group") or ""
+        lib_kind = _normalize_entry_kind(lib)
         
         version_badge = f'<span class="badge"><span data-i18n="version">Version</span>: {lib_version}</span>' if lib_version else ''
         description_html = f'<div class="library-description">{lib_description}</div>' if lib_description else ''
         group_badge = f'<span class="badge badge-group">{lib_group}</span>' if lib_group else ''
+        kind_label = "Resource" if lib_kind == "resource" else "Library"
+        kind_badge = f'<span class="badge badge-kind">{kind_label}</span>'
         
         # Build metadata list
         meta_items = []
@@ -3070,16 +3347,20 @@ def _generate_dashboard_html(
                  data-library-description="{lib_description.lower() if lib_description else ''}" 
                  data-description-text="{lib_description if lib_description else ''}"
                  data-keyword-count="{lib_keyword_count}"
+                 data-version="{lib_version}"
+                 data-kind="{lib_kind}"
                  data-author="{lib_author.lower() if lib_author else ''}"
                  data-maintainer="{lib_maintainer.lower() if lib_maintainer else ''}"
                  data-license="{lib_license.lower() if lib_license else ''}"
                  data-robot-framework="{lib_robot_framework.lower() if lib_robot_framework else ''}"
                  data-python="{lib_python.lower() if lib_python else ''}"
-                 data-group="{lib_group.lower() if lib_group else ''}">
+                 data-group="{lib_group.lower() if lib_group else ''}"
+                 data-group-display="{lib_group}">
                 <h2>
                     <a href="{lib_url}">{lib_name}</a>
                 </h2>
                 <div class="library-badges">
+                    {kind_badge}
                     {version_badge}
                     {group_badge}
                 </div>
@@ -3095,7 +3376,23 @@ def _generate_dashboard_html(
             </div>
         """)
     
-    # Build groups stat card HTML (only when at least one named group exists)
+    # Build groups/library/resource stat cards
+    library_stat_html = ''
+    if library_count > 0:
+        library_stat_html = f'''
+            <div class="stat-card">
+                <div class="stat-value">{library_count}</div>
+                <div class="stat-label" data-i18n="libraries">Libraries</div>
+            </div>
+        '''
+    resource_stat_html = ''
+    if resource_count > 0:
+        resource_stat_html = f'''
+            <div class="stat-card">
+                <div class="stat-value">{resource_count}</div>
+                <div class="stat-label" data-i18n="resources">Resources</div>
+            </div>
+        '''
     if group_count > 0:
         group_stat_html = f'''
             <div class="stat-card">
@@ -3108,12 +3405,15 @@ def _generate_dashboard_html(
     
     # Load template
     template = _load_dashboard_template()
-    
+    logo_url = logo_url_for_theme(resolve_theme_tokens(site_config or {}))
+
     # Format template with variables
     return template.format(
         site_name=site_name,
         site_description=site_description,
-        total_libraries=total_libraries,
+        logo_url=logo_url,
+        library_stat_html=library_stat_html,
+        resource_stat_html=resource_stat_html,
         total_keywords=total_keywords,
         group_stat_html=group_stat_html,
         libraries_html=''.join(libraries_html),
@@ -3122,7 +3422,8 @@ def _generate_dashboard_html(
         filter_data_maintainers=json.dumps(sorted_maintainers),
         filter_data_licenses=json.dumps(sorted_licenses),
         filter_data_robot_frameworks=json.dumps(sorted_robot_frameworks),
-        filter_data_pythons=json.dumps(sorted_pythons)
+        filter_data_pythons=json.dumps(sorted_pythons),
+        filter_data_groups=json.dumps(sorted_groups),
     )
 
 
@@ -3140,7 +3441,7 @@ def add_dashboard_navigation(html_content: str, dashboard_url: str = "../index.h
     import re
     
     # Create the dashboard link
-    nav_link = f'<a href="{dashboard_url}">← Back to Dashboard</a>'
+    nav_link = f'<a class="nav-back" href="{dashboard_url}">← Back to Dashboard</a>'
     
     # Check if header exists and has a nav element
     if '<header' in html_content:
@@ -3159,7 +3460,7 @@ def add_dashboard_navigation(html_content: str, dashboard_url: str = "../index.h
         html_content = re.sub(nav_pattern, insert_dashboard_link, html_content, count=1, flags=re.DOTALL)
     else:
         # No header found, add navigation bar before body content
-        nav_html = f'''<div class="dashboard-nav-container" style="background: rgba(15,23,42,0.95); padding: 0.75rem 2rem; border-bottom: 1px solid var(--border);">
+        nav_html = f'''<div class="dashboard-nav-container" style="background: color-mix(in srgb, var(--bg) 95%, transparent); padding: 0.75rem 2rem; border-bottom: 1px solid var(--border);">
     <a href="{dashboard_url}" style="color: var(--accent); text-decoration: none; font-weight: 500;">← Back to Dashboard</a>
 </div>'''
         # Insert after <body> tag

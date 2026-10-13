@@ -6,10 +6,7 @@ keywords, arguments, and docstrings to create professional, well-formatted HTML
 and Markdown documentation with advanced markdown support and syntax highlighting.
 """
 
-__version__ = "2.1.1"
-__author__ = "Deekshith Poojary"
-__email__ = "deekshithpoojary355@gmail.com"
-
+from robotframework_docgen._meta import __author__, __email__, __version__
 from robotframework_docgen.parser import (
     RobotFrameworkDocParser,
     KeywordInfo,
@@ -22,5 +19,7 @@ __all__ = [
     "DocumentationGenerator",
     "KeywordInfo",
     "LibraryInfo",
+    "__version__",
+    "__author__",
+    "__email__",
 ]
-

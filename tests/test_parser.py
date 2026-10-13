@@ -369,3 +369,68 @@ class RegularClass:
         finally:
             if os.path.exists(temp_path):
                 os.unlink(temp_path)
+
+
+class TestInlineFormatting:
+    """Inline markdown must not mangle Robot identifiers."""
+
+    def test_underscore_identifiers_are_not_italicized(self):
+        parser = RobotFrameworkDocParser()
+        html = parser._parse_inline_formatting(
+            "POST using ``USER_CREDS[${cred_type}]`` and `${e_type}` / `${p_type}`."
+        )
+        assert "<em>" not in html
+        assert "USER_CREDS[${cred_type}]" in html
+        assert "${e_type}" in html
+        assert "${p_type}" in html
+
+    def test_word_boundary_underscore_italic_still_works(self):
+        parser = RobotFrameworkDocParser()
+        html = parser._parse_inline_formatting("This is _italic_ text.")
+        assert "<em>italic</em>" in html
+
+    def test_docstring_keeps_underscore_identifiers(self):
+        parser = RobotFrameworkDocParser()
+        html, _ = parser._parse_docstring(
+            "Login with ``USER_CREDS[${cred_type}]`` for `${e_type}` users."
+        )
+        assert "<em>" not in html
+        assert "USER_CREDS[${cred_type}]" in html
+        assert "${e_type}" in html
+
+
+def test_positional_only_and_var_keyword_arguments(tmp_path):
+    """Required positional-only arguments must not disappear from the signature."""
+    path = tmp_path / "posonly.py"
+    path.write_text(
+        '''
+from robot.api.deco import keyword
+
+class PosOnly:
+    """Positional-only arguments."""
+
+    @keyword
+    def fetch(self, url: str, /, timeout: int = 30, **options) -> str:
+        """Fetch a URL."""
+        return url
+
+    @keyword
+    def fetch_with_defaults(self, url: str = "http://example", /, timeout: int = 5) -> str:
+        """Fetch with defaults on both sides of the slash."""
+        return url
+''',
+        encoding="utf-8",
+    )
+    info = RobotFrameworkDocParser().parse_file(str(path))
+    fetch = next(kw for kw in info.keywords if kw.name == "Fetch")
+    assert fetch.parameters == [
+        ("url", "str"),
+        ("timeout", "int"),
+        ("**options", "Any"),
+    ]
+    assert fetch.parameter_defaults == {"timeout": "30"}
+
+    defaulted = next(kw for kw in info.keywords if kw.name == "Fetch With Defaults")
+    assert [name for name, _ in defaulted.parameters] == ["url", "timeout"]
+    assert defaulted.parameter_defaults["url"] == '"http://example"'
+    assert defaulted.parameter_defaults["timeout"] == "5"

@@ -8,8 +8,5 @@
   "license": "MIT",
   "robot_framework": ">=7.0",
   "python": ">=3.11",
-  "library_url": "https://github.com/deekshith-poojary98/robotframework-docgen",
-  "custom_keywords": [
-    "Transform Json Data"
-  ]
+  "library_url": "https://github.com/deekshith-poojary98/robotframework-docgen"
 }

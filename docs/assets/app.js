@@ -7,11 +7,19 @@ const translations = {
         site_description: '',
         libraries: 'Libraries',
         library: 'library',
+        resources: 'Resources',
+        resource: 'resource',
         total_keywords: 'Total Keywords',
         search_keywords: 'Search keywords...',
         search_libraries: 'Search libraries...',
+        search_resources: 'Search resources...',
+        search_groups: 'Search groups...',
         no_libraries_found: 'No libraries found.',
+        no_resources_found: 'No resources found.',
+        no_groups_found: 'No groups found.',
         available_libraries: 'Available Libraries',
+        available_resources: 'Available Resources',
+        available_groups: 'Available Groups',
         sort_by: 'Sort by:',
         sort_name_asc: 'Name (A–Z)',
         sort_keywords_desc: 'Keyword count (desc)',
@@ -42,11 +50,19 @@ const translations = {
         site_description: '',
         libraries: 'Bibliotecas',
         library: 'biblioteca',
+        resources: 'Recursos',
+        resource: 'recurso',
         total_keywords: 'Palabras Clave Totales',
         search_keywords: 'Buscar palabras clave...',
         search_libraries: 'Buscar bibliotecas...',
+        search_resources: 'Buscar recursos...',
+        search_groups: 'Buscar grupos...',
         no_libraries_found: 'No se encontraron bibliotecas.',
+        no_resources_found: 'No se encontraron recursos.',
+        no_groups_found: 'No se encontraron grupos.',
         available_libraries: 'Bibliotecas Disponibles',
+        available_resources: 'Recursos Disponibles',
+        available_groups: 'Grupos Disponibles',
         sort_by: 'Ordenar por:',
         sort_name_asc: 'Nombre (A–Z)',
         sort_keywords_desc: 'Cantidad de palabras clave (desc)',
@@ -77,11 +93,19 @@ const translations = {
         site_description: '',
         libraries: 'Bibliothèques',
         library: 'bibliothèque',
+        resources: 'Ressources',
+        resource: 'ressource',
         total_keywords: 'Mots-clés Totaux',
         search_keywords: 'Rechercher des mots-clés...',
         search_libraries: 'Rechercher des bibliothèques...',
+        search_resources: 'Rechercher des ressources...',
+        search_groups: 'Rechercher des groupes...',
         no_libraries_found: 'Aucune bibliothèque trouvée.',
+        no_resources_found: 'Aucune ressource trouvée.',
+        no_groups_found: 'Aucun groupe trouvé.',
         available_libraries: 'Bibliothèques Disponibles',
+        available_resources: 'Ressources Disponibles',
+        available_groups: 'Groupes Disponibles',
         sort_by: 'Trier par:',
         sort_name_asc: 'Nom (A–Z)',
         sort_keywords_desc: 'Nombre de mots-clés (desc)',
@@ -112,11 +136,19 @@ const translations = {
         site_description: '',
         libraries: 'Bibliotheken',
         library: 'Bibliothek',
+        resources: 'Ressourcen',
+        resource: 'Ressource',
         total_keywords: 'Gesamt-Schlüsselwörter',
         search_keywords: 'Schlüsselwörter suchen...',
         search_libraries: 'Bibliotheken suchen...',
+        search_resources: 'Ressourcen suchen...',
+        search_groups: 'Gruppen suchen...',
         no_libraries_found: 'Keine Bibliotheken gefunden.',
+        no_resources_found: 'Keine Ressourcen gefunden.',
+        no_groups_found: 'Keine Gruppen gefunden.',
         available_libraries: 'Verfügbare Bibliotheken',
+        available_resources: 'Verfügbare Ressourcen',
+        available_groups: 'Verfügbare Gruppen',
         sort_by: 'Sortieren nach:',
         sort_name_asc: 'Name (A–Z)',
         sort_keywords_desc: 'Schlüsselwortanzahl (abst)',
@@ -147,11 +179,19 @@ const translations = {
         site_description: '',
         libraries: '库',
         library: '库',
+        resources: '资源',
+        resource: '资源',
         total_keywords: '总关键字',
         search_keywords: '搜索关键字...',
         search_libraries: '搜索库...',
+        search_resources: '搜索资源...',
+        search_groups: '搜索分组...',
         no_libraries_found: '未找到库。',
+        no_resources_found: '未找到资源。',
+        no_groups_found: '未找到分组。',
         available_libraries: '可用库',
+        available_resources: '可用资源',
+        available_groups: '可用分组',
         sort_by: '排序方式:',
         sort_name_asc: '名称 (A–Z)',
         sort_keywords_desc: '关键字数量 (降序)',
@@ -182,11 +222,19 @@ const translations = {
         site_description: '',
         libraries: 'ライブラリ',
         library: 'ライブラリ',
+        resources: 'リソース',
+        resource: 'リソース',
         total_keywords: '総キーワード数',
         search_keywords: 'キーワードを検索...',
         search_libraries: 'ライブラリを検索...',
+        search_resources: 'リソースを検索...',
+        search_groups: 'グループを検索...',
         no_libraries_found: 'ライブラリが見つかりません。',
+        no_resources_found: 'リソースが見つかりません。',
+        no_groups_found: 'グループが見つかりません。',
         available_libraries: '利用可能なライブラリ',
+        available_resources: '利用可能なリソース',
+        available_groups: '利用可能なグループ',
         sort_by: '並び替え:',
         sort_name_asc: '名前 (A–Z)',
         sort_keywords_desc: 'キーワード数 (降順)',
@@ -217,11 +265,19 @@ const translations = {
         site_description: '',
         libraries: 'Bibliotecas',
         library: 'biblioteca',
+        resources: 'Recursos',
+        resource: 'recurso',
         total_keywords: 'Total de Palavras-chave',
         search_keywords: 'Pesquisar palavras-chave...',
         search_libraries: 'Pesquisar bibliotecas...',
+        search_resources: 'Pesquisar recursos...',
+        search_groups: 'Pesquisar grupos...',
         no_libraries_found: 'Nenhuma biblioteca encontrada.',
+        no_resources_found: 'Nenhum recurso encontrado.',
+        no_groups_found: 'Nenhum grupo encontrado.',
         available_libraries: 'Bibliotecas Disponíveis',
+        available_resources: 'Recursos Disponíveis',
+        available_groups: 'Grupos Disponíveis',
         sort_by: 'Ordenar por:',
         sort_name_asc: 'Nome (A–Z)',
         sort_keywords_desc: 'Contagem de palavras-chave (desc)',
@@ -252,11 +308,19 @@ const translations = {
         site_description: '',
         libraries: 'Библиотеки',
         library: 'библиотека',
+        resources: 'Ресурсы',
+        resource: 'ресурс',
         total_keywords: 'Всего Ключевых Слов',
         search_keywords: 'Поиск ключевых слов...',
         search_libraries: 'Поиск библиотек...',
+        search_resources: 'Поиск ресурсов...',
+        search_groups: 'Поиск групп...',
         no_libraries_found: 'Библиотеки не найдены.',
+        no_resources_found: 'Ресурсы не найдены.',
+        no_groups_found: 'Группы не найдены.',
         available_libraries: 'Доступные Библиотеки',
+        available_resources: 'Доступные Ресурсы',
+        available_groups: 'Доступные Группы',
         sort_by: 'Сортировать по:',
         sort_name_asc: 'Имя (А–Я)',
         sort_keywords_desc: 'Количество ключевых слов (убыв)',
@@ -287,11 +351,19 @@ const translations = {
         site_description: '',
         libraries: 'Librerie',
         library: 'libreria',
+        resources: 'Risorse',
+        resource: 'risorsa',
         total_keywords: 'Parole Chiave Totali',
         search_keywords: 'Cerca parole chiave...',
         search_libraries: 'Cerca librerie...',
+        search_resources: 'Cerca risorse...',
+        search_groups: 'Cerca gruppi...',
         no_libraries_found: 'Nessuna libreria trovata.',
+        no_resources_found: 'Nessuna risorsa trovata.',
+        no_groups_found: 'Nessun gruppo trovato.',
         available_libraries: 'Librerie Disponibili',
+        available_resources: 'Risorse Disponibili',
+        available_groups: 'Gruppi Disponibili',
         sort_by: 'Ordina per:',
         sort_name_asc: 'Nome (A–Z)',
         sort_keywords_desc: 'Conteggio parole chiave (disc)',
@@ -322,11 +394,19 @@ const translations = {
         site_description: '',
         libraries: '라이브러리',
         library: '라이브러리',
+        resources: '리소스',
+        resource: '리소스',
         total_keywords: '총 키워드',
         search_keywords: '키워드 검색...',
         search_libraries: '라이브러리 검색...',
+        search_resources: '리소스 검색...',
+        search_groups: '그룹 검색...',
         no_libraries_found: '라이브러리를 찾을 수 없습니다.',
+        no_resources_found: '리소스를 찾을 수 없습니다.',
+        no_groups_found: '그룹을 찾을 수 없습니다.',
         available_libraries: '사용 가능한 라이브러리',
+        available_resources: '사용 가능한 리소스',
+        available_groups: '사용 가능한 그룹',
         sort_by: '정렬 기준:',
         sort_name_asc: '이름 (A–Z)',
         sort_keywords_desc: '키워드 수 (내림차순)',
@@ -413,6 +493,9 @@ function translatePage(lang) {
                     updateGroupContext(activeGroupKey);
                 }
             }
+            if (typeof updateSectionTitle === 'function') {
+                updateSectionTitle();
+            }
         });
     }
     
@@ -423,8 +506,18 @@ function translatePage(lang) {
     let libraryCards = librariesGrid ? Array.from(librariesGrid.querySelectorAll('.library-card')) : [];
 
     // View and grouping state
-    let currentView = 'all'; // 'all' | 'groups' | 'group-libraries'
+    let currentView = 'libraries'; // 'libraries' | 'resources' | 'groups' | 'group-libraries'
     let activeGroupKey = null; // normalized group key or null
+
+    function cardKind(card) {
+        const kind = (card.getAttribute('data-kind') || 'library').toLowerCase();
+        return kind === 'resource' ? 'resource' : 'library';
+    }
+
+    function normalizePersistedView(view) {
+        if (view === 'all') return 'libraries';
+        return view;
+    }
     
     // Sort libraries function
     function sortLibraries(sortBy) {
@@ -486,8 +579,48 @@ function translatePage(lang) {
         sortLibraries(sortSelect.value);
     }
     
+    // Substring match only (case-insensitive). No fuzzy matching.
+    function matchesSubstring(haystack, needle) {
+        if (!needle) return true;
+        return String(haystack || '').toLowerCase().includes(needle);
+    }
+
+    function filterGroups() {
+        if (!groupsGrid) return 0;
+        const searchQuery = searchInput ? searchInput.value.trim().toLowerCase() : '';
+        let visibleCount = 0;
+        groupsGrid.querySelectorAll('.group-card').forEach(card => {
+            const key = (card.getAttribute('data-group-key') || '').toLowerCase();
+            const label = (card.getAttribute('data-group-label') || '').toLowerCase();
+            const matchesSearch = (
+                !searchQuery ||
+                matchesSubstring(label, searchQuery) ||
+                (key !== '__ungrouped__' && matchesSubstring(key, searchQuery))
+            );
+            card.style.display = matchesSearch ? '' : 'none';
+            if (matchesSearch) visibleCount++;
+        });
+        return visibleCount;
+    }
+
     // Filter libraries function
     function filterLibraries() {
+        // Groups tab: search group cards by name (substring only)
+        if (currentView === 'groups') {
+            const visibleGroups = filterGroups();
+            if (noResults) {
+                const t = translations[currentLanguage] || translations.en;
+                noResults.setAttribute('data-i18n', 'no_groups_found');
+                noResults.textContent = t.no_groups_found || 'No groups found.';
+                if (visibleGroups === 0) {
+                    noResults.classList.add('active');
+                } else {
+                    noResults.classList.remove('active');
+                }
+            }
+            return;
+        }
+
         if (!librariesGrid || libraryCards.length === 0) return;
         
         // Get filter values
@@ -496,9 +629,10 @@ function translatePage(lang) {
         const filterLicense = (document.getElementById('filter-license')?.value || '').toLowerCase();
         const filterRobotFramework = (document.getElementById('filter-robot-framework')?.value || '').toLowerCase();
         const filterPython = (document.getElementById('filter-python')?.value || '').toLowerCase();
+        const filterGroup = (document.getElementById('filter-group')?.value || '').toLowerCase();
         
         // Check if any filters are active
-        const hasActiveFilters = filterAuthor || filterMaintainer || filterLicense || filterRobotFramework || filterPython;
+        const hasActiveFilters = filterAuthor || filterMaintainer || filterLicense || filterRobotFramework || filterPython || filterGroup;
         const clearBtn = document.getElementById('clear-filters');
         if (clearBtn) {
             clearBtn.style.display = hasActiveFilters ? 'block' : 'none';
@@ -510,12 +644,11 @@ function translatePage(lang) {
         // Filter library cards
         let visibleCount = 0;
         libraryCards.forEach(card => {
-            // Check search match
+            // Check search match (name substring only — no fuzzy, no description)
             let matchesSearch = true;
             if (searchQuery.length > 0) {
                 const libraryName = card.getAttribute('data-library-name') || '';
-                const libraryDescription = card.getAttribute('data-library-description') || '';
-                matchesSearch = libraryName.includes(searchQuery) || libraryDescription.includes(searchQuery);
+                matchesSearch = matchesSubstring(libraryName, searchQuery);
             }
             
             // Check filter matches
@@ -524,24 +657,34 @@ function translatePage(lang) {
             const cardLicense = (card.getAttribute('data-license') || '').toLowerCase();
             const cardRobotFramework = (card.getAttribute('data-robot-framework') || '').toLowerCase();
             const cardPython = (card.getAttribute('data-python') || '').toLowerCase();
+            const cardGroup = (card.getAttribute('data-group') || '').toLowerCase();
             
             const matchesAuthor = !filterAuthor || cardAuthor === filterAuthor;
             const matchesMaintainer = !filterMaintainer || cardMaintainer === filterMaintainer;
             const matchesLicense = !filterLicense || cardLicense === filterLicense;
             const matchesRobotFramework = !filterRobotFramework || cardRobotFramework === filterRobotFramework;
             const matchesPython = !filterPython || cardPython === filterPython;
+            const matchesFilterGroup = !filterGroup || cardGroup === filterGroup;
 
             // Check group match when in group-libraries view
-            const cardGroup = (card.getAttribute('data-group') || '').toLowerCase();
             const matchesGroup = (
                 currentView !== 'group-libraries' ||
                 !activeGroupKey ||
                 (activeGroupKey === '__ungrouped__' && !cardGroup) ||
                 (activeGroupKey === cardGroup)
             );
+
+            // Libraries / Resources tabs filter by entry kind
+            const kind = cardKind(card);
+            const matchesKind = (
+                currentView === 'groups' ||
+                currentView === 'group-libraries' ||
+                (currentView === 'libraries' && kind === 'library') ||
+                (currentView === 'resources' && kind === 'resource')
+            );
             
             // Show card if it matches all criteria
-            if (matchesSearch && matchesAuthor && matchesMaintainer && matchesLicense && matchesRobotFramework && matchesPython && matchesGroup) {
+            if (matchesSearch && matchesAuthor && matchesMaintainer && matchesLicense && matchesRobotFramework && matchesPython && matchesFilterGroup && matchesGroup && matchesKind) {
                 card.style.display = '';
                 visibleCount++;
             } else {
@@ -550,15 +693,25 @@ function translatePage(lang) {
         });
         
         // Show/hide no results message
-        if (visibleCount === 0) {
-            noResults.classList.add('active');
-        } else {
-            noResults.classList.remove('active');
+        if (noResults) {
+            const t = translations[currentLanguage] || translations.en;
+            if (currentView === 'resources') {
+                noResults.setAttribute('data-i18n', 'no_resources_found');
+                noResults.textContent = t.no_resources_found || 'No resources found.';
+            } else {
+                noResults.setAttribute('data-i18n', 'no_libraries_found');
+                noResults.textContent = t.no_libraries_found || 'No libraries found.';
+            }
+            if (visibleCount === 0) {
+                noResults.classList.add('active');
+            } else {
+                noResults.classList.remove('active');
+            }
         }
     }
     
     // Initialize filters
-    const filterSelects = ['filter-author', 'filter-maintainer', 'filter-license', 'filter-robot-framework', 'filter-python'];
+    const filterSelects = ['filter-group', 'filter-author', 'filter-maintainer', 'filter-license', 'filter-robot-framework', 'filter-python'];
     filterSelects.forEach(filterId => {
         const filterSelect = document.getElementById(filterId);
         if (filterSelect) {
@@ -604,7 +757,10 @@ function translatePage(lang) {
         const filterData = window.filterData;
         const buildFilterHTML = (label, filterId, options) => {
             if (!options || options.length === 0) return '';
-            const allLabel = label.includes('Version') ? 'All Versions' : `All ${label}s`;
+            let allLabel = `All ${label}s`;
+            if (label.includes('Version')) allLabel = 'All Versions';
+            if (label === 'Python') allLabel = 'All Python versions';
+            if (label === 'Group') allLabel = 'All Groups';
             const optionsHTML = options.map(opt => 
                 `<option value="${opt.toLowerCase()}">${opt}</option>`
             ).join('');
@@ -625,6 +781,7 @@ function translatePage(lang) {
                     <button id="clear-filters" class="clear-filters-btn" style="display: none;" data-i18n="clear_all">Clear All</button>
                 </div>
                 <div class="filters-grid">
+                    ${buildFilterHTML('Group', 'filter-group', filterData.groups)}
                     ${buildFilterHTML('Author', 'filter-author', filterData.authors)}
                     ${buildFilterHTML('Maintainer', 'filter-maintainer', filterData.maintainers)}
                     ${buildFilterHTML('License', 'filter-license', filterData.licenses)}
@@ -635,22 +792,9 @@ function translatePage(lang) {
         `;
     }
     
-    // Build export container HTML
-    function buildExportContainer() {
-        return `
-            <div class="export-container">
-                <div class="export-options">
-                    <button class="export-option-btn" data-export="csv">CSV</button>
-                    <button class="export-option-btn" data-export="excel">Excel</button>
-                    <button class="export-option-btn" data-export="pdf">PDF</button>
-                </div>
-            </div>
-        `;
-    }
-    
-    // Initialize filter functionality
+    // Initialize filter functionality (called when filters panel is opened)
     function initializeFilters(filtersContainer) {
-        const filterSelects = ['filter-author', 'filter-maintainer', 'filter-license', 'filter-robot-framework', 'filter-python'];
+        const filterSelects = ['filter-group', 'filter-author', 'filter-maintainer', 'filter-license', 'filter-robot-framework', 'filter-python'];
         filterSelects.forEach(filterId => {
             const filterSelect = document.getElementById(filterId);
             if (filterSelect) {
@@ -666,11 +810,11 @@ function translatePage(lang) {
                         localStorage.removeItem(`dashboard_filter_${filterId}`);
                     }
                     filterLibraries();
+                    updateClearFiltersButton();
                 });
             }
         });
-        
-        // Clear filters button
+
         const clearFiltersBtn = document.getElementById('clear-filters');
         if (clearFiltersBtn) {
             clearFiltersBtn.addEventListener('click', function() {
@@ -681,29 +825,20 @@ function translatePage(lang) {
                         localStorage.removeItem(`dashboard_filter_${filterId}`);
                     }
                 });
-                filterLibraries();
                 clearFiltersBtn.style.display = 'none';
+                filterLibraries();
             });
         }
-        
-        // Check if any filters are active
+
         function updateClearFiltersButton() {
-            if (clearFiltersBtn) {
-                const hasActiveFilters = filterSelects.some(filterId => {
-                    const select = document.getElementById(filterId);
-                    return select && select.value;
-                });
-                clearFiltersBtn.style.display = hasActiveFilters ? 'block' : 'none';
-            }
+            if (!clearFiltersBtn) return;
+            const hasActiveFilters = filterSelects.some(filterId => {
+                const select = document.getElementById(filterId);
+                return select && select.value;
+            });
+            clearFiltersBtn.style.display = hasActiveFilters ? 'block' : 'none';
         }
-        
-        // Update clear button on filter change
-        filterSelects.forEach(filterId => {
-            const filterSelect = document.getElementById(filterId);
-            if (filterSelect) {
-                filterSelect.addEventListener('change', updateClearFiltersButton);
-            }
-        });
+
         updateClearFiltersButton();
     }
     
@@ -746,7 +881,8 @@ function translatePage(lang) {
     filterLibraries();
 
     // ===== Grouping and view toggle =====
-    const viewAllBtn = document.getElementById('view-all-btn');
+    const viewLibrariesBtn = document.getElementById('view-libraries-btn') || document.getElementById('view-all-btn');
+    const viewResourcesBtn = document.getElementById('view-resources-btn');
     const viewGroupsBtn = document.getElementById('view-groups-btn');
     const viewToggleEl = document.getElementById('view-toggle');
     const groupsGrid = document.getElementById('groups-grid');
@@ -757,6 +893,19 @@ function translatePage(lang) {
     const groupMetaKeywords = document.getElementById('group-meta-keywords');
     const groupBackBtn = document.getElementById('group-back-btn');
     const headerControls = document.querySelector('.libraries-section-header .header-controls');
+
+    const hasLibraryCards = libraryCards.some(card => cardKind(card) === 'library');
+    const hasResourceCards = libraryCards.some(card => cardKind(card) === 'resource');
+    if (viewLibrariesBtn) {
+        viewLibrariesBtn.style.display = hasLibraryCards ? '' : 'none';
+    }
+    if (viewResourcesBtn) {
+        viewResourcesBtn.style.display = hasResourceCards ? '' : 'none';
+    }
+    // Default to Resources when the dashboard only has resource entries.
+    if (!hasLibraryCards && hasResourceCards) {
+        currentView = 'resources';
+    }
 
     const groupStats = {};
 
@@ -776,12 +925,17 @@ function translatePage(lang) {
                 label = 'Ungrouped';
             } else {
                 key = rawGroup.toLowerCase();
-                // Convert to Title Case for display
-                label = rawGroup
-                    .split(/\s+/)
-                    .filter(Boolean)
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ');
+                // Prefer original casing from data-group-display (preserves API/UI acronyms).
+                const displayLabel = (card.getAttribute('data-group-display') || '').trim();
+                if (displayLabel) {
+                    label = displayLabel;
+                } else {
+                    label = rawGroup
+                        .split(/\s+/)
+                        .filter(Boolean)
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(' ');
+                }
                 hasNamedGroups = true;
             }
 
@@ -789,11 +943,16 @@ function translatePage(lang) {
                 groupStats[key] = {
                     label,
                     libraryCount: 0,
+                    resourceCount: 0,
                     keywordCount: 0,
                 };
             }
 
-            groupStats[key].libraryCount += 1;
+            if (cardKind(card) === 'resource') {
+                groupStats[key].resourceCount += 1;
+            } else {
+                groupStats[key].libraryCount += 1;
+            }
             groupStats[key].keywordCount += keywordCount;
         });
 
@@ -801,6 +960,58 @@ function translatePage(lang) {
         if (!hasNamedGroups && viewToggleEl) {
             viewToggleEl.style.display = 'none';
         }
+    }
+
+    function formatKindCount(count, singular, plural) {
+        if (!count) return '';
+        const label = count === 1 ? singular : plural;
+        return `<span><strong>${count}</strong> ${label}</span>`;
+    }
+
+    function formatGroupEntryMeta(info, t) {
+        const parts = [];
+        const libPart = formatKindCount(
+            info.libraryCount || 0,
+            t.library || 'library',
+            t.libraries || 'libraries'
+        );
+        const resPart = formatKindCount(
+            info.resourceCount || 0,
+            t.resource || 'resource',
+            t.resources || 'resources'
+        );
+        if (libPart) parts.push(libPart);
+        if (resPart) parts.push(resPart);
+        // Fallback if kind metadata is missing on older dashboards.
+        if (!parts.length) {
+            const total = (info.libraryCount || 0) + (info.resourceCount || 0);
+            parts.push(formatKindCount(total, t.library || 'library', t.libraries || 'libraries'));
+        }
+        return parts.join('<span>•</span>');
+    }
+
+    function formatGroupEntryText(info, t) {
+        const parts = [];
+        if (info.libraryCount) {
+            const word = info.libraryCount === 1
+                ? (t.library || 'library')
+                : (t.libraries || 'libraries');
+            parts.push(`${info.libraryCount} ${word}`);
+        }
+        if (info.resourceCount) {
+            const word = info.resourceCount === 1
+                ? (t.resource || 'resource')
+                : (t.resources || 'resources');
+            parts.push(`${info.resourceCount} ${word}`);
+        }
+        if (!parts.length) {
+            const total = (info.libraryCount || 0) + (info.resourceCount || 0);
+            const word = total === 1
+                ? (t.library || 'library')
+                : (t.libraries || 'libraries');
+            parts.push(`${total} ${word}`);
+        }
+        return parts.join(' • ');
     }
 
     function renderGroupCards() {
@@ -816,14 +1027,12 @@ function translatePage(lang) {
             keys.sort((a, b) => groupStats[a].label.localeCompare(groupStats[b].label));
             keys.forEach(key => {
                 const info = groupStats[key];
-                const libWord = info.libraryCount === 1
-                    ? (tForGroups.library || 'library')
-                    : (tForGroups.libraries || 'libraries');
+                const entryMeta = formatGroupEntryMeta(info, tForGroups);
                 const kwWord = info.keywordCount === 1
                     ? (tForGroups.keyword || 'keyword')
                     : (tForGroups.keywords || 'keywords');
                 html += `
-                    <div class="library-card group-card" data-group-key="${key}">
+                    <div class="library-card group-card" data-group-key="${key}" data-group-label="${escapeHtml(String(info.label || '').toLowerCase())}">
                         <h2><span class="group-card-title">${info.label}</span></h2>
                         <div class="library-stats">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -831,7 +1040,7 @@ function translatePage(lang) {
                                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                             </svg>
                             <span class="group-card-meta">
-                                <span><strong>${info.libraryCount}</strong> ${libWord}</span>
+                                ${entryMeta}
                                 <span>•</span>
                                 <span><strong>${info.keywordCount}</strong> ${kwWord}</span>
                             </span>
@@ -843,14 +1052,12 @@ function translatePage(lang) {
 
         if (groupStats['__ungrouped__']) {
             const info = groupStats['__ungrouped__'];
-            const libWord = info.libraryCount === 1
-                ? (tForGroups.library || 'library')
-                : (tForGroups.libraries || 'libraries');
+            const entryMeta = formatGroupEntryMeta(info, tForGroups);
             const kwWord = info.keywordCount === 1
                 ? (tForGroups.keyword || 'keyword')
                 : (tForGroups.keywords || 'keywords');
             html += `
-                <div class="library-card group-card group-card-ungrouped" data-group-key="__ungrouped__">
+                <div class="library-card group-card group-card-ungrouped" data-group-key="__ungrouped__" data-group-label="${escapeHtml(String(info.label || '').toLowerCase())}">
                     <h2><span class="group-card-title">${info.label}</span></h2>
                     <div class="library-stats">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -858,7 +1065,7 @@ function translatePage(lang) {
                             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                         </svg>
                         <span class="group-card-meta">
-                            <span><strong>${info.libraryCount}</strong> ${libWord}</span>
+                            ${entryMeta}
                             <span>•</span>
                             <span><strong>${info.keywordCount}</strong> ${kwWord}</span>
                         </span>
@@ -876,6 +1083,10 @@ function translatePage(lang) {
                 enterGroupLibrariesView(key);
             });
         });
+
+        if (currentView === 'groups') {
+            filterLibraries();
+        }
     }
 
     function updateGroupContext(key) {
@@ -885,7 +1096,7 @@ function translatePage(lang) {
         groupBreadcrumbName.textContent = info.label;
         const tForGroup = translations[currentLanguage] || translations.en;
         if (groupMetaLibraries) {
-            groupMetaLibraries.textContent = `${info.libraryCount} ${tForGroup.libraries || 'libraries'}`;
+            groupMetaLibraries.textContent = formatGroupEntryText(info, tForGroup);
         }
         if (groupMetaKeywords) {
             const keywordText = info.keywordCount === 1
@@ -896,33 +1107,59 @@ function translatePage(lang) {
     }
 
     function setView(view) {
-        currentView = view;
+        currentView = normalizePersistedView(view);
 
-        if (viewAllBtn && viewGroupsBtn) {
-            // Highlight "Libraries" only in flat view, and "Groups" for both
-            // the group cards overview and the group-libraries sub-dashboard.
-            viewAllBtn.classList.toggle('view-toggle-btn-active', view === 'all');
+        if (viewLibrariesBtn) {
+            viewLibrariesBtn.classList.toggle('view-toggle-btn-active', currentView === 'libraries');
+        }
+        if (viewResourcesBtn) {
+            viewResourcesBtn.classList.toggle('view-toggle-btn-active', currentView === 'resources');
+        }
+        if (viewGroupsBtn) {
             viewGroupsBtn.classList.toggle(
                 'view-toggle-btn-active',
-                view === 'groups' || view === 'group-libraries'
+                currentView === 'groups' || currentView === 'group-libraries'
             );
         }
 
         if (groupsGrid) {
-            groupsGrid.style.display = view === 'groups' ? 'grid' : 'none';
+            groupsGrid.style.display = currentView === 'groups' ? 'grid' : 'none';
         }
 
         if (librariesGrid) {
-            librariesGrid.style.display = view === 'all' || view === 'group-libraries' ? 'grid' : 'none';
+            librariesGrid.style.display = (
+                currentView === 'libraries' ||
+                currentView === 'resources' ||
+                currentView === 'group-libraries'
+            ) ? 'grid' : 'none';
         }
 
         if (groupContextEl) {
-            groupContextEl.style.display = view === 'group-libraries' ? 'flex' : 'none';
+            groupContextEl.style.display = currentView === 'group-libraries' ? 'flex' : 'none';
         }
 
         // Visually indicate disabled controls when showing group cards
         if (headerControls) {
-            headerControls.classList.toggle('controls-disabled', view === 'groups');
+            headerControls.classList.toggle('controls-disabled', currentView === 'groups');
+        }
+
+        // Update search placeholder for the active kind tab
+        if (searchInput) {
+            const t = translations[currentLanguage] || translations.en;
+            const labelEl = document.getElementById('global-search-label');
+            if (currentView === 'resources') {
+                searchInput.setAttribute('data-i18n-placeholder', 'search_resources');
+                searchInput.placeholder = t.search_resources || 'Search resources...';
+                if (labelEl) labelEl.textContent = t.search_resources || 'Search resources...';
+            } else if (currentView === 'groups') {
+                searchInput.setAttribute('data-i18n-placeholder', 'search_groups');
+                searchInput.placeholder = t.search_groups || 'Search groups...';
+                if (labelEl) labelEl.textContent = t.search_groups || 'Search groups...';
+            } else {
+                searchInput.setAttribute('data-i18n-placeholder', 'search_libraries');
+                searchInput.placeholder = t.search_libraries || 'Search libraries...';
+                if (labelEl) labelEl.textContent = t.search_libraries || 'Search libraries...';
+            }
         }
 
         // Persist current dashboard view state
@@ -936,11 +1173,31 @@ function translatePage(lang) {
             // Ignore storage errors
         }
 
-        if (view === 'all') {
+        if (currentView === 'libraries' || currentView === 'resources') {
             activeGroupKey = null;
         }
 
+        updateSectionTitle();
         filterLibraries();
+    }
+
+    function updateSectionTitle() {
+        const titleEl = document.querySelector('.libraries-section-title');
+        if (!titleEl) return;
+        const t = translations[currentLanguage] || translations.en;
+        if (currentView === 'groups') {
+            titleEl.removeAttribute('data-i18n');
+            titleEl.textContent = t.available_groups || 'Available Groups';
+        } else if (currentView === 'resources') {
+            titleEl.setAttribute('data-i18n', 'available_resources');
+            titleEl.textContent = t.available_resources || 'Available Resources';
+        } else if (currentView === 'group-libraries' && activeGroupKey && groupStats[activeGroupKey]) {
+            titleEl.removeAttribute('data-i18n');
+            titleEl.textContent = groupStats[activeGroupKey].label;
+        } else {
+            titleEl.setAttribute('data-i18n', 'available_libraries');
+            titleEl.textContent = t.available_libraries || 'Available Libraries';
+        }
     }
 
     function enterGroupsView() {
@@ -967,10 +1224,17 @@ function translatePage(lang) {
     computeGroupStats();
     if (Object.keys(groupStats).length > 0) {
         renderGroupCards();
+    } else if (viewGroupsBtn) {
+        viewGroupsBtn.style.display = 'none';
     }
 
-    if (viewAllBtn && viewGroupsBtn) {
-        viewAllBtn.addEventListener('click', () => setView('all'));
+    if (viewLibrariesBtn) {
+        viewLibrariesBtn.addEventListener('click', () => setView('libraries'));
+    }
+    if (viewResourcesBtn) {
+        viewResourcesBtn.addEventListener('click', () => setView('resources'));
+    }
+    if (viewGroupsBtn) {
         viewGroupsBtn.addEventListener('click', () => enterGroupsView());
     }
 
@@ -989,11 +1253,11 @@ function translatePage(lang) {
             return;
         }
         
-        const csvRows = ['Library Name,Version,Keywords,Author,Maintainer,License,RF Version,Python,Description'];
+        const csvRows = ['Name,Type,Keywords,Author,Maintainer,License,RF Version,Python,Description'];
         
         visibleCards.forEach(card => {
             const name = card.querySelector('h2 a')?.textContent || '';
-            const version = card.querySelector('.badge')?.textContent.replace('Version: ', '') || '';
+            const type = cardKind(card) === 'resource' ? 'Resource' : 'Library';
             const keywords = card.getAttribute('data-keyword-count') || '0';
             const author = card.getAttribute('data-author') || '';
             const maintainer = card.getAttribute('data-maintainer') || '';
@@ -1015,7 +1279,7 @@ function translatePage(lang) {
             
             csvRows.push([
                 escapeCSV(name),
-                escapeCSV(version),
+                escapeCSV(type),
                 escapeCSV(keywords),
                 escapeCSV(author),
                 escapeCSV(maintainer),
@@ -1046,11 +1310,11 @@ function translatePage(lang) {
         }
         
         // Generate Excel-compatible CSV with UTF-8 BOM for proper Excel opening
-        const csvRows = ['Library Name,Version,Keywords,Author,Maintainer,License,RF Version,Python,Description'];
+        const csvRows = ['Name,Type,Keywords,Author,Maintainer,License,RF Version,Python,Description'];
         
         visibleCards.forEach(card => {
             const name = card.querySelector('h2 a')?.textContent || '';
-            const version = card.querySelector('.badge')?.textContent.replace('Version: ', '') || '';
+            const type = cardKind(card) === 'resource' ? 'Resource' : 'Library';
             const keywords = card.getAttribute('data-keyword-count') || '0';
             const author = card.getAttribute('data-author') || '';
             const maintainer = card.getAttribute('data-maintainer') || '';
@@ -1071,7 +1335,7 @@ function translatePage(lang) {
             
             csvRows.push([
                 escapeCSV(name),
-                escapeCSV(version),
+                escapeCSV(type),
                 escapeCSV(keywords),
                 escapeCSV(author),
                 escapeCSV(maintainer),
@@ -1155,12 +1419,12 @@ function translatePage(lang) {
             </head>
             <body>
                 <h1>${siteName}</h1>
-                <div class="meta">Exported: ${exportDate} | Total Libraries: ${visibleCards.length}</div>
+                <div class="meta">Exported: ${exportDate} | Total Entries: ${visibleCards.length}</div>
                 <table>
                     <thead>
                         <tr>
-                            <th>Library Name</th>
-                            <th>Version</th>
+                            <th>Name</th>
+                            <th>Type</th>
                             <th>Keywords</th>
                             <th>Author</th>
                             <th>Maintainer</th>
@@ -1175,7 +1439,7 @@ function translatePage(lang) {
         
         visibleCards.forEach(card => {
             const name = card.querySelector('h2 a')?.textContent || '';
-            const version = card.querySelector('.badge')?.textContent.replace('Version: ', '') || '';
+            const type = cardKind(card) === 'resource' ? 'Resource' : 'Library';
             const keywords = card.getAttribute('data-keyword-count') || '0';
             const author = card.getAttribute('data-author') || '';
             const maintainer = card.getAttribute('data-maintainer') || '';
@@ -1194,7 +1458,7 @@ function translatePage(lang) {
             htmlContent += `
                 <tr>
                     <td>${escapeHtml(name)}</td>
-                    <td>${escapeHtml(version)}</td>
+                    <td>${escapeHtml(type)}</td>
                     <td>${escapeHtml(keywords)}</td>
                     <td>${escapeHtml(author)}</td>
                     <td>${escapeHtml(maintainer)}</td>
@@ -1222,53 +1486,24 @@ function translatePage(lang) {
         }, 250);
     }
     
-    // Export dropdown functionality
-    // Export select functionality
-    // Export toggle functionality
-    const exportToggleBtn = document.getElementById('export-toggle-btn');
-    let exportContainer = null;
-    
-    if (exportToggleBtn) {
-        exportToggleBtn.addEventListener('click', function() {
-            // Only allow export when libraries are visible
+    // Export format dropdown
+    const exportFormatSelect = document.getElementById('export-format');
+    if (exportFormatSelect) {
+        exportFormatSelect.addEventListener('change', function() {
             if (currentView === 'groups') {
+                exportFormatSelect.value = '';
                 return;
             }
-            const librariesSection = document.querySelector('.libraries-section');
-            if (!librariesSection) return;
-            
-            if (!exportContainer) {
-                // Create and inject export container
-                const exportHTML = buildExportContainer();
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = exportHTML;
-                exportContainer = tempDiv.firstElementChild;
-                librariesSection.insertBefore(exportContainer, document.getElementById('libraries-grid'));
-                
-                // Initialize export button handlers
-                const exportOptionBtns = exportContainer.querySelectorAll('.export-option-btn');
-                exportOptionBtns.forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const format = this.getAttribute('data-export');
-                        
-                        if (format === 'csv') {
-                            exportToCSV();
-                        } else if (format === 'excel') {
-                            exportToExcel();
-                        } else if (format === 'pdf') {
-                            exportToPDF();
-                        }
-                    });
-                });
-                
-                // Show container (it's already visible since we don't add collapsed class)
-                exportToggleBtn.classList.add('active');
-            } else {
-                // Remove container from DOM
-                exportContainer.remove();
-                exportContainer = null;
-                exportToggleBtn.classList.remove('active');
+            const format = exportFormatSelect.value;
+            if (format === 'csv') {
+                exportToCSV();
+            } else if (format === 'excel') {
+                exportToExcel();
+            } else if (format === 'pdf') {
+                exportToPDF();
             }
+            // Reset so the same format can be chosen again
+            exportFormatSelect.selectedIndex = 0;
         });
     }
     
@@ -1516,15 +1751,19 @@ function translatePage(lang) {
         const persistedRaw = localStorage.getItem('dashboard_view_state');
         if (persistedRaw) {
             const persisted = JSON.parse(persistedRaw);
-            if (persisted && persisted.view === 'groups' && Object.keys(groupStats).length > 0) {
+            const persistedView = normalizePersistedView(persisted && persisted.view);
+            if (persistedView === 'groups' && Object.keys(groupStats).length > 0) {
                 enterGroupsView();
             } else if (
-                persisted &&
-                persisted.view === 'group-libraries' &&
+                persistedView === 'group-libraries' &&
                 persisted.groupKey &&
                 groupStats[persisted.groupKey]
             ) {
                 enterGroupLibrariesView(persisted.groupKey);
+            } else if (persistedView === 'resources' && hasResourceCards) {
+                setView('resources');
+            } else if (persistedView === 'libraries' && hasLibraryCards) {
+                setView('libraries');
             }
         }
     } catch (e) {
@@ -1537,19 +1776,28 @@ function translatePage(lang) {
         if (lastStateRaw) {
             const lastState = JSON.parse(lastStateRaw);
             localStorage.removeItem('dashboard_last_state');
+            const lastView = normalizePersistedView(lastState && lastState.view);
 
-            if (lastState && lastState.view === 'groups' && Object.keys(groupStats).length > 0) {
+            if (lastView === 'groups' && Object.keys(groupStats).length > 0) {
                 enterGroupsView();
             } else if (
-                lastState &&
-                lastState.view === 'group-libraries' &&
+                lastView === 'group-libraries' &&
                 lastState.groupKey &&
                 groupStats[lastState.groupKey]
             ) {
                 enterGroupLibrariesView(lastState.groupKey);
+            } else if (lastView === 'resources' && hasResourceCards) {
+                setView('resources');
+            } else if (lastView === 'libraries' && hasLibraryCards) {
+                setView('libraries');
             }
         }
     } catch (e) {
         // Fail silently if localStorage is unavailable or JSON is invalid
+    }
+
+    // Apply the active view so Libraries/Resources filtering takes effect on first paint.
+    if (currentView === 'libraries' || currentView === 'resources') {
+        setView(currentView);
     }
 });
