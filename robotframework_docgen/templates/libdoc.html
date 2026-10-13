@@ -719,6 +719,13 @@
       background: color-mix(in srgb, var(--bg) 85%, var(--card) 15%);
     }
 
+    /* Long harvested suite examples scroll instead of stretching the hero. */
+    .hero-card > pre {
+      max-height: 16rem;
+      overflow: auto;
+      margin: 0;
+    }
+
     pre {
       background: var(--code-bg);
       border-radius: 0.75rem;
@@ -789,6 +796,12 @@
       border: none;
       border-radius: 0.5rem;
       background: var(--code-bg);
+      max-height: 20rem;
+      overflow: auto;
+    }
+
+    .kw-example .code-block pre {
+      overflow: visible;
     }
 
     .arguments-list-container {

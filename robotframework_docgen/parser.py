@@ -2760,7 +2760,9 @@ class RobotFrameworkDocParser:
             if part.startswith("<") and part.endswith(">"):
                 result_parts.append(part)
             else:
-                part = re.sub(r"(#.*)$", highlight_comment, part)
+                # Do not treat the '#' inside HTML entities (&#x27;, &#39;) as an
+                # RF comment — that produced visible "#x27;SUBMITTED'" spans.
+                part = re.sub(r"(?<!&)(#.*)$", highlight_comment, part)
                 result_parts.append(part)
 
         text = "".join(result_parts)
@@ -2991,7 +2993,9 @@ class RobotFrameworkDocParser:
         line = re.sub(r"(@\{[^}]+\})", r'<span class="robot-variables">\1</span>', line)
         line = re.sub(r"(&\{[^}]+\})", r'<span class="robot-variables">\1</span>', line)
 
-        line = re.sub(r"(#.*)$", r'<span class="robot-comments">\1</span>', line)
+        line = re.sub(
+            r"(?<!&)(#.*)$", r'<span class="robot-comments">\1</span>', line
+        )
 
         line = re.sub(
             r'(["\'])([^"\']*)\1', r'\1<span class="robot-strings">\2</span>\1', line
@@ -3002,7 +3006,12 @@ class RobotFrameworkDocParser:
         return line
 
     def _escape_html(self, text: str) -> str:
-        """Escape HTML special characters."""
+        """Escape HTML special characters.
+
+        Single quotes are left as-is: they are safe in HTML text nodes, and
+        turning them into ``&#x27;`` makes the later ``#`` comment highlighter
+        treat the entity as a Robot comment.
+        """
         if not text:
             return ""
 
@@ -3010,6 +3019,5 @@ class RobotFrameworkDocParser:
         text = text.replace("<", "&lt;")
         text = text.replace(">", "&gt;")
         text = text.replace('"', "&quot;")
-        text = text.replace("'", "&#x27;")
         return text
 
