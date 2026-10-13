@@ -13,6 +13,7 @@ A powerful documentation generator for Robot Framework **Python libraries** and 
 **View Sample Documentation:** 
 - [Generated Documentation](https://deekshith-poojary98.github.io/robotframework-docgen/SingleLibrary/)
 - [Dashboard](https://deekshith-poojary98.github.io/robotframework-docgen/)
+- [Theme gallery](https://deekshith-poojary98.github.io/robotframework-docgen/Themes/)
 
 ## 🚀 Features
 
@@ -320,7 +321,7 @@ Omitted tokens keep built-in defaults (or the chosen preset). Colors may be hex 
 
 ### Sample themes
 
-Ready-made files live in [`sample_configs/theme/`](sample_configs/theme/) (e.g. `graphite.json`, `sage.yml`, `matcha.yml`, `accent-only.json`, `paper.json`, `ocean.yaml`, …). An example multi-lib + dashboard config is [`sample_configs/lib/timetravel_with_theme.json`](sample_configs/lib/timetravel_with_theme.json).
+Ready-made theme files live in [`sample_configs/theme/`](sample_configs/theme/) (e.g. `graphite.json`, `sage.yml`, `matcha.yml`, `accent-only.json`, `paper.json`, `ocean.yaml`, …). Browse rendered samples in [`docs/Themes/`](docs/Themes/) ([live gallery](https://deekshith-poojary98.github.io/robotframework-docgen/Themes/)). An example multi-lib + dashboard config is [`sample_configs/lib/timetravel_with_theme.json`](sample_configs/lib/timetravel_with_theme.json).
 
 ```bash
 docgen -c sample_configs/lib/timetravel_with_theme.json --dashboard -d timetravel-docs
@@ -574,7 +575,8 @@ If type hints are not provided, arguments show as `Any` type.
 
 - **Sample libraries / resources**: `sample_libs/` (includes `http_helpers.resource`, `auth_suite.robot`, `tests/`)
 - **Sample configs**: `sample_configs/lib/` (`multi_lib_config.json`, `single_lib_config.json`, `timetravel_with_theme.json`)
-- **Themes**: `sample_configs/theme/`
+- **Theme configs**: `sample_configs/theme/`
+- **Theme gallery (GitHub Pages)**: [`docs/Themes/`](https://deekshith-poojary98.github.io/robotframework-docgen/Themes/)
 
 **Single library / resource:**
 ```bash
